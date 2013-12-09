@@ -1,0 +1,53 @@
+{% extends "Layout/main.twig" %}
+
+{% block content %}
+	
+	<section id="forums">
+		{% for forum in forums %}
+			<div class="parent-forum">
+				<header>
+					{{ forum.name }}
+				</header>
+
+				<div class="content">
+					{% if forum.children is defined %}
+						<div class="forums">
+							{% for child in forum.children %}
+								<div class="forum row">
+									<div class="col-md-8">
+										<a class="forum-name" href="">
+											{{ child.name }}
+										</a>
+										<p class="forum-description">
+											{{ child.description }}
+										</p>
+									</div>
+									<div class="col-md-4 text-right">
+										<p>	
+											<a href="" class="topic-name">
+												Some topic name
+											</a>
+										</p>
+										<p>
+											<a href="" class="user-link">
+												cjmarkham
+											</a>
+										</p>
+										<p class="date">
+											{{ child.lastPostTime|date('d-m-y H:i') }}
+										</p>
+									</div>
+								</div>
+
+								{% if not loop.last %}
+									<div class="seperator"></div>
+								{% endif %}
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		{% endfor %}
+	</section>
+
+{% endblock %}

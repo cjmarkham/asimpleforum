@@ -1,0 +1,196 @@
+<!doctype html>
+<head>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/main.css" />
+
+	<title>{{ title }}</title>
+
+	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script src="js/asf.js"></script>
+	<script src="js/dom.js"></script>
+</head>
+
+<body>
+	
+	<header id="header">
+
+		<div class="container" id="logo">
+			<img src="/images/logo.png" alt="" />
+		</div>
+
+		<nav class="container" id="main-nav">
+			<ul class="list-unstyled list-inline">
+				<li {% if section == 'forums' %}class="active"{% endif %}>
+					<a href="/">
+						Forums
+					</a>	
+				</li>
+				<li {% if section == 'members' %}class="active"{% endif %}>
+					<a href="">
+						Members
+					</a>	
+				</li>
+				<li {% if section == 'search' %}class="active"{% endif %}>
+					<a href="">
+						Search
+					</a>	
+				</li>
+				<li {% if section == 'new-topics' %}class="active"{% endif %}>
+					<a href="">
+						New Topics
+					</a>	
+				</li>
+				<li {% if section == 'download' %}class="active"{% endif %}>
+					<a href="">
+						Download
+					</a>	
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<div id="message-block"></div>
+
+	<div class="container" id="main">
+
+		<nav id="breadcrumbs">
+			<ul class="list-unstyled list-inline">
+				<li>
+					<a href="">
+						Home
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="row">
+
+			<div class="col-md-3">
+				<section id="account-control" class="box">
+					<header>
+						Account Control
+					</header>
+					<div class="content">
+						{% if user.id is not defined %}
+							<form data-event="submit" data-action="login" method="post" action="javascript:void(0)">
+								<div class="form-group">
+									<label>Username</label>
+									<input required type="text" class="form-control" name="username" placeholder="Username" />
+								</div>
+								<div class="form-group">
+									<label>Password</label>
+									<input required type="password" class="form-control" name="password" placeholder="Password" />
+									<p class="help text-right">
+										<a href="">
+											Forgot password?
+										</a>
+									</p>
+								</div>
+
+								<div class="text-center">
+									<button class="btn btn-orange">
+										Login
+									</button>
+
+									<a class="btn btn-orange" href="/signup">
+										Signup
+									</a>
+								</div>
+							</form>
+
+						{% else %}
+							{{ include('Partials/userbox.twig') }}
+						{% endif %}
+					</div>
+				</section>
+
+				<section class="box">
+					<header>
+						Recent Topics
+					</header>
+					<div class="content">
+						<ul class="list-unstyled">
+							<li class="clearfix">
+								<div class="pull-left">
+									<div class="avatar">
+										<img width="35" height="35" src="" alt="" />
+									</div>
+								</div>
+								<div class="pull-left marginLeft10">
+									<p class="topic-name">
+										<a href="">
+											Some topic name
+										</a>
+									</p>
+									<p class="topic-info">
+										<a href="" class="user-link">
+											cjmarkham
+										</a>
+										 - 
+										<span class="date">
+											Today, 1:05pm
+										</span>
+									</p>
+								</div>
+							</li>
+							<li class="seperator"></li>
+							<li class="clearfix">
+								<div class="pull-left">
+									<div class="avatar">
+										<img width="35" height="35" src="" alt="" />
+									</div>
+								</div>
+								<div class="pull-left marginLeft10">
+									<p class="topic-name">
+										<a href="">
+											Some topic name
+										</a>
+									</p>
+									<p class="topic-info">
+										<a href="" class="user-link">
+											cjmarkham
+										</a>
+										 - 
+										<span class="date">
+											Today, 1:05pm
+										</span>
+									</p>
+								</div>
+							</li>
+						</ul>		
+					</div>
+				</section>
+			</div>
+
+			<div class="col-md-9">
+
+				{% block flash %}
+					{% set alert = app.session.flashbag.get('alert') %}
+					{% if alert.message is defined %}
+						<p class="alert alert-{{ alert.type }}">
+							{{ alert.message }}
+						</p>
+					{% endif %}
+				{% endblock %}
+
+				{% block content %}{% endblock %}
+			</div>
+
+		</div>
+
+	</div>
+
+	<footer id="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4"></div>
+				<div class="text-right col-md-4">
+					&copy; {{ 'now'|date('Y') }} asimpleforum
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+</body>
