@@ -4,5 +4,7 @@
 	"INVALID_EMAIL": "Please enter a valid email address",
 	"PASSWORDS_DONT_MATCH": "Sorry, your entered passwords do not match.",
 
+	"LOGGED_IN_NOT_APPROVED": "You are logged in but your account has not yet been approved. Some functions will not be available until your account has been approved by a board team member.",
+
 	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later."
 }

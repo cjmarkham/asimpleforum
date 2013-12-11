@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "433ac2cb0d38628baa08bedd6f8f39b1",
+    "hash": "e8e1336a52ffdf469a05f9265bd0b9e0",
     "packages": [
         {
             "name": "cjmarkham/disk-cache",
@@ -252,6 +252,56 @@
                 "sdk"
             ],
             "time": "2013-12-03 19:19:43"
+        },
+        {
+            "name": "moriony/silex-mongo-provider",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moriony/silex-mongo-provider.git",
+                "reference": "5bdc6c0bb5f225eb3f168ec79b3ce555e3e9d992"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moriony/silex-mongo-provider/zipball/5bdc6c0bb5f225eb3f168ec79b3ce555e3e9d992",
+                "reference": "5bdc6c0bb5f225eb3f168ec79b3ce555e3e9d992",
+                "shasum": ""
+            },
+            "require": {
+                "pimple/pimple": "1.*",
+                "silex/silex": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "pimple/pimple": "1.*",
+                "satooshi/php-coveralls": "*",
+                "silex/silex": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mongo\\Silex": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vitaliy Chesnokov",
+                    "email": "demateus@gmail.com"
+                }
+            ],
+            "description": "Mongo service provider for the Silex framwork.",
+            "homepage": "https://github.com/moriony/silex-mongo-provider",
+            "keywords": [
+                "database",
+                "mongo",
+                "mongodb",
+                "silex"
+            ],
+            "time": "2013-09-22 08:24:26"
         },
         {
             "name": "pimple/pimple",

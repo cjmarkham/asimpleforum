@@ -88,8 +88,7 @@ class AuthModel
 			return false;
 		}
 
-		$this->app['config']->load('defaults');
-		$hashed = $this->hash($this->app['config']->get('defaults.salt') . $data['password']);
+		$hashed = $this->hash($this->app['config']->defaults['salt'] . $data['password']);
 
 		$insert = $this->app['db']->insert('users', array(
 			'username' => $data['username'],
@@ -131,9 +130,7 @@ class AuthModel
 			return $response;
 		}
 
-		$this->app['config']->load('defaults');
-
-		if ($user['password'] !== $this->hash($this->app['config']->get('defaults.salt') . $password))
+		if ($user['password'] !== $this->hash($this->app['config']->defaults['salt'] . $password))
 		{
 			$response = new Response();
 			$response->setStatusCode(400);

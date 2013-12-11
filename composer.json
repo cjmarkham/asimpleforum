@@ -3,12 +3,13 @@
         "silex/silex": "1.0.*@dev",
         "twig/twig": "1.*",
         "entea/silex-twig-simple-asset-extension": "dev-master",
-        "doctrine/dbal": "2.2.*",
         "silex/web-profiler": "1.0.*@dev",
         "symfony/twig-bridge": "~2.3",
         "cjmarkham/disk-cache": "dev-master",
         "symfony/validator": "~2.3",
         "facebook/php-sdk": "dev-master",
+        "moriony/silex-mongo-provider": "*",
+        "doctrine/dbal": "2.2.*",
         "tobiassjosten/facebook-service-provider": "dev-master"
     },
 

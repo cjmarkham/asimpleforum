@@ -26,12 +26,19 @@ else
     $app['config']->base = 'production';
 }
 
+$app['config']->load();
+
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
-$app->register(new \Silex\Provider\SessionServiceProvider());
+$app->register(new \Silex\Provider\SessionServiceProvider(), array(
+    'session.storage.options' => array(
+        'name' => $app['config']->cookie['name'],
+        'cookie_domain' => $app['config']->cookie['domain']
+    )
+));
 
 // Twig
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => dirname(dirname(__FILE__)) . '/src/View'
+    'twig.path' => dirname(__DIR__) . '/src/View'
 ));
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
@@ -41,19 +48,41 @@ $twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
     $app
 ));
 
-$app['config']->load('defaults');
-$default_cache = $app['config']->get('defaults.cache');
+/*$default_cache = $app['config']->defaults['cache'];
 
 if ($default_cache === 'disk')
 {
     $app->register(new \DiskCache\DiskCacheServiceProvider(), array(
-        'cache.cache_dir' => dirname(dirname(__FILE__)) . '/cache'
+        'diskcache.cache_dir' => dirname(__DIR__) . '/cache'
     ));
+
+    $app['cache'] = $app['diskcache'];
 } 
 else
 {
     $app->register(new Rafal\MemcacheServiceProvider\MemcacheServiceProvider());
-}
+
+    $app['cache'] = $app['memcache'];
+}*/
+
+/*$app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
+    'mongo.connections' => array(
+        'default' => array(
+            'server' => 'mongodb://' . $app['config']->database['host'] . ':' . $app['config']->database['port'],
+            'options' => array("connect" => true)
+        )
+    ),
+));*/
+
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver'    => 'pdo_mysql',
+        'dbname'   => $app['config']->database['name'],
+        'host'      => $app['config']->database['host'],
+        'user'      => $app['config']->database['user'],
+        'password'  => $app['config']->database['password'],
+    ),
+));
 
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
@@ -67,19 +96,6 @@ $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
     $webProfilerPath = dirname(dirname(__FILE__)) . '/vendor/symfony/web-profiler-bundle/Symfony/Bundle/WebProfilerBundle/Resources/views'; 
     $app['twig.loader.filesystem']->addPath($webProfilerPath, 'WebProfiler');
 }*/
-
-// Doctrine
-$app['config']->load('database');
-$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-    'db.options' => array(
-        'driver' 	=> 'pdo_mysql',
-        'host' 		=> $app['config']->get('database.host'),
-        'user' 		=> $app['config']->get('database.user'),
-        'password' 	=> $app['config']->get('database.password'),
-        'dbname' 	=> $app['config']->get('database.name'),
-        'charset' 	=> 'utf8'
-    )
-));
 
 // Facebook SDK
 $app->register(new Tobiassjosten\Silex\Provider\FacebookServiceProvider(), array(
@@ -117,6 +133,17 @@ $app['forum'] = $app->share(function() use ($app) {
     return $model;
 });
 
+$app['topic'] = $app->share(function() use ($app) {
+    $model = new \Model\TopicModel($app);
+    return $model;
+});
+
+$app['post'] = $app->share(function() use ($app) {
+    $model = new \Model\PostModel($app);
+    return $model;
+});
+
+
 $app['auth'] = $app->share(function() use ($app) {
     $model = new \Model\AuthModel($app);
     return $model;
@@ -126,8 +153,6 @@ $app['language'] = $app->share(function() use ($app) {
     $model = new Language($app);
     return $model;
 });
-
-$app['config']->load('cookie');
 
 /*$app['modelName'] = $app->share(function() use ($app) {
     $model = new \Model\ModelName($app);
@@ -159,6 +184,14 @@ $app->get('/partial/{name}', function (Application $app, $name) {
     return $app['twig']->render('Partials/' . $name . '.twig', array(
         'user' => $app['session']->get('user')
     ));
+});
+
+$app->get('/{name}-{id}', function (Application $app, $name, $id) {
+    return Route::get('forum:index', $name, $id);
+});
+
+$app->get('/{forum_name}/{topic_name}-{topic_id}', function (Application $app, $topic_name, $topic_id) {
+    return Route::get('topic:index', $topic_name, $topic_id);
 });
 
 /*$app->post('/game/update_plays', function (Request $request) {

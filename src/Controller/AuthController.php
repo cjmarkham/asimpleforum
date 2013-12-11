@@ -24,7 +24,7 @@ class AuthController extends BaseController
 
 			if ($signup_attempt === true)
 			{
-				header ('Location: /login');
+				header ('Location: /');
 				exit;
 			}
 		}

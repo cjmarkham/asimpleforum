@@ -1,14 +1,16 @@
 <!doctype html>
 <head>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="/css/main.css" />
 
 	<title>{{ title }}</title>
 
 	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-	<script src="js/asf.js"></script>
-	<script src="js/dom.js"></script>
+	<script src="/js/asf.js"></script>
+	<script src="/js/timeago.js"></script>
+	<script src="/js/dom.js"></script>
 </head>
 
 <body>
@@ -16,7 +18,9 @@
 	<header id="header">
 
 		<div class="container" id="logo">
-			<img src="/images/logo.png" alt="" />
+			<a href="/">
+				<img src="/images/logo.png" alt="" />
+			</a>
 		</div>
 
 		<nav class="container" id="main-nav">
@@ -41,6 +45,11 @@
 						New Topics
 					</a>	
 				</li>
+				<li {% if section == 'faqs' %}class="active"{% endif %}>
+					<a href="">
+						FAQs
+					</a>	
+				</li>
 				<li {% if section == 'download' %}class="active"{% endif %}>
 					<a href="">
 						Download
@@ -53,7 +62,6 @@
 	<div id="message-block"></div>
 
 	<div class="container" id="main">
-
 		<nav id="breadcrumbs">
 			<ul class="list-unstyled list-inline">
 				<li>
@@ -114,7 +122,7 @@
 							<li class="clearfix">
 								<div class="pull-left">
 									<div class="avatar">
-										<img width="35" height="35" src="" alt="" />
+										<img width="35" height="35" src="/avatars/cjmarkham/small.png" alt="" />
 									</div>
 								</div>
 								<div class="pull-left marginLeft10">
@@ -128,9 +136,9 @@
 											cjmarkham
 										</a>
 										 - 
-										<span class="date">
+										<date class="date">
 											Today, 1:05pm
-										</span>
+										</date>
 									</p>
 								</div>
 							</li>
@@ -138,7 +146,7 @@
 							<li class="clearfix">
 								<div class="pull-left">
 									<div class="avatar">
-										<img width="35" height="35" src="" alt="" />
+										<img width="35" height="35" src="/avatars/cjmarkham/small.png" alt="" />
 									</div>
 								</div>
 								<div class="pull-left marginLeft10">
@@ -152,9 +160,9 @@
 											cjmarkham
 										</a>
 										 - 
-										<span class="date">
+										<date class="date">
 											Today, 1:05pm
-										</span>
+										</date>
 									</p>
 								</div>
 							</li>

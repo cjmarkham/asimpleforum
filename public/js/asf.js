@@ -18,7 +18,9 @@ ASF.prototype.login = function (node) {
 	}).done(function (response) {
 
 		$.get('/partial/userbox', function (html) {
-			$('#account-control .content').html(html);
+			$('#account-control .content').fadeOut(function () {
+				$(this).html(html).fadeIn(self.medSpeed);
+			});
 		});
 
 	}).fail(function (response) {
@@ -30,7 +32,7 @@ ASF.prototype.login = function (node) {
 
 ASF.prototype.error = function (message) {
 	this.message(message, true);
-}
+};
 
 ASF.prototype.message = function (message, error) {
 	var type = 'info';
@@ -46,4 +48,14 @@ ASF.prototype.message = function (message, error) {
 	$('#message-block').append(el);
 
 	el.delay(5000).fadeOut(this.medSpeed);
-}
+};
+
+ASF.prototype.notification = function (image, title, message) {
+	if (window.webkitNotifications.checkPermission() == 0) {
+		window.webkitNotifications.createNotification(
+			image, 
+			title,
+			message
+		).show();
+	}
+};

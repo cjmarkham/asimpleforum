@@ -4,9 +4,8 @@
 @darkGrey: #c6c6c6;
 @orange: #f46626;
 
-.marginLeft10 {
-	margin-left: 10px;
-}
+.marginLeft10 {margin-left: 10px}
+.marginRight10 {margin-right:10px}
 
 .greyGradient {
 	background: #ffffff; /* Old browsers */
@@ -36,6 +35,7 @@
 
 body {
 	background: @grey;
+	display: none;
 }
 
 #header, #footer {
@@ -61,6 +61,7 @@ body {
 	border-top: 1px solid @lightBlue;
 	padding: 10px 10px 0;
 	height: 50px;
+	z-index: 900;
 	.topRadius5();
 
 	ul {
@@ -96,6 +97,7 @@ body {
 	background: @white;
 	z-index: 5;
 	position: relative;
+	min-height: 1200px;
 }
 
 #breadcrumbs {
@@ -147,6 +149,11 @@ section {
 	img {
 		border: 1px solid @darkGrey;
 	}
+
+	&.big {
+		width: 72px;
+		height: 72px;
+	}
 }
 
 p {
@@ -178,9 +185,13 @@ p {
 	color: #79828b;
 }
 
-.date {
+a:hover {
+	text-decoration: none;
+}
+
+date {
 	text-transform: uppercase;
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: bold;
 }
 
@@ -207,4 +218,90 @@ p {
 	position: absolute;
 	top: 20px;
 	right: 20px;
+}
+
+#userbox-options {
+	line-height:25px;
+}
+
+.views, .replies {
+	margin-top: 20px;
+	display: inline-block;
+	color: #79828b;
+	font-weight: bold;
+
+	i {
+		color: #428bca;
+		font-weight: normal;
+	}
+}
+
+.views {
+	margin-right: 20px;
+}
+
+.replies {
+	margin-left: 20px;
+}
+
+.truncate {
+	text-overflow: ellipsis;
+	overflow: hidden;
+
+	&.w80 {
+		width: 80px;
+	}
+}
+
+.post {
+
+	header {
+		.pull-right {
+			span {
+				margin-left: 20px;
+			}
+		}
+	}
+
+	.col-md-2 {
+		border-right: 1px solid #dfdfdf;
+		text-align: center;
+
+		.avatar, p {
+			margin: 0 auto;
+		}
+
+		.avatar {
+			margin-bottom: 10px;
+		}
+
+		.group, .post-count {
+			color: @lightBlue;
+			font-size: 12px;
+			font-weight: bold;
+			margin-top: 10px;
+		}
+	}
+
+	.col-md-10 {
+		border-left: 1px solid #fff;
+
+		.post-info {
+			color: #79828b;
+			font-weight: bold;
+			border-bottom: 1px solid #dfdfdf;
+			padding: 0 0 10px;
+
+			date {
+				font-size: 13px;
+				color: @orange;
+			}
+		}
+
+		.post-content {
+			color: #79828b;
+			padding-top: 10px;
+			border-top: 1px solid #fff;
+		}
+	}
 }

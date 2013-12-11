@@ -27,6 +27,7 @@ return array(
     'Rafal' => array($vendorDir . '/rafal/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Pimple' => array($vendorDir . '/pimple/pimple/lib'),
+    'Mongo\\Silex' => array($vendorDir . '/moriony/silex-mongo-provider/src'),
     'Entea' => array($vendorDir . '/entea/silex-twig-simple-asset-extension'),
     'Doctrine\\DBAL' => array($vendorDir . '/doctrine/dbal/lib'),
     'Doctrine\\Common' => array($vendorDir . '/doctrine/common/lib'),

@@ -11,8 +11,7 @@ class Language
 	{
 		$this->app = $app;
 
-		$this->app['config']->load('defaults');
-		$this->file = dirname(__DIR__) . '/public/languages/' . $this->app['config']->get('defaults.language') . '.json';
+		$this->file = dirname(__DIR__) . '/public/languages/' . $this->app['config']->defaults['language'] . '.json';
 		$this->phrases = json_decode(file_get_contents($this->file), true);
 	}
 

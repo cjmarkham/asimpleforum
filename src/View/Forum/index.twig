@@ -1,0 +1,60 @@
+{% extends "Layout/main.twig" %}
+
+{% block content %}
+	
+	<section id="topics">
+		<header>
+			{{ forum.name }}
+		</header>
+
+		<div class="content">
+			{% for topic in topics %}
+				<div class="row topic">
+					<div class="col-md-6">
+						<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}" class="topic-name">
+							{{ topic.name }}
+						</a>
+						<p class="topic-author">
+							<a href="" class="user-link">
+								{{ topic.author }}
+							</a>
+						</p>
+						<date class="date" title="{{ topic.added|date('c') }}">
+							{{ topic.added|date('jS M y, H:i') }}
+						</date>
+					</div>
+					<div class="col-md-2">
+						<p class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
+						<p class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
+					</div>
+					<div class="text-right col-md-4">
+						<p>
+							{% if topic.lastPostName %}
+								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}#{{ topic.lastPostId }}" class="topic-name">
+									{{ topic.lastPostName }}
+								</a>
+							{% else %}
+								<a href="" class="topic-name">
+									{{ topic.name }}
+								</a>
+							{% endif %}
+						</p>
+						<p>	
+							<a href="" class="user-link">
+								{{ topic.lastPosterUsername }}
+							</a>
+						</p>
+						<date class="date" title="{{ topic.updated|date('c') }}">
+							{{ topic.updated|date('jS M y. H:i') }}
+						</date>
+					</div>
+				</div>
+
+				{% if not loop.last %}
+					<div class="seperator"></div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</section>
+
+{% endblock %}

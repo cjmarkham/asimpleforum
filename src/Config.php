@@ -4,33 +4,30 @@ use Silex\Application;
 
 class Config
 {
-	public $config;
 	public $base;
 
-	public function load($file)
+	public function load () 
 	{
-		$path = dirname(__DIR__) . '/config/' . $this->base . '/' . $file . '.ini';
+		$dir = dirname(__DIR__) . '/config/' . $this->base;
 
-		if (file_exists($path))
+		foreach (glob($dir . '/*.ini') as $config_file)
 		{
-			$this->config = parse_ini_file($path, true);
-		}
-		else
-		{
-			throw new \Exception('No config file named ' . $path);
+			if (is_file($config_file))
+			{
+				$this->get($config_file);
+			}
 		}
 	}
 
-	public function get($key)
+	public function get ($file)
 	{
-		if (strpos($key, '.') !== false)
-		{
-			list($key, $value) = explode('.', $key);
+		$property = str_replace('.ini', '', basename($file));
 
-			if (isset($this->config[$key]))
-			{
-				return $this->config[$key][$value];
-			}
+		if (!file_exists($file))
+		{
+			die('No config file ' . $file);
 		}
+
+		$this->$property = parse_ini_file($file);
 	}
 }
