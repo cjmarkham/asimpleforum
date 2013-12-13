@@ -17,7 +17,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'dev') !== false)
 }
 else if (strpos($_SERVER['HTTP_HOST'], 'staging') !== false)
 {
-    $app['debug'] = false;
+    $app['debug'] = true;
     $app['config']->base = 'staging';
 }
 else
@@ -128,6 +128,13 @@ $app->error(function (\Exception $e, $code) use ($app) {
                 )
             ), 
         404);
+    }
+    else
+    {
+        if ($app['debug'])
+        {
+            die(var_dump($e->getMessage()));
+        }
     }
 
 });
