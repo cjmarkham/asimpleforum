@@ -1,0 +1,21 @@
+<div class="pagination pull-right">
+	<ul class="list-unstyled list-inline">	
+		{% for page in pagination.pages.prev %}
+			<li class="page">
+				<a href="/{{ prefix }}{{ page }}">
+					{{ page }}
+				</a>
+			</li>
+		{% endfor %}
+		<li class="page current">
+			{{ pagination.pages.current }}
+		</li>
+		{% for page in pagination.pages.next %}
+			<li class="page">
+				<a href="/{{ prefix }}{{ page }}">
+					{{ page }}
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+</div>

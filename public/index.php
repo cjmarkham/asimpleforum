@@ -48,6 +48,12 @@ $twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
     $app
 ));
 
+$bbcode = new Twig_SimpleFilter('bbcode', array('Utils', 'bbcode'));
+$truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
+
+$app['twig']->addFilter($bbcode);
+$app['twig']->addFunction($truncate);
+
 /*$default_cache = $app['config']->defaults['cache'];
 
 if ($default_cache === 'disk')
@@ -180,18 +186,61 @@ $app->get('/logout', function (Application $app) {
     return Route::get('auth:logout');
 });
 
+$app->post('/partial/{name}', function (Request $request, $name) use ($app) {
+
+    $params = $request->get('params');
+    $array = array();
+
+    foreach ($params as $key => $param)
+    {
+        $array[$key] = $param;
+    }
+
+    $array['user'] = $app['session']->get('user');
+
+    return $app['twig']->render('Partials/' . $name . '.twig', $array);
+});
+
 $app->get('/partial/{name}', function (Application $app, $name) {
     return $app['twig']->render('Partials/' . $name . '.twig', array(
         'user' => $app['session']->get('user')
     ));
 });
 
+$app->get('/{name}-{id}/{page}', function (Application $app, $name, $id, $page) {
+    return Route::get('forum:index', $name, $id, $page);
+})->assert('page', '([0-9]+)');
+
 $app->get('/{name}-{id}', function (Application $app, $name, $id) {
     return Route::get('forum:index', $name, $id);
 });
 
+$app->get('/{forum_name}/{topic_name}-{topic_id}/{page}', function (Application $app, $topic_name, $topic_id, $page) {
+    return Route::get('topic:index', $topic_name, $topic_id, $page);
+})->assert('page', '([0-9]+)');
+
 $app->get('/{forum_name}/{topic_name}-{topic_id}', function (Application $app, $topic_name, $topic_id) {
     return Route::get('topic:index', $topic_name, $topic_id);
+});
+
+$app->post('/topic/{method}', function (Request $request, $method) use ($app) {
+    if (!method_exists($app['topic'], $method))
+    {
+        $response = new Response();
+        $response->setStatusCode(403);
+        return $response;
+    }
+    return $app['topic']->$method($request);
+});
+
+$app->post('/post/{method}', function (Request $request, $method) use ($app) {
+    if (!method_exists($app['post'], $method))
+    {
+        $response = new Response();
+        $response->setStatusCode(403);
+        return $response;
+    }
+    return $app['post']->$method($request);
 });
 
 /*$app->post('/game/update_plays', function (Request $request) {

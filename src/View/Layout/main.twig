@@ -1,16 +1,23 @@
 <!doctype html>
 <head>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="/css/main.css" />
+
+	{% block css %}
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="/css/main.css" />
+	{% endblock %}
 
 	<title>{{ title }}</title>
 
-	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-	<script src="/js/asf.js"></script>
-	<script src="/js/timeago.js"></script>
-	<script src="/js/dom.js"></script>
+	{{ include('Layout/meta.twig') }}
+
+	{% block scripts %}
+		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<script src="/js/asf.js"></script>
+		<script src="/js/timeago.js"></script>
+		<script src="/js/dom.js"></script>
+	{% endblock %}
 </head>
 
 <body>
@@ -65,10 +72,11 @@
 		<nav id="breadcrumbs">
 			<ul class="list-unstyled list-inline">
 				<li>
-					<a href="">
+					<a href="/">
 						Home
 					</a>
 				</li>
+				{% block crumbs %}{% endblock %}
 			</ul>
 		</nav>
 
@@ -119,53 +127,36 @@
 					</header>
 					<div class="content">
 						<ul class="list-unstyled">
-							<li class="clearfix">
-								<div class="pull-left">
-									<div class="avatar">
-										<img width="35" height="35" src="/avatars/cjmarkham/small.png" alt="" />
+							{% for topic in recent_topics %}
+								<li class="clearfix recent-topic">
+									<div class="pull-left">
+										<div class="avatar">
+											<img width="55" height="55" src="/avatars/{{ topic.lastPoster }}/small.png" alt="" />
+										</div>
 									</div>
-								</div>
-								<div class="pull-left marginLeft10">
-									<p class="topic-name">
-										<a href="">
-											Some topic name
-										</a>
-									</p>
-									<p class="topic-info">
-										<a href="" class="user-link">
-											cjmarkham
-										</a>
-										 - 
-										<date class="date">
-											Today, 1:05pm
-										</date>
-									</p>
-								</div>
-							</li>
-							<li class="seperator"></li>
-							<li class="clearfix">
-								<div class="pull-left">
-									<div class="avatar">
-										<img width="35" height="35" src="/avatars/cjmarkham/small.png" alt="" />
+									<div class="pull-left marginLeft30">
+										<p class="topic-name">
+											<a href="/{{ topic.forumName|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}">
+												{{ truncate(topic.name, 10) }}
+											</a>
+										</p>
+										<p class="topic-info">
+											<a href="/user/{{ topic.lastPoster }}" class="user-link">
+												{{ topic.lastPoster }}
+											</a>
+											<p>
+												<date title="{{ topic.updated|date('c') }}" class="date">
+													{{ topic.updated|date('jS M y, H:i') }}
+												</date>
+											</p>
+										</p>
 									</div>
-								</div>
-								<div class="pull-left marginLeft10">
-									<p class="topic-name">
-										<a href="">
-											Some topic name
-										</a>
-									</p>
-									<p class="topic-info">
-										<a href="" class="user-link">
-											cjmarkham
-										</a>
-										 - 
-										<date class="date">
-											Today, 1:05pm
-										</date>
-									</p>
-								</div>
-							</li>
+								</li>
+
+								{% if not loop.last %}
+									<li class="seperator"></li>
+								{% endif %}
+							{% endfor %}
 						</ul>		
 					</div>
 				</section>
@@ -200,5 +191,7 @@
 			</div>
 		</div>
 	</footer>
+
+	{% block modals %}{% endblock %}
 	
 </body>

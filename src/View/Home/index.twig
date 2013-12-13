@@ -14,7 +14,10 @@
 						<div class="forums">
 							{% for child in forum.children %}
 								<div class="forum row">
-									<div class="col-md-8">
+									<div class="forum-icon col-md-1">
+										<i class="fa fa-comment"></i>
+									</div>
+									<div class="col-md-7">
 										<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}">
 											{{ child.name }}
 										</a>
@@ -25,7 +28,7 @@
 									<div class="col-md-4 text-right">
 										<p>	
 											{% if child.lastTopicName %}
-												<a href="" class="topic-name">
+												<a href="/{{ child.name|url_encode }}/{{ child.lastTopicName|url_encode }}-{{ child.lastPostId }}" class="topic-name">
 													{{ child.lastTopicName }}
 												</a>
 											{% else %}
@@ -62,6 +65,8 @@
 				</div>
 			</div>
 		{% endfor %}
+
+
 	</section>
 
 {% endblock %}

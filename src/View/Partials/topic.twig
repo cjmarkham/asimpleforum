@@ -1,0 +1,39 @@
+<div class="row topic" id="topic-{{ params.topic_id }}">
+	<div class="col-md-6">
+		<a href="/{{ params.forum_name|url_encode }}/{{ params.title|url_encode }}-{{ params.topic_id }}" class="topic-name preview">
+			{{ truncate(params.title, 40) }}
+		</a>
+
+		<div class="topic-info">
+			
+		</div>
+
+		<p class="topic-author">
+			<a href="" class="user-link">
+				{{ params.author }}
+			</a>
+		</p>
+		<date class="date" title="{{ params.added|date('c') }}">
+			{{ params.added|date('jS M y, H:i') }}
+		</date>
+	</div>
+	<div class="col-md-2">
+		<p title="Views" data-toggle="tooltip" class="views"><i class="fa fa-eye"></i> 0</p>
+		<p title="Replies" data-toggle="tooltip" class="replies"><i class="fa fa-pencil"></i> 0<p>
+	</div>
+	<div class="text-right col-md-4">
+		<p>
+			<a href="" class="topic-name">
+				{{ params.title }}
+			</a>
+		</p>
+		<p>	
+			<a href="" class="user-link">
+				{{ params.author }}
+			</a>
+		</p>
+		<date class="date" title="{{ params.added|date('c') }}">
+			{{ params.added|date('jS M y. H:i') }}
+		</date>
+	</div>
+</div>

@@ -17,9 +17,12 @@ class BaseController
 			\Message::alert('LOGGED_IN_NOT_APPROVED');
 		}
 
+		$recent_topics = $app['topic']->find_recent(4);
+
 		$this->params = array(
 			'debug' 		 => $app['debug'],
-			'user'			 => $user
+			'user'			 => $user,
+			'recent_topics'  => $recent_topics
 		);
 	}
 }

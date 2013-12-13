@@ -1,5 +1,24 @@
 {% extends "Layout/main.twig" %}
 
+{% block crumbs %}
+	{{ parent() }}
+	<li class="next">&gt;</li>
+	<li>
+		<a href="">
+			{{ forum.name }}
+		</a>
+	</li>
+
+	{% if pagination.pages.current > 1 %}
+		<li class="next">&gt;</li>
+		<li>
+			<a href="">
+				Page {{ pagination.pages.current }}
+			</a>
+		</li>
+	{% endif %}
+{% endblock %}
+
 {% block content %}
 	
 	<section id="topics">
@@ -9,11 +28,22 @@
 
 		<div class="content">
 			{% for topic in topics %}
-				<div class="row topic">
-					<div class="col-md-6">
-						<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}" class="topic-name">
-							{{ topic.name }}
+				<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
+					<div class="col-md-5">
+						<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}" class="topic-name preview">
+							{{ truncate(topic.name, 40) }}
 						</a>
+
+						<div class="topic-info">
+							{% if topic.locked %}
+								<i title="Locked" data-toggle="tooltip" class="fa fa-lock"></i>
+							{% endif %}
+
+							{% if topic.sticky %}
+								<i title="Sticky" data-toggle="tooltip" class="fa fa-thumb-tack"></i>
+							{% endif %}
+						</div>
+
 						<p class="topic-author">
 							<a href="" class="user-link">
 								{{ topic.author }}
@@ -23,14 +53,14 @@
 							{{ topic.added|date('jS M y, H:i') }}
 						</date>
 					</div>
-					<div class="col-md-2">
-						<p class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
-						<p class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
+					<div class="col-md-3">
+						<p title="Views" data-toggle="tooltip" class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
+						<p title="Replies" data-toggle="tooltip" class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
 					</div>
 					<div class="text-right col-md-4">
 						<p>
 							{% if topic.lastPostName %}
-								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}#{{ topic.lastPostId }}" class="topic-name">
+								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}#{{ topic.lastPostId }}" class="topic-name">
 									{{ topic.lastPostName }}
 								</a>
 							{% else %}
@@ -57,4 +87,48 @@
 		</div>
 	</section>
 
+	<div class="forum-options clearfix">
+		{% if user %}
+			<button class="btn btn-orange" data-event="click" data-action="newTopicTrigger">
+				New topic
+			</button>
+		{% else %}
+			<button class="btn btn-danger">
+				Login to create
+			</button>
+		{% endif %}
+
+		{% include('Partials/pagination.twig') with {
+			prefix: forum.name|url_encode ~ '-' ~ forum.id ~ '/',
+			suffix: ''
+		} %}
+	</div>
+{% endblock %}
+
+{% block modals %}
+	<div class="modal fade" id="create-topic-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Create topic</h4>
+				</div>
+				<div class="modal-body">
+					<form method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
+						<input type="hidden" name="forumId" value="{{ forum.id }}" />
+						<input type="text" name="name" class="form-control" placeholder="Topic title" />
+						<br />
+						<textarea class="form-control" name="post-content" placeholder="Add your post"></textarea>
+						<br />
+						<button class="btn btn-orange">
+							Create topic
+						</button>
+						<button data-event="click" data-action="hideModal" class="btn btn-orange">
+							Cancel
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

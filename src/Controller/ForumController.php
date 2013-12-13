@@ -6,29 +6,35 @@ class ForumController extends BaseController
 {
 	public $app;
 
-	public function index($name, $id)
+	public function index($name, $forum_id, $page = 1)
 	{
-		$id = (int) $id;
+		$forum_id = (int) $forum_id;
 
-		if (!$id)
+		if (!$forum_id)
 		{
 			$this->app->redirect('/');
 		}
 
-		$forum = $this->app['forum']->find_by_id($id);
+		$forum = $this->app['forum']->find_by_id($forum_id);
 
 		if (!$forum)
 		{
 			$this->app->redirect('/');
 		}
 
-		$topics = $this->app['topic']->find_by_forum($id);
+		$topics = $this->app['topic']->find_by_forum($forum_id, $page);
+
+		if (empty($topics['data']))
+		{
+			return $this->app->redirect('/' . urlencode($forum['name']) . '-' . $forum_id . '/1');
+		}
 
 		return $this->app['twig']->render('Forum/index.twig', array(
 			'title' 			=> $forum['name'],
 			'section'			=> 'forums',
 			'forum'				=> $forum,
-			'topics' 			=> $topics
+			'topics' 			=> $topics['data'],
+			'pagination'		=> $topics['pagination']
 		) + $this->params);
 	}
 }

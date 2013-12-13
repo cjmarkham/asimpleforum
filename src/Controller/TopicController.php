@@ -6,7 +6,7 @@ class TopicController extends BaseController
 {
 	public $app;
 
-	public function index ($topic_name, $topic_id)
+	public function index ($topic_name, $topic_id, $page = 1)
 	{
 		$topic_id = (int) $topic_id;
 
@@ -22,13 +22,22 @@ class TopicController extends BaseController
 			$this->app->redirect('/');
 		}
 
-		$posts = $this->app['post']->find_by_topic($topic_id);
+		$forum = $this->app['forum']->find_by_id($topic['forum']);
+
+		$posts = $this->app['post']->find_by_topic($topic_id, (int) $page);
+
+		if (empty($posts['data']))
+		{
+			return $this->app->redirect('/' . urlencode($forum['name']) . '/' . urlencode($topic['name']) . '-' . $topic_id . '/1');
+		}
 
 		return $this->app['twig']->render('Topic/index.twig', array(
 			'title' 			=> $topic['name'],
-			'section'			=> 'topics',
+			'section'			=> 'forums',
+			'forum'				=> $forum,
 			'topic'				=> $topic,
-			'posts' 			=> $posts
+			'posts' 			=> $posts['data'],
+			'pagination'		=> $posts['pagination']
 		) + $this->params);
 	}
 }

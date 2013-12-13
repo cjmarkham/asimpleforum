@@ -1,56 +1,157 @@
 {% extends "Layout/main.twig" %}
 
+{% block scripts %}
+	{{ parent() }}
+
+	<script>
+	$(function () {
+		$.post('/topic/update_views', {
+			id: '{{ topic.id }}',
+		});
+	});
+	</script>
+{% endblock %}
+
+{% block crumbs %}
+	{{ parent() }}
+	<li class="next">&gt;</li>
+	<li>
+		<a href="/{{ forum.name|url_encode }}-{{ forum.id }}">
+			{{ forum.name }}
+		</a>
+	</li>	
+	<li class="next">&gt;</li>
+	<li>
+		<a href="">
+			{{ topic.name }}
+		</a>
+	</li>	
+
+	{% if pagination.pages.current > 1 %}
+		<li class="next">&gt;</li>
+		<li>
+			<a href="">
+				Page {{ pagination.pages.current }}
+			</a>
+		</li>
+	{% endif %}
+{% endblock %}
+
 {% block content %}
 	
 	<section id="posts">
 		{% for post in posts %}
-			<section class="post">
+			
+			<section class="post" id="post-{{ post.id }}">
 				{% if loop.first %}
 					<header class="clearfix">
 						<div class="pull-left">
 							{{ post.name }}
 						</div>
 						<div class="pull-right text-right">
-							<span>
+							<span data-toggle="tooltip" title="Views">
 								<i class="fa fa-eye"></i> {{ topic.views }}
 							</span>
-							<span>
+							<span data-toggle="tooltip" title="Replies">
 								<i class="fa fa-pencil"></i> {{ topic.replies }}
 							</span>
 						</div>
 					</header>
 				{% endif %}
 
-				<div class="content">
-					<div class="row post">
-						<div class="col-md-2">
-							<div class="avatar big">
-								<img width="70" height="70" src="/avatars/{{ post.username }}/big.png" alt="" />
-							</div>
-							<p class="truncate w80">
-								<a href="user/{{ post.username }}" class="user-link resize">
-									123456789
-								</a>
-							</p>
-							<p title="Group" class="group">
-								<i class="fa fa-group"></i> Admin
-							</p>
-							<p title="Posts" class="post-count">
-								<i class="fa fa-pencil"></i> 200
-							</p>
-						</div>
-						<div class="col-md-10">
-							<div class="post-info">
-								<date class="date">{{ post.added|date('jS M y, H:i') }}</date> - <a href="" class="topic-name">{{ post.name }}</a>
-							</div>
-							<div class="post-content">
-								{{ post.content }}
-							</div>
-						</div>
-					</div>
-				</div>
+				{% include('Partials/post.twig') %}
+
 			</section>
+
 		{% endfor %}
 	</section>
 
+	<div class="post-buttons clearfix">
+		<div class="pull-left">
+			{% if topic.locked %}
+				<button class="btn btn-danger">
+					Locked
+				</button>	
+			{% else %}
+				{% if user %}
+					<button class="btn btn-orange" data-event="click" data-action="showQuickReply">
+						Add Reply
+					</button>
+				{% else %}
+					<button class="btn btn-info">
+						Login to reply
+					</button>
+				{% endif %}
+			{% endif %}
+		</div>
+
+		{% if pagination %}
+
+			{% include('Partials/pagination.twig') with {
+				prefix: forum.name|url_encode ~ '/' ~ topic.name|url_encode ~ '-' ~ topic.id ~ '/',
+				suffix: ''
+			} %}
+
+		{% endif %}
+	</div>
+
+
+{% endblock %}
+
+{% block modals %}
+	{{ parent() }}
+
+	<div class="modal fade" id="post-report-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Report a post</h4>
+				</div>
+				<div class="modal-body">
+					<p>Please choose a reason for reporting this post.</p>
+					<form method="post" action="javascript:void(0)" data-event="submit" data-action="reportPost">
+						<input type="hidden" name="postId" value="" />
+
+						<select required class="form-control" name="reason">
+							<option value="" selected disabled>Please choose a reason</option>
+							<option value="It's spam or a scam">It's spam or a scam</option>
+							<option value="It's harassing me or someone else">It's harassing me or someone else</option>
+							<option value="It contains copyright material">It contains copyright material</option>
+						</select>
+						<br />
+						<button class="submit btn btn-orange">
+							<span>Report</span>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="quick-reply-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Quick Reply</h4>
+				</div>
+				<div class="modal-body">
+					<form method="post" action="javascript:void(0)" data-event="submit" data-action="addQuickReply">
+						<input type="hidden" name="topicId" value="{{ topic.id }}" />
+						<input type="text" name="name" class="form-control" value="RE: {{ topic.name }}" />
+						<br />
+						<textarea class="form-control" name="reply" placeholder="Add your reply"></textarea>
+						<br />
+						<button class="btn btn-orange">
+							Submit Quick Reply
+						</button>
+						<button data-event="click" data-action="hideQuickReply" class="btn btn-orange">
+							Cancel
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

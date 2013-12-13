@@ -7,25 +7,110 @@ $(function () {
 	$(document).on('submit', '[data-event="submit"]', function (e) {
 		var action = $(this).data('action');
 
-		if (typeof asf[action] != undefined) {
+		if (typeof asf[action] == 'function') {
 			asf[action](this);
+		} else {
+			console.error('No function ASF.' + action);
+		}
+	});
+
+	$(document).on('click', '[data-event="click"]', function (e) {
+		var action = $(this).data('action');
+
+		if (typeof asf[action] == 'function') {
+			asf[action](this);
+		} else {
+			console.error('No function ASF.' + action);
 		}
 	});
 
 	$('date').timeago();
 
-	$('form button').on('click', function (e) {
+	$('form').on('submit', function (e) {
 		if ($(this).attr('disabled')) {
 			return false;
 		}
+		var button = $(this).find('button.submit');
 
-		$(this).attr('data-text', $(this).text());
-		$(this).attr('disabled', true);
-		$(this).text('Working...');
+		button.attr('disabled', true);
+		button.find('span').hide();
 
-		$(this).closest('form').submit();
+		if (button.find('strong').length) {
+			button.find('strong').show();
+		} else {
+			button.append('<strong class="working">Working...</strong>');
+		}
 	});
 
+	$('#quick-reply-modal').on('shown.bs.modal', function () {
+		var textarea = $('#quick-reply-modal').find('textarea');
+
+		textarea.focus();
+
+		if (textarea[0].setSelectionRange) {
+			var length = textarea.val().length * 2;
+        	textarea[0].setSelectionRange(length, length);
+		} else {
+			textarea.val(textarea.val());
+		}
+
+		textarea.scrollTop(99999);
+	});
+
+	$('form').on('fail', function () {
+
+		var button = $(this).find('button.submit');
+		button.attr('disabled', false);
+
+		button.find('.working').hide();
+		button.find('span').show();
+
+		return false;
+	});
+
+	$('.topic-name.preview').on({
+		mouseenter: function () {
+
+			var self = $(this);
+			var topicId = $(this).closest('.topic').attr('id').replace('topic-', '')
+
+			if ($('#preview-' + topicId).length) {
+				self.popover({
+					html: true,
+					content: $('#preview-' + topicId).text(),
+					title: 'HIHI'
+				});
+
+				self.popover('show');
+			} else {
+
+				$.post('/post/get_first', {
+					topicId: topicId
+				}, function (response) {
+
+					var previewEl = $('<div />').attr('id', 'preview-' + topicId);
+					previewEl.addClass('preview-tooltip').html(response);
+					$(document.body).append(previewEl);
+
+					self.popover({
+						html: true,
+						content: response,
+						title: 'HIHI'
+					});
+
+					self.popover('show');
+
+				});
+			}
+		}, mouseleave: function () {
+			$(this).popover('hide');
+		}
+	});
+	
+	$('[data-toggle="tooltip"]').tooltip({
+		placement: $(this).data('placement')
+	});		
+		
 	$(document).on('scroll', function (e) {
 		var amount = $(this).scrollTop();
 		var scrolled = $('#main-nav').css('position') == 'fixed' ? true: false;

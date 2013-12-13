@@ -37,7 +37,9 @@ class ForumModel
 			'LEFT JOIN topics t ' . 
 			'ON f.lastTopicId=t.id ' . 
 			'LEFT JOIN users u ' . 
-			'ON f.lastPosterId=u.id'
+			'ON f.lastPosterId=u.id ' . 
+			'LEFT JOIN posts p ' . 
+			'ON f.lastPostId=p.id'
 		);
 
 		foreach ($forums as $key => $forum)
