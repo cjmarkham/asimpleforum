@@ -26,7 +26,7 @@
 
 		<div class="container" id="logo">
 			<a href="/">
-				<img src="/images/logo.png" alt="" />
+				<img src="/images/{{ config('board', 'logo') }}" alt="" />
 			</a>
 		</div>
 
@@ -174,6 +174,24 @@
 				{% endblock %}
 
 				{% block content %}{% endblock %}
+
+				<div id="sessions">
+					Currently online: 
+					<span title="Users" data-toggle="tooltip"><i class="fa fa-group"></i> {{ sessions.users }}</span>
+					<span title="Guests" data-toggle="tooltip"><i class="fa fa-user"></i> {{ sessions.guests }}</span>
+					
+					{% if sessions.online|length %}
+						<section>
+							<header>
+								Currently online users
+							</header>
+
+							<div class="content" id="users">
+								{{ sessions.online|join(', ')|raw }}
+							</div>
+						</section>
+					{% endif %}
+				</div>
 			</div>
 
 		</div>

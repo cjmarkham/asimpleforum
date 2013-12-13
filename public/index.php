@@ -50,9 +50,13 @@ $twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
 
 $bbcode = new Twig_SimpleFilter('bbcode', array('Utils', 'bbcode'));
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
+$config_function = new Twig_SimpleFunction('config', function ($file, $key) use ($app) {
+    return $app['config']->board['logo'];
+});
 
 $app['twig']->addFilter($bbcode);
 $app['twig']->addFunction($truncate);
+$app['twig']->addFunction($config_function);
 
 /*$default_cache = $app['config']->defaults['cache'];
 
@@ -134,6 +138,11 @@ Message::$app = $app;
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
 // Models
+$app['sessions'] = $app->share(function() use ($app) {
+    $model = new \Model\SessionModel($app);
+    return $model;
+});
+
 $app['forum'] = $app->share(function() use ($app) {
     $model = new \Model\ForumModel($app);
     return $model;
