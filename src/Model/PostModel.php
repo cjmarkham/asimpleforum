@@ -318,12 +318,12 @@ class PostModel extends BaseModel
 			$_likes[] = $like['username'];
 		}
 
-		/*if (in_array($user['username'], $_likes))
+		if (in_array($user['username'], $_likes))
 		{
 			$response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('ALREADY_LIKED'));
 	        return $response;
-		}*/
+		}
 
 		$this->app['db']->insert('likes', array(
 			'postId' => $post_id,
