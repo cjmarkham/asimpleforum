@@ -7,8 +7,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostModel extends BaseModel
 {
+	/**
+	 * Silex App
+	 * @var object
+	 */
 	public $app;
 
+	/**
+	 * HTML allowed for post content
+	 * @var array
+	 */
 	public $allowed_html = array(
 		'<p>',
 		'<br />',
@@ -34,11 +42,21 @@ class PostModel extends BaseModel
 		'<div>'
 	);
 
+	/**
+	 * Set the silex app object
+	 * @param SilexApplication $app
+	 */
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
 	}
 
+	/**
+	 * Get a list of posts for a topic
+	 * @param  int  $topic_id
+	 * @param  int $page    
+	 * @return array The list of posts and pagination data
+	 */
 	public function find_by_topic ($topic_id, $page = 1)
 	{
 		$topic_id = (int) $topic_id;
@@ -73,6 +91,10 @@ class PostModel extends BaseModel
 		return $posts;
 	}
 
+	/**
+	 * Adds a post to the database
+	 * @param Request $request The request object
+	 */
 	public function add (Request $request)
 	{
 		$topic_id = (int) $request->get('topicId');
@@ -201,6 +223,11 @@ class PostModel extends BaseModel
 		));
 	}
 
+	/**
+	 * Gets the first post for a topic
+	 * @param  Request $request The request object
+	 * @return string           The post content
+	 */
 	public function get_first (Request $request)
 	{
 		$topic_id = (int) $request->get('topicId');
@@ -217,6 +244,11 @@ class PostModel extends BaseModel
 		return \Utils::truncate($content, 200);
 	}
 
+	/**
+	 * Reports a post
+	 * @param  Request $request The request object
+	 * @return string           The message
+	 */
 	public function report (Request $request)
 	{
 		$post_id = (int) $request->get('postId');
@@ -247,6 +279,11 @@ class PostModel extends BaseModel
 		return 'Your report has been logged and a member of the team will look into it shortly.';
 	}
 
+	/**
+	 * Finds a post by its id
+	 * @param  Request $request The request object
+	 * @return string           json encoded post data
+	 */
 	public function find_by_id (Request $request)
 	{
 		$id = (int) $request->get('id');
@@ -265,6 +302,11 @@ class PostModel extends BaseModel
 		return json_encode($post);
 	}
 
+	/**
+	 * Updates a posts content
+	 * @param  Request $request The request object
+	 * @return string           json encoded content
+	 */
 	public function update (Request $request)
 	{
 		$id = (int) $request->get('id');
@@ -289,6 +331,11 @@ class PostModel extends BaseModel
 		));
 	}
 
+	/**
+	 * Likes a post
+	 * @param  Request $request The request object
+	 * @return string           the json encoded list of likes
+	 */
 	public function like(Request $request)
 	{
 		$post_id = (int) $request->get('postId');
