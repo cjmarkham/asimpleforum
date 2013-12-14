@@ -175,7 +175,7 @@ class PostModel extends BaseModel
 				$response = new Response();
 				$response->setContent(json_encode(array(
 					'id' => $last['id'],
-					'content' => \Utils::bbcode(nl2br($content)),
+					'content' => $content,
 					'updated' => true
 				)));
 				return $response;
@@ -327,7 +327,7 @@ class PostModel extends BaseModel
 		));
 
 		return json_encode(array(
-			'content' => \Utils::bbcode(nl2br($content))
+			'content' => $content
 		));
 	}
 

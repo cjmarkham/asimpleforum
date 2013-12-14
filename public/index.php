@@ -48,7 +48,6 @@ $twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
     $app
 ));
 
-$bbcode = new Twig_SimpleFilter('bbcode', array('Utils', 'bbcode'));
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
 $config_function = new Twig_SimpleFunction('config', function ($file, $key) use ($app) {
 
@@ -59,7 +58,6 @@ $config_function = new Twig_SimpleFunction('config', function ($file, $key) use 
 
 });
 
-$app['twig']->addFilter($bbcode);
 $app['twig']->addFunction($truncate);
 $app['twig']->addFunction($config_function);
 

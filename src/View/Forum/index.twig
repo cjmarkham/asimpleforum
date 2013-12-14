@@ -1,4 +1,11 @@
 {% extends "Layout/main.twig" %}
+	
+{% block scripts %}
+	{{ parent() }}
+
+	<script src="/ckeditor/ckeditor.js"></script>
+
+{% endblock %}
 
 {% block crumbs %}
 	{{ parent() }}
@@ -118,14 +125,18 @@
 						<input type="hidden" name="forumId" value="{{ forum.id }}" />
 						<input type="text" name="name" class="form-control" placeholder="Topic title" />
 						<br />
-						<textarea class="form-control" name="post-content" placeholder="Add your post"></textarea>
+						<textarea class="form-control" name="post-content" id="post-content" placeholder="Add your post"></textarea>
 						<br />
 						<button class="btn btn-orange">
 							Create topic
 						</button>
-						<button data-event="click" data-action="hideModal" class="btn btn-orange">
+						<a href="javascript:void(0)" data-event="click" data-action="hideModal" class="btn btn-orange">
 							Cancel
-						</button>
+						</a>
+
+						<script>
+							CKEDITOR.replace('post-content');
+						</script>
 					</form>
 				</div>
 			</div>
