@@ -1,8 +1,6 @@
+var asf = new ASF();
 $(function () {
-
 	$(document.body).fadeIn();
-
-	var asf = new ASF();
 
 	$(document).on('submit', '[data-event="submit"]', function (e) {
 		var action = $(this).data('action');

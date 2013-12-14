@@ -15,19 +15,26 @@ class SessionModel
 	{
 		$user = $this->app['session']->get('user');
 
+		$check = $this->app['db']->fetchAssoc('SELECT * FROM sessions WHERE ip=? AND userAgent=?', array(
+			$this->app['request']->getClientIp(),
+			$this->app['request']->headers->get('User-Agent')
+		));
+
 		if (!empty($user))
 		{
-			$check = $this->app['db']->fetchAssoc('SELECT * FROM sessions WHERE userId=?', array(
-				$user['id']
-			));
+			if (!$check['userId'])
+			{
+				$this->app['db']->update('sessions', array(
+					'active' => time(),
+					'userId' => $user['id']
+				), array('id' => $check['id']));
+
+				return;
+			}
 		}
 		else
 		{
-			$check = $this->app['db']->fetchAssoc('SELECT * FROM sessions WHERE ip=? AND userAgent=?', array(
-				$this->app['request']->getClientIp(),
-				$this->app['request']->headers->get('User-Agent')
-			));
-
+			
 			if ($check['userId'])
 			{
 				$this->app['db']->update('sessions', array(
@@ -78,7 +85,7 @@ class SessionModel
 			else
 			{
 				$visits['users']++;
-				$visits['online'][] = '<a href="/user/' . $session['username'] . '">' . $session['username'] . '</a>';
+				$visits['online'][] = '<a data-user="'. $session['username'] . '" href="/user/' . $session['username'] . '">' . $session['username'] . '</a>';
 			}
 		}
 

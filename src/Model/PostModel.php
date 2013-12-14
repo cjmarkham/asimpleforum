@@ -16,7 +16,22 @@ class PostModel extends BaseModel
 		'<i>',
 		'<strong>',
 		'<b>',
-		'<abbr>'
+		'<abbr>',
+		'<a>',
+		'<hr />',
+		'<img />',
+		'<s>',
+		'<ul>',
+		'<ol>',
+		'<li>',
+		'<h1>',
+		'<h2>',
+		'<h3>',
+		'<h4>',
+		'<h5>',
+		'<blockquote>',
+		'<span>',
+		'<div>'
 	);
 
 	public function __construct (\Silex\Application $app)
@@ -42,6 +57,18 @@ class PostModel extends BaseModel
 		$posts['data'] = $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC ' . $posts['pagination']['sql_text'], array(
 			$topic_id
 		));
+
+		foreach ($posts['data'] as $key => $post)
+		{
+			$likes = $this->app['db']->fetchAll('SELECT username FROM likes WHERE postId=? ORDER BY added DESC', array(
+				$post['id']
+			));
+
+			foreach ($likes as $like)
+			{
+				$posts['data'][$key]['likes'][] = $like['username'];
+			}
+		}
 
 		return $posts;
 	}
@@ -92,19 +119,19 @@ class PostModel extends BaseModel
 		{
 			if ($this->app['config']->board['double_post'] === 'merge')
 			{
-				preg_match('/\[update\](.*)\[\/update\]/s', $last['content'], $matches);
+				preg_match('/<div class="update">(.*)<\/div>/s', $last['content'], $matches);
 
 				if (count($matches) > 0)
 				{
 					$content = preg_replace(
-						'/\[update\](.*)\[\/update\]/s',
-						'[update]' . "\n" . '$1' . "\n" . $content . '[/update]',
+						'/<div class="update">(.*)<\/div>/s',
+						'<div class="update">' . "\n" . '$1' . "\n" . $content . '</div>',
 						$last['content']
 					);
 				}
 				else
 				{
-					$content = $last['content'] . '[update][size=18][b]Update[/b][/size]' . "\n" . $content . '[/update]';
+					$content = $last['content'] . '<div class="update"><h2>Update</h2>' . "\n" . $content . '</div>';
 				}
 
 				$this->app['db']->update('posts', array(
@@ -260,5 +287,53 @@ class PostModel extends BaseModel
 		return json_encode(array(
 			'content' => \Utils::bbcode(nl2br($content))
 		));
+	}
+
+	public function like(Request $request)
+	{
+		$post_id = (int) $request->get('postId');
+		$user = $this->app['session']->get('user');
+		$response = new Response;
+
+		if (!$user)
+		{
+			$response->setStatusCode(500);
+	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+	        return $response;
+		}
+
+		if (!$post_id)
+		{
+			$response->setStatusCode(500);
+	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+	        return $response;
+		}
+
+		$likes = $this->app['db']->fetchAll('SELECT username FROM likes WHERE postId=?', array(
+			$post_id
+		));
+
+		foreach ($likes as $like)
+		{
+			$_likes[] = $like['username'];
+		}
+
+		/*if (in_array($user['username'], $_likes))
+		{
+			$response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase('ALREADY_LIKED'));
+	        return $response;
+		}*/
+
+		$this->app['db']->insert('likes', array(
+			'postId' => $post_id,
+			'username' => $user['username'],
+			'added' => time()
+		));
+
+		$_likes[] = $user['username'];
+
+		return json_encode($_likes);
+
 	}
 }

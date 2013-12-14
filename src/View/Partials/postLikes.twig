@@ -1,0 +1,17 @@
+<div class="like-row" data-postId="{{ post.id }}">
+	{% if post.likes is defined %}
+
+		{% if post.likes|length == 1 %}
+			<a>{{ post.likes[0] }}</a> likes this
+		{% endif %}
+
+		{% if post.likes|length == 2 %}
+			<a>{{ post.likes[0] }}</a> and <a>{{ post.likes[1] }}</a> like this
+		{% endif %}
+
+		{% if post.likes|length > 2 %}
+			<a>{{ post.likes[0] }}</a>, <a>{{ post.likes[1] }}</a> and <span class="others"><a>{{ post.likes|length - 2 }}</a></span> others like this
+		{% endif %}
+
+	{% endif %}
+</div>

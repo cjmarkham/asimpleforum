@@ -51,7 +51,12 @@ $twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
 $bbcode = new Twig_SimpleFilter('bbcode', array('Utils', 'bbcode'));
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
 $config_function = new Twig_SimpleFunction('config', function ($file, $key) use ($app) {
-    return $app['config']->board['logo'];
+
+    if (property_exists($app['config'], $file))
+    {
+        return $app['config']->{$file}[$key];
+    }
+
 });
 
 $app['twig']->addFilter($bbcode);

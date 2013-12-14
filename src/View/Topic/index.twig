@@ -3,6 +3,8 @@
 {% block scripts %}
 	{{ parent() }}
 
+	<script src="/ckeditor/ckeditor.js"></script>
+
 	<script>
 	$(function () {
 		$.post('/topic/update_views', {
@@ -10,6 +12,7 @@
 		});
 	});
 	</script>
+	
 {% endblock %}
 
 {% block crumbs %}
@@ -141,7 +144,7 @@
 						<input type="hidden" name="topicId" value="{{ topic.id }}" />
 						<input type="text" name="name" class="form-control" value="RE: {{ topic.name }}" />
 						<br />
-						<textarea class="form-control" name="reply" placeholder="Add your reply"></textarea>
+						<textarea class="form-control" name="reply" id="reply" placeholder="Add your reply"></textarea>
 						<br />
 						<button class="btn btn-orange">
 							Submit Quick Reply
@@ -149,6 +152,10 @@
 						<button data-event="click" data-action="hideQuickReply" class="btn btn-orange">
 							Cancel
 						</button>
+
+						<script>
+							CKEDITOR.replace('reply');
+						</script>
 					</form>
 				</div>
 			</div>

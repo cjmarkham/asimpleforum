@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="/css/main.css" />
 	{% endblock %}
 
-	<title>{{ title }}</title>
+	<title>{{ title }} - {{ config('board', 'name') }}</title>
 
 	{{ include('Layout/meta.twig') }}
 
@@ -17,6 +17,10 @@
 		<script src="/js/asf.js"></script>
 		<script src="/js/timeago.js"></script>
 		<script src="/js/dom.js"></script>
+
+		{% if user %}
+		<script>asf.user = JSON.parse('{{ user|json_encode|raw }}');</script>
+		{% endif %}
 	{% endblock %}
 </head>
 
@@ -88,36 +92,7 @@
 						Account Control
 					</header>
 					<div class="content">
-						{% if user.id is not defined %}
-							<form data-event="submit" data-action="login" method="post" action="javascript:void(0)">
-								<div class="form-group">
-									<label>Username</label>
-									<input required type="text" class="form-control" name="username" placeholder="Username" />
-								</div>
-								<div class="form-group">
-									<label>Password</label>
-									<input required type="password" class="form-control" name="password" placeholder="Password" />
-									<p class="help text-right">
-										<a href="">
-											Forgot password?
-										</a>
-									</p>
-								</div>
-
-								<div class="text-center">
-									<button class="btn btn-orange">
-										Login
-									</button>
-
-									<a class="btn btn-orange" href="/signup">
-										Signup
-									</a>
-								</div>
-							</form>
-
-						{% else %}
-							{{ include('Partials/userbox.twig') }}
-						{% endif %}
+						{{ include('Partials/userbox.twig') }}
 					</div>
 				</section>
 
@@ -167,7 +142,7 @@
 				{% block flash %}
 					{% set alert = app.session.flashbag.get('alert') %}
 					{% if alert.message is defined %}
-						<p class="alert alert-{{ alert.type }}">
+						<p class="{% if user %}visible-user {% endif %}alert alert-{{ alert.type }}">
 							{{ alert.message }}
 						</p>
 					{% endif %}
@@ -177,20 +152,14 @@
 
 				<div id="sessions">
 					Currently online: 
-					<span title="Users" data-toggle="tooltip"><i class="fa fa-group"></i> {{ sessions.users }}</span>
-					<span title="Guests" data-toggle="tooltip"><i class="fa fa-user"></i> {{ sessions.guests }}</span>
+					<p class="inline" title="Users" data-toggle="tooltip"><i class="fa fa-group"></i> <span>{{ sessions.users }}</span></p>
+					<p class="inline" title="Guests" data-toggle="tooltip"><i class="fa fa-user"></i> <span>{{ sessions.guests }}</span></p>
 					
-					{% if sessions.online|length %}
-						<section>
-							<header>
-								Currently online users
-							</header>
-
-							<div class="content" id="users">
-								{{ sessions.online|join(', ')|raw }}
-							</div>
-						</section>
-					{% endif %}
+					<section id="onlineList">
+						{% if sessions.online|length %}
+							{{ include('Partials/onlineList.twig') }}
+						{% endif %}
+					</section>
 				</div>
 			</div>
 

@@ -1,0 +1,7 @@
+<header>
+	Currently online users
+</header>
+
+<div class="content" id="users">
+	{{ sessions.online|join(', ')|raw }}
+</div>

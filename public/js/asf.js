@@ -21,10 +21,67 @@ ASF.prototype.login = function (node) {
 			$('#account-control .content').fadeOut(function () {
 				$(this).html(html).fadeIn(self.medSpeed);
 			});
+
+			var onlineCount = parseInt($('#sessions p:first span').text().trim(), 10);
+			var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
+			onlineCount += 1;
+			guestCount -= 1;
+			$('#sessions p:first span').text(onlineCount);
+			$('#sessions p:last span').text(guestCount);
+
+			$('#onlineList').fadeIn(self.medSpeed);
+
+			var link = '<a data-user="' + username + '" href="/user/' + username + '">' + username + '</a>';
+
+			if ($('#users').length) {
+				if ($('#users a').length) {
+					$('#users').append(', ' + link);
+				} else {
+					$('#users').append(link);
+				}
+			} else {
+				$.post('/partial/onlineList', {
+					params: {
+						sessions: {
+							online: [link]
+						}
+					}
+				}).done(function (html) {
+					$('#onlineList').hide().html(html).fadeIn(self.medSpeed);
+				});
+			}
 		});
 
 	}).fail(function (response) {
 		return self.error(response.responseText);
+	});
+};
+
+ASF.prototype.logout = function (node) {
+	var username = $(node).data('user');
+	var self = this;
+
+	$.get('/logout').done(function () {
+		$('#users [data-user="' + username + '"]').remove();
+
+		if ($('#users a').length == 0) {
+			$('#sessions section').fadeOut();
+		}
+
+		var onlineCount = parseInt($('#sessions p:first span').text().trim(), 10);
+		var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
+		onlineCount -= 1;
+		guestCount += 1;
+		$('#sessions p:first span').text(onlineCount);
+		$('#sessions p:last span').text(guestCount);
+
+		$('.visible-user').fadeOut(self.medSpeed);
+
+		$.get('/partial/userbox', function (html) {
+			$('#account-control .content').fadeOut(function () {
+				$(this).html(html).fadeIn(self.medSpeed);
+			});
+		});
 	});
 
 };
@@ -270,3 +327,44 @@ ASF.prototype.quotePost = function (node) {
 		});
 	});
 }
+
+ASF.prototype.likePost = function (node) {
+	node = $(node);
+	var self = this;
+
+	var postId = node.attr('data-postId');
+
+	$.post('/post/like', {
+		postId: postId
+	}).done(function (response) {
+
+		self.elements.replace('postLikes', {
+			post: {
+				likes: JSON.parse(response),
+				id: postId
+			}
+		}, '.like-row[data-postId="' + postId + '"]');
+
+	}).fail(function (response) {
+		self.error(response.responseText);
+		return false;
+	});
+}
+
+ASF.prototype.elements = function () {};
+
+ASF.prototype.elements.replace = function (element, params, replace) {
+
+	if (!$(replace).length) {
+		console.error('Could not find element', replace);
+		return false;
+	}
+
+	replace = $(replace);
+
+	$.post('/partial/' + element, {
+		params: params
+	}).done(function (response) {
+		replace.html(response);
+	});
+};

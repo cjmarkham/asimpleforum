@@ -45,11 +45,14 @@
 			<div class="post-content">
 				{{ post.content|bbcode|raw|nl2br }}
 			</div>
-			{% if post.edits > 0 %}
-				<div class="edit-count">
-					Edited {{ post.edits }} times
-				</div>
-			{% endif %}
+			<div class="post-extras clearfix">
+				{% if post.edits > 0 %}
+					<div class="edit-count pull-left">
+						Edited {{ post.edits }} times
+					</div>
+				{% endif %}
+				{{ include ('Partials/postLikes.twig') }}
+			</div>
 		</div>
 	</div>
 </div>

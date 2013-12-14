@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "e8e1336a52ffdf469a05f9265bd0b9e0",
+    "hash": "158d63c7cc1831674d6bba0a10842e10",
     "packages": [
         {
             "name": "cjmarkham/disk-cache",
@@ -40,6 +40,16 @@
             ],
             "description": "A Disk Caching service for Silex",
             "time": "2013-06-09 18:08:52"
+        },
+        {
+            "name": "ckeditor",
+            "version": "4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ckeditor/ckeditor-releases.git",
+                "reference": "4.3.x/full"
+            },
+            "type": "library"
         },
         {
             "name": "doctrine/common",

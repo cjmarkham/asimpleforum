@@ -27,7 +27,8 @@ class BaseController
 			'debug' 		 => $app['debug'],
 			'user'			 => $user,
 			'recent_topics'  => $recent_topics,
-			'sessions'	 	 => $sessions 
+			'sessions'	 	 => $sessions,
+			'vendor'		 => '/vendor'
 		);
 	}
 }
