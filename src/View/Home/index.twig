@@ -28,7 +28,7 @@
 									<div class="col-md-4 text-right">
 										<p>	
 											{% if child.lastTopicName %}
-												<a href="/{{ child.name|url_encode }}/{{ child.lastTopicName|url_encode }}-{{ child.lastPostId }}" class="topic-name">
+												<a href="/{{ child.name|url_encode }}/{{ child.lastTopicName|url_encode }}-{{ child.lastTopicId }}#{{ child.lastPostId }}" class="topic-name">
 													{{ child.lastTopicName }}
 												</a>
 											{% else %}
