@@ -298,7 +298,7 @@ class PostModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(500);
-	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+	        $response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
 	        return $response;
 		}
 
