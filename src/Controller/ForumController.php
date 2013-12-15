@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-class ForumController extends BaseController
+class ForumController
 {
 	public $app;
 

@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-class TopicController extends BaseController
+class TopicController
 {
 	public $app;
 

@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-class UserController extends BaseController
+class UserController
 {
 	public $app;
 

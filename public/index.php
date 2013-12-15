@@ -290,6 +290,31 @@ if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
     $app['cache']->flush();
 }
 
+$app->before(function () use ($app) {
+    $user = $app['session']->get('user');
+
+    if (!empty($user) && $user['approved'] == 0) 
+    {
+        \Message::alert('LOGGED_IN_NOT_APPROVED');
+    }
+
+    $app['sessions']->update();
+    $sessions = $app['sessions']->get();
+
+    $recent_topics = $app['topic']->find_recent(4);
+
+    $config = array(
+        'default' => $app['config']->defaults,          
+        'board' => $app['config']->board            
+    );
+
+    $app['twig']->addGlobal('user', $user);
+    $app['twig']->addGlobal('config', $config);
+    $app['twig']->addGlobal('recent_topics', $recent_topics);
+    $app['twig']->addGlobal('sessions', $sessions);
+
+});
+
 $app->finish(function () use ($app, $logger) {
     
     $time = 0;
