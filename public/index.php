@@ -294,7 +294,7 @@ if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
     $app['cache']->flush();
 }
 
-$app->before(function () use ($app) {
+$app->before(function (Request $request) use ($app) {
     $user = $app['session']->get('user');
 
     if (!empty($user) && $user['approved'] == 0) 
@@ -319,20 +319,22 @@ $app->before(function () use ($app) {
 
 });
 
-$app->finish(function () use ($app, $logger) {
+$app->finish(function (Request $request) use ($app, $logger) {
     
-    $time = 0;
-    foreach ($logger->queries as $query)
+    if (!$request->isXMLHttpRequest())
     {
-       $time += $query['executionMS'];
-       $sql = preg_replace('/([A-Z]{2,})/', '<strong>$1</strong>', $query['sql']);
-       $queries[] = preg_replace('/\?/', '<strong style="color:red">?</strong>', $sql);
-    }
+        $time = 0;
+        foreach ($logger->queries as $query)
+        {
+           $time += $query['executionMS'];
+           $sql = preg_replace('/([A-Z]{2,})/', '<strong>$1</strong>', $query['sql']);
+           $queries[] = preg_replace('/\?/', '<strong style="color:red">?</strong>', $sql);
+        }
 
-    $time = round($time, 4);
+        $time = round($time, 4);
 
-    $query_length = count($logger->queries);
-    $query_list = implode('<br /><hr />', $queries);
+        $query_length = count($logger->queries);
+        $query_list = implode('<br /><hr />', $queries);
 
 echo <<<HEREDOC
     <div id="logger">
@@ -347,6 +349,7 @@ echo <<<HEREDOC
         </button>
     </div>
 HEREDOC;
+    }
 
 }, Application::LATE_EVENT);
 
