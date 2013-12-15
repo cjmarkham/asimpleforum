@@ -262,10 +262,12 @@ ASF.prototype.addNewTopic = function (node) {
 				topic_id: response.topic_id,
 				forum_id: response.forum_id,
 				forum_name: response.forum_name,
-				title: title,
-				author: response.author,
-				content: response.content,
-				added: Math.round(new Date().getTime() / 1000)
+				topic: {
+					title: title,
+					author: response.author,
+					content: response.content,
+					added: Math.round(new Date().getTime() / 1000)
+				}
 			}
 		}).done(function (html) {
 			node.find('input[name="name"]').val('');
@@ -275,13 +277,23 @@ ASF.prototype.addNewTopic = function (node) {
 
 			var stickies = $('#topics .sticky').length;
 
-			if (stickies) {
-				var seperator = $('<div />').addClass('seperator');
+			var seperator = $('<div />').addClass('seperator');
+			
+			var topicCount = $('#topics .topic').length;
+
+			if (stickies > 0) {
 				$(seperator).insertAfter('#topics .sticky:last');
 				$(html).insertAfter(seperator);
 			} else {
-				$('#topics').prepend(html);
+
+				if (topicCount == 0) {
+					$('#topics .content').html(html);
+				} else {
+					$('#topics .content').prepend(html, seperator);
+				}
 			}
+
+			self.delegate();
 		});
 
 	}).fail(function (response) {

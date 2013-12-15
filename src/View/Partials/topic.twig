@@ -1,7 +1,7 @@
-<div class="row topic" id="topic-{{ params.topic_id }}">
+<div class="row topic" id="topic-{{ topic_id }}">
 	<div class="col-md-6">
-		<a href="/{{ params.forum_name|url_encode }}/{{ params.title|url_encode }}-{{ params.topic_id }}" class="topic-name preview">
-			{{ truncate(params.title, 40) }}
+		<a href="/{{ forum_name|url_encode }}/{{ topic.title|url_encode }}-{{ topic_id }}" class="topic-name preview">
+			{{ truncate(topic.title, 40) }}
 		</a>
 
 		<div class="topic-info">
@@ -10,11 +10,11 @@
 
 		<p class="topic-author">
 			<a href="" class="user-link">
-				{{ params.author }}
+				{{ topic.author }}
 			</a>
 		</p>
-		<date class="date" title="{{ params.added|date('c') }}">
-			{{ params.added|date('jS M y, H:i') }}
+		<date class="date" title="{{ topic.added|date('c') }}">
+			{{ topic.added|date('jS M y, H:i') }}
 		</date>
 	</div>
 	<div class="col-md-2">
@@ -24,16 +24,16 @@
 	<div class="text-right col-md-4">
 		<p>
 			<a href="" class="topic-name">
-				{{ params.title }}
+				{{ topic.title }}
 			</a>
 		</p>
 		<p>	
 			<a href="" class="user-link">
-				{{ params.author }}
+				{{ topic.author }}
 			</a>
 		</p>
-		<date class="date" title="{{ params.added|date('c') }}">
-			{{ params.added|date('jS M y. H:i') }}
+		<date class="date" title="{{ topic.added|date('c') }}">
+			{{ topic.added|date('jS M y. H:i') }}
 		</date>
 	</div>
 </div>

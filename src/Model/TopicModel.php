@@ -124,7 +124,18 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
-		$content = \Utils::bbcode($content);
+		$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE userId=? LIMIT 1', array(
+			$user['id']
+		));
+
+		if ($user_last['forum'] == $forum_id && $user_last['added'] < time() - 300)
+		{
+			$response->setStatusCode(500);
+			$response->setContent($this->app['language']->phrase('TOPIC_POST_LIMIT'));
+			return $response;
+		}
+
+		$content = $content;
 		$time = time();
 
 		$this->app['db']->insert('topics', array(

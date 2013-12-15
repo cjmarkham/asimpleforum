@@ -94,15 +94,29 @@
 				{% if not loop.last %}
 					<div class="seperator"></div>
 				{% endif %}
+
+			{% else %}
+				<div>
+					<a href="javascript:void(0)" class="topc-name">
+						No Topics yet
+					</a>
+				</div>
+
 			{% endfor %}
 		</div>
 	</section>
 
 	<div class="forum-options clearfix">
 		{% if user %}
-			<button class="btn btn-orange" data-event="click" data-action="newTopicTrigger">
-				New topic
-			</button>
+			{% if not forum.locked %}
+				<button class="btn btn-orange" data-event="click" data-action="newTopicTrigger">
+					New topic
+				</button>
+			{% else %}
+				<button class="btn btn-danger">
+					Locked
+				</button>
+			{% endif %}
 		{% else %}
 			<button class="btn btn-danger">
 				Login to create

@@ -136,7 +136,6 @@ class PostModel extends BaseModel
 			$topic_id
 		));
 
-
 		if ($last['poster'] == $user['id'])
 		{
 			if ($this->app['config']->board['double_post'] === 'merge')

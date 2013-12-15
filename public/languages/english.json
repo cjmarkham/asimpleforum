@@ -9,6 +9,8 @@
 
 	"NO_DOUBLE_POST": "You cannot add another post, please edit your last post.",
 	"ALREADY_LIKED": "You have already liked this post.",
+
+	"TOPIC_POST_LIMIT": "you cannot create a new topic in this forum yet.",
 	
 	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later."
 }

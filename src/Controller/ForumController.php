@@ -24,7 +24,7 @@ class ForumController extends BaseController
 
 		$topics = $this->app['topic']->find_by_forum($forum_id, $page);
 
-		if (empty($topics['data']))
+		if (empty($topics['data']) && $page > 1)
 		{
 			return $this->app->redirect('/' . urlencode($forum['name']) . '-' . $forum_id . '/1');
 		}
