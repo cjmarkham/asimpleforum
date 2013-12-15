@@ -27,8 +27,6 @@ class Route
 
 		$admin = (isset($folder) && $folder == 'admin') ? true : false;
 
-		$base_controller = new Controller\BaseController(self::$app);
-
 		if ($admin && !self::$app['auth']->admin)
 		{
 			return self::$app->redirect('/');
