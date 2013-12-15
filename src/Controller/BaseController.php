@@ -23,12 +23,17 @@ class BaseController
 
 		$recent_topics = $app['topic']->find_recent(4);
 
+		$config = array(
+			'default' => $app['config']->defaults,			
+			'board' => $app['config']->board			
+		);
+
 		$this->params = array(
 			'debug' 		 => $app['debug'],
 			'user'			 => $user,
 			'recent_topics'  => $recent_topics,
 			'sessions'	 	 => $sessions,
-			'vendor'		 => '/vendor'
+			'config'	 	 => $config 
 		);
 	}
 }

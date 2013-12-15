@@ -70,7 +70,7 @@ class PostModel extends BaseModel
 
 		$total = $this->app['db']->fetchColumn('SELECT COUNT(*) FROM posts WHERE topic=?', array($topic_id));
 
-		$posts['pagination'] = $this->pagination($total, 10, $page);
+		$posts['pagination'] = $this->pagination($total, (int) $this->app['config']->board['posts_per_page'], $page);
 
 		$posts['data'] = $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC ' . $posts['pagination']['sql_text'], array(
 			$topic_id
@@ -216,10 +216,15 @@ class PostModel extends BaseModel
 			$topic['forum']
 		));
 
+		$post_count = $this->app['db']->fetchColumn('SELECT COUNT(id) FROM posts WHERE topic=?', array(
+			$topic_id
+		));
+
 		return json_encode(array(
 			'id' => $post_id,
 			'username' => $user['username'],
-			'userId' => $user['id']
+			'userId' => $user['id'],
+			'page' => (int) round($post_count / $this->app['config']->board['posts_per_page'])
 		));
 	}
 

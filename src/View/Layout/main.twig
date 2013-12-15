@@ -19,7 +19,11 @@
 		<script src="/js/dom.js"></script>
 
 		{% if user %}
-		<script>asf.user = JSON.parse('{{ user|json_encode|raw }}');</script>
+		<script>
+			asf.user = JSON.parse('{{ user|json_encode|raw }}');
+
+			asf.config = JSON.parse('{{ config|json_encode|raw }}');
+		</script>
 		{% endif %}
 	{% endblock %}
 </head>

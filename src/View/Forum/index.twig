@@ -37,7 +37,7 @@
 			{% for topic in topics %}
 				<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
 					<div class="col-md-5">
-						<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}" class="topic-name preview">
+						<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
 							{{ truncate(topic.name, 40) }}
 						</a>
 
@@ -67,7 +67,11 @@
 					<div class="text-right col-md-4">
 						<p>
 							{% if topic.lastPostName %}
-								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}#{{ topic.lastPostId }}" class="topic-name">
+								{% set page = (topic.replies / config('board', 'posts_per_page'))|round %}
+								{% if page < 1 %}
+									{% set page = 1 %}
+								{% endif %}
+								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
 									{{ topic.lastPostName }}
 								</a>
 							{% else %}

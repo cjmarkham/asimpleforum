@@ -146,6 +146,25 @@ ASF.prototype.addQuickReply = function (node) {
 			$('#posts #post-' + response.id + ' .post-content').html(response.content);
 			self.hideQuickReply();
 		} else {
+
+			var postCount = $('#posts .post').length;
+
+			if (postCount >= parseInt(self.config.board.posts_per_page, 10)) {
+
+				var url = location.href;
+				if (location.hash) {
+					var url = location.href.replace(location.hash, '');
+				}
+
+				console.log(location.href);
+				
+				url = url.substring(0, location.href.length - 1);
+				url = url + response.page + '#' + response.id;
+
+				window.location.href = url;
+				return;
+			}
+
 			$.post('/partial/post', {
 				params: {
 					post: {
