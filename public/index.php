@@ -43,8 +43,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 
-$twig = $app['twig'];
-$twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
+$app['twig']->addExtension(new \Entea\Twig\Extension\AssetExtension(
     $app
 ));
 
@@ -105,6 +104,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'password'  => $app['config']->database['password'],
     ),
 ));
+
+$logger = new Doctrine\DBAL\Logging\DebugStack();
+$app['db']->getConfiguration()->setSQLLogger($logger);
 
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
@@ -288,6 +290,35 @@ if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
     $app['cache']->flush();
 }
 
-//$app['auth']->load();
+$app->finish(function () use ($app, $logger) {
+    
+    $time = 0;
+    foreach ($logger->queries as $query)
+    {
+       $time += $query['executionMS'];
+       $sql = preg_replace('/([A-Z]{2,})/', '<strong>$1</strong>', $query['sql']);
+       $queries[] = preg_replace('/\?/', '<strong style="color:red">?</strong>', $sql);
+    }
+
+    $time = round($time, 4);
+
+    $query_length = count($logger->queries);
+    $query_list = implode('<br /><hr />', $queries);
+
+echo <<<HEREDOC
+    <div id="logger">
+        <button onclick="$(this).next().slideToggle()" class="btn btn-danger">
+            Queries: $query_length
+        </button>
+        <div id="query-list">
+            $query_list
+        </div>
+        <button class="btn btn-warn">
+            Query Time: $time
+        </button>
+    </div>
+HEREDOC;
+
+}, Application::LATE_EVENT);
 
 $app->run();

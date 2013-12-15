@@ -26,7 +26,7 @@ class BaseController
 			'default' => $app['config']->defaults,			
 			'board' => $app['config']->board			
 		);
-		
+
 		$this->params = array(
 			'debug' 		 => $app['debug'],
 			'user'			 => $user,

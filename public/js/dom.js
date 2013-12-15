@@ -40,6 +40,10 @@ $(function () {
 		}
 	});
 
+	$('[data-toggle="popover"]').popover({
+		trigger: 'click'
+	});
+
 	$('#quick-reply-modal').on('shown.bs.modal', function () {
 		var textarea = $('#quick-reply-modal').find('textarea');
 
