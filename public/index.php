@@ -229,9 +229,13 @@ $app->post('/partial/{name}', function (Request $request, $name) use ($app) {
     $params = $request->get('params');
     $array = array();
 
-    foreach ($params as $key => $param)
+    if (isset($params) && is_array($params))
     {
-        $array[$key] = $param;
+        foreach ($params as $key => $param)
+        {
+            $array[$key] = $param;
+        
+        }
     }
 
     $array['user'] = $app['session']->get('user');

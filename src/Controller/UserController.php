@@ -18,6 +18,6 @@ class UserController
 		return $this->app['twig']->render('User/index.twig', array(
 			'title' 			=> $user['username'],
 			'section'			=> 'members'
-		) + $this->params);
+		));
 	}
 }

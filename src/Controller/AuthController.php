@@ -33,7 +33,7 @@ class AuthController
 			'title' 			=> 'Sign up',
 			'section'			=> 'members',
 			'data'				=> isset($data) ? $data : null
-		) + $this->params);
+		));
 	}
 
 	public function logout ()

@@ -35,6 +35,6 @@ class ForumController
 			'forum'				=> $forum,
 			'topics' 			=> $topics['data'],
 			'pagination'		=> $topics['pagination']
-		) + $this->params);
+		));
 	}
 }

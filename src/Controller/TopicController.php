@@ -38,6 +38,6 @@ class TopicController
 			'topic'				=> $topic,
 			'posts' 			=> $posts['data'],
 			'pagination'		=> $posts['pagination']
-		) + $this->params);
+		));
 	}
 }
