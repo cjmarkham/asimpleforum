@@ -28,6 +28,25 @@ class Config
 			die('No config file ' . $file);
 		}
 
-		$this->$property = parse_ini_file($file);
+		$config = parse_ini_file($file, true);
+
+		foreach ($config as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$array[$key] = array();
+
+				foreach ($value as $k => $v)
+				{
+					$array[$key] = $value;
+				}
+
+				$this->$property = $array;
+			}
+			else
+			{
+				$this->$property = $config;
+			}
+		}
 	}
 }

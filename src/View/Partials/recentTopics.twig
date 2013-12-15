@@ -1,0 +1,39 @@
+<section class="box">
+	<header>
+		Recent Topics
+	</header>
+	<div class="content">
+		<ul class="list-unstyled">
+			{% for topic in recent_topics %}
+				<li class="clearfix recent-topic">
+					<div class="pull-left">
+						<div class="avatar">
+							<img width="55" height="55" src="/avatars/{{ topic.lastPoster }}/small.png" alt="" />
+						</div>
+					</div>
+					<div class="pull-left marginLeft30">
+						<p class="topic-name">
+							<a href="/{{ topic.forumName|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}">
+								{{ truncate(topic.name, 10) }}
+							</a>
+						</p>
+						<p class="topic-info">
+							<a href="/user/{{ topic.lastPoster }}" class="user-link">
+								{{ topic.lastPoster }}
+							</a>
+							<p>
+								<date title="{{ topic.updated|date('c') }}" class="date">
+									{{ topic.updated|date('jS M y, H:i') }}
+								</date>
+							</p>
+						</p>
+					</div>
+				</li>
+
+				{% if not loop.last %}
+					<li class="seperator"></li>
+				{% endif %}
+			{% endfor %}
+		</ul>		
+	</div>
+</section>

@@ -49,12 +49,21 @@ $twig->addExtension(new \Entea\Twig\Extension\AssetExtension(
 ));
 
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
-$config_function = new Twig_SimpleFunction('config', function ($file, $key) use ($app) {
+$config_function = new Twig_SimpleFunction('config', function ($file, $key = false) use ($app) {
 
+   
     if (property_exists($app['config'], $file))
     {
-        return $app['config']->{$file}[$key];
-    }
+        if ($key)
+        {
+            return $app['config']->{$file}[$key];
+        }
+        else
+        {
+            return $app['config']->{$file};
+        }
+    } 
+  
 
 });
 
@@ -168,6 +177,10 @@ $app['post'] = $app->share(function() use ($app) {
     return $model;
 });
 
+$app['user'] = $app->share(function() use ($app) {
+    $model = new \Model\UserModel($app);
+    return $model;
+});
 
 $app['auth'] = $app->share(function() use ($app) {
     $model = new \Model\AuthModel($app);
@@ -203,6 +216,10 @@ $app->post('/login', function (Request $request) use ($app) {
 
 $app->get('/logout', function (Application $app) {
     return Route::get('auth:logout');
+});
+
+$app->get('/user/{username}', function (Application $app, $username) {
+    return Route::get('user:index', $username);
 });
 
 $app->post('/partial/{name}', function (Request $request, $name) use ($app) {

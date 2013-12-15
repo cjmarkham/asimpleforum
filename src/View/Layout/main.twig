@@ -40,7 +40,7 @@
 
 		<nav class="container" id="main-nav">
 			<ul class="list-unstyled list-inline">
-				<li {% if section == 'forums' %}class="active"{% endif %}>
+				<li {% if section == 'forums' or section == 'index' %}class="active"{% endif %}>
 					<a href="/">
 						Forums
 					</a>	
@@ -90,58 +90,27 @@
 
 		<div class="row">
 
-			<div class="col-md-3">
-				<section id="account-control" class="box">
-					<header>
-						Account Control
-					</header>
-					<div class="content">
-						{{ include('Partials/userbox.twig') }}
-					</div>
-				</section>
+			{% set sidebars = config('sidebars') %}
 
-				<section class="box">
-					<header>
-						Recent Topics
-					</header>
-					<div class="content">
-						<ul class="list-unstyled">
-							{% for topic in recent_topics %}
-								<li class="clearfix recent-topic">
-									<div class="pull-left">
-										<div class="avatar">
-											<img width="55" height="55" src="/avatars/{{ topic.lastPoster }}/small.png" alt="" />
-										</div>
-									</div>
-									<div class="pull-left marginLeft30">
-										<p class="topic-name">
-											<a href="/{{ topic.forumName|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}">
-												{{ truncate(topic.name, 10) }}
-											</a>
-										</p>
-										<p class="topic-info">
-											<a href="/user/{{ topic.lastPoster }}" class="user-link">
-												{{ topic.lastPoster }}
-											</a>
-											<p>
-												<date title="{{ topic.updated|date('c') }}" class="date">
-													{{ topic.updated|date('jS M y, H:i') }}
-												</date>
-											</p>
-										</p>
-									</div>
-								</li>
-
-								{% if not loop.last %}
-									<li class="seperator"></li>
-								{% endif %}
+			{% if sidebars[section] is defined and sidebars[section]|length %}
+				<div class="col-md-3">
+					
+					{% for key, array in sidebars if key == section %}
+						{% if array|length %}
+							{% for sidebar in array %}
+								{{ include('Partials/' ~ sidebar ~ '.twig') }}
 							{% endfor %}
-						</ul>		
-					</div>
-				</section>
-			</div>
+						{% endif %}
+					{% endfor %}
 
-			<div class="col-md-9">
+				</div>
+			{% endif %}
+
+			{% if sidebars[section] is defined and sidebars[section]|length %}
+				<div class="col-md-9">
+			{% else %}
+				<div id="main-full">
+			{% endif %}
 
 				{% block flash %}
 					{% set alert = app.session.flashbag.get('alert') %}

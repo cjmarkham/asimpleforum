@@ -17,7 +17,6 @@ class BaseController
 			\Message::alert('LOGGED_IN_NOT_APPROVED');
 		}
 
-
 		$app['sessions']->update();
 		$sessions = $app['sessions']->get();
 
@@ -27,7 +26,7 @@ class BaseController
 			'default' => $app['config']->defaults,			
 			'board' => $app['config']->board			
 		);
-
+		
 		$this->params = array(
 			'debug' 		 => $app['debug'],
 			'user'			 => $user,
