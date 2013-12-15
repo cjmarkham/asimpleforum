@@ -24,19 +24,27 @@
 		</a>
 	</li>	
 	<li class="next">&gt;</li>
-	<li>
-		<a href="">
-			{{ topic.name }}
-		</a>
-	</li>	
+	
 
 	{% if pagination.pages.current > 1 %}
+		<li>
+			<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1">
+				{{ topic.name }}
+			</a>
+		</li>	
 		<li class="next">&gt;</li>
 		<li>
 			<a href="">
 				Page {{ pagination.pages.current }}
 			</a>
 		</li>
+
+	{% else %}
+		<li>
+			<a href="">
+				{{ topic.name }}
+			</a>
+		</li>	
 	{% endif %}
 {% endblock %}
 
