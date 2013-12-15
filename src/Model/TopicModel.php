@@ -124,7 +124,7 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
-		$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE userId=? LIMIT 1', array(
+		$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? LIMIT 1', array(
 			$user['id']
 		));
 
