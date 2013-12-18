@@ -34,7 +34,6 @@ class SessionModel
 		}
 		else
 		{
-			
 			if ($check['userId'])
 			{
 				$this->app['db']->update('sessions', array(
@@ -54,9 +53,12 @@ class SessionModel
 		}
 		else
 		{
-			$this->app['db']->update('sessions', array(
-				'active' => time()
-			), array('id' => $check['id']));
+			if ($check['active'] <= time() - 300)
+			{
+				$this->app['db']->update('sessions', array(
+					'active' => time()
+				), array('id' => $check['id']));
+			}
 		}
 	}
 

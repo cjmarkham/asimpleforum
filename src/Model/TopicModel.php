@@ -81,7 +81,57 @@ class TopicModel extends BaseModel
 			$amount = 4;
 		}
 
-		return $this->app['db']->fetchAll('SELECT t.*, u.username as lastPoster, f.name as forumName FROM topics t JOIN users u ON t.lastPosterId=u.id JOIN forums f ON t.forum=f.id ORDER BY updated DESC LIMIT ' . $amount);
+		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'topics');
+		$cache_key = 'topics-recent.' . $amount;
+
+		$topics = $this->app['mongocache']->get($collection, $cache_key, function () use ($amount) {
+
+			$topics = $this->app['db']->fetchAll(
+				'SELECT ' .  
+					't.*, ' .  
+					'u.id as lastPosterId, u.username, ' .  
+					'f.name as forumName, ' .  
+					'p.name as lastPostName, p.content ' . 
+				'FROM topics t ' . 
+				'JOIN posts p ' . 
+				'ON p.id=t.lastPostId ' . 
+				'JOIN users u ' .  
+				'ON p.poster=u.id ' .  
+				'JOIN forums f ' .  
+				'ON t.forum=f.id ' .  
+				'ORDER BY updated ' . 
+				'DESC LIMIT ' . $amount
+			);
+
+			$data = array('data' => array());
+
+			foreach ($topics as $topic)
+			{
+				$_topic = array(
+					'id' => $topic['id'],
+					'name' => $topic['name'],
+					'updated' => $topic['updated'],
+					'forum' => array(
+						'id' => $topic['forum'],
+						'name' => $topic['forumName']
+					),
+					'lastPost' => array(
+						'name' => $topic['lastPostName'],
+						'content' => $topic['content'],
+						'user' => array(
+							'id' => $topic['lastPosterId'],
+							'username' => $topic['username']
+						)
+					)
+				);
+
+				$data['data'][] = $_topic;
+			}
+
+			return $data;
+		});
+
+		return $topics['data'];
 	}
 
 	public function add_topic (Request $request)
