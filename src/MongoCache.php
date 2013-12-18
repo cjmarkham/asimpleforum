@@ -33,4 +33,20 @@ class MongoCache
 			'data' => $data['data']
 		));
 	}
+
+	public function delete (MongoCollection $collection, $key)
+	{
+		return $collection->remove(array(
+			'key' => $key
+		));
+	}
+
+	public function delete_group (MongoCollection $collection, $group)
+	{
+		return $collection->remove(array(
+			'key' => array(
+				'$regex' => $group . '\..*'
+			) 
+		));
+	}
 }

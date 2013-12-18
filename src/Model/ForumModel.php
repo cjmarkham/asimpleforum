@@ -31,7 +31,9 @@ class ForumModel
 	public function find_all ()
 	{
 		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
-		$cache_key = 'forums-all';
+		$cache_key = 'forums.all';
+
+		$this->app['mongocache']->delete_group($collection, 'forums');
 
 		// Look for data in mongo
 		$forums = $this->app['mongocache']->get($collection, $cache_key, function () {
