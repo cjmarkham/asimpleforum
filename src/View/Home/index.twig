@@ -27,9 +27,9 @@
 									</div>
 									<div class="col-md-4 text-right">
 										<p>	
-											{% if child.lastTopicName %}
-												<a href="/{{ child.name|url_encode }}/{{ child.lastTopicName|url_encode }}-{{ child.lastTopicId }}#{{ child.lastPostId }}" class="topic-name">
-													{{ child.lastTopicName }}
+											{% if child.lastTopic.name %}
+												<a href="/{{ child.name|url_encode }}/{{ child.lastTopic.name|url_encode }}-{{ child.lastTopic.id }}#{{ child.lastPost.id }}" class="topic-name">
+													{{ child.lastTopic.name }}
 												</a>
 											{% else %}
 												<a href="javascript:void(0)" class="topic-name">
@@ -38,9 +38,9 @@
 											{% endif %}
 										</p>
 										<p>
-											{% if child.lastTopicName %}
-												<a href="/user/{{ child.lastPoster }}" class="user-link">
-													{{ child.lastPoster }}
+											{% if child.lastTopic.name %}
+												<a href="/user/{{ child.lastPost.user.username }}" class="user-link">
+													{{ child.lastPost.user.username }}
 												</a>
 											{% else %}
 												<a href="javascript:void(0)" class="user-link">
@@ -48,7 +48,7 @@
 												</a>
 											{% endif %}
 										</p>
-										{% if child.lastTopicName %}
+										{% if child.lastTopic.name %}
 											<date title="{{ child.updated|date('c') }}" class="date">
 												{{ child.updated|date('jS M y, H:i') }}
 											</date>

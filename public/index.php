@@ -86,14 +86,14 @@ else
     $app['cache'] = $app['memcache'];
 }*/
 
-/*$app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
+$app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
     'mongo.connections' => array(
         'default' => array(
             'server' => 'mongodb://' . $app['config']->database['host'] . ':' . $app['config']->database['port'],
             'options' => array("connect" => true)
         )
-    ),
-));*/
+    )
+));
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
@@ -155,6 +155,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
 
 Route::$app = $app;
 Message::$app = $app;
+$app['mongocache'] = new MongoCache($app);
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 

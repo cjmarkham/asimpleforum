@@ -30,30 +30,72 @@ class ForumModel
 
 	public function find_all ()
 	{
+		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
+		$cache_key = 'forums-all';
 
-		$forums = $this->app['db']->fetchAll(
-			'SELECT f.*, t.name as lastTopicName, u.username as lastPoster ' . 
-			'FROM forums f ' . 
-			'LEFT JOIN topics t ' . 
-			'ON f.lastTopicId=t.id ' . 
-			'LEFT JOIN users u ' . 
-			'ON f.lastPosterId=u.id ' . 
-			'LEFT JOIN posts p ' . 
-			'ON f.lastPostId=p.id'
-		);
+		// Look for data in mongo
+		$forums = $this->app['mongocache']->get($collection, $cache_key, function () {
 
-		foreach ($forums as $key => $forum)
-		{
-			if ($forum['parent'] == 0)
+			// If not in mongo get from mysql
+			$forums = $this->app['db']->fetchAll(
+				'SELECT ' . 
+					'f.*, ' . 
+					't.name as lastTopicName, t.id as lastTopicId, ' . 
+					'u.username, u.regdate, u.ip, u.lastActive, ' . 
+					'p.id as lastPostId, p.name as lastPostName, p.content ' . 
+				'FROM forums f ' . 
+				'LEFT JOIN topics t ' . 
+				'ON f.lastTopicId=t.id ' . 
+				'LEFT JOIN users u ' . 
+				'ON f.lastPosterId=u.id ' . 
+				'LEFT JOIN posts p ' . 
+				'ON f.lastPostId=p.id'
+			);
+
+			$data = array('data' => array());
+
+			// Build collection object
+			foreach ($forums as $forum)
 			{
-				$_forums[$forum['id']] = $forum;
-			}
-			else
-			{
-				$_forums[$forum['parent']]['children'][] = $forum;
-			}
-		}
+				$_forum = array(
+					'id' => $forum['id'],
+					'parent' => $forum['parent'],
+					'name' => $forum['name'],
+					'description' => $forum['description'],
+					'updated' => $forum['updated'],
+					'lastTopic' => array(
+						'id' => $forum['lastTopicId'],
+						'name' => $forum['lastTopicName']
+					),
+					'lastPost' => array(
+						'id' => $forum['lastPostId'],
+						'name' => $forum['lastPostName'],
+						'content' => $forum['content'],
+						'user' => array(
+							'username' => $forum['username'],
+							'regdate' => $forum['regdate'],
+							'ip' => $forum['ip'],
+							'lastActive' => $forum['lastActive']
+						)
+					)
+				);
 
-		return $_forums;
+				if ($forum['parent'] == 0)
+				{
+					$data['data'][$forum['id']] = $_forum;
+				}
+				else
+				{
+					$data['data'][$forum['parent']]['children'][] = $_forum;
+				}
+			}
+
+			// return data to be inserted into mongo
+			return $data;
+
+		});
+	
+		// return cached data
+		return $forums['data'];
 	}
 }
