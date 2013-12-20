@@ -54,6 +54,17 @@
 											</date>
 										{% endif %}
 									</div>
+									{% if child.children is defined %}
+										<div class="col-md-offset-1"></div>
+										<div class="col-md-11 subforum-list">
+											Subforums: 
+											{% for subchild in child.children %}
+												<a href="/{{ subchild.name|url_encode }}-{{ subchild.id }}">
+													{{ subchild.name }}
+												</a>
+											{% endfor %}
+										</div>
+									{% endif %}
 								</div>
 
 								{% if not loop.last %}

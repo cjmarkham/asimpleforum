@@ -28,6 +28,32 @@ class ForumModel
 		));
 	}
 
+	public function display_tree ($root)
+	{
+		$right = array();
+
+		$forums = $this->app['db']->fetchAll('SELECT name, `left`, `right` FROM forums WHERE `left` BETWEEN ? AND ? ORDER BY `left` ASC', array(
+			$root['left'],
+			$root['right']
+		));
+
+		foreach ($forums as $forum)
+		{
+			if (count($right) > 0)
+			{
+				while ($right[count($right) - 1] < $forum['right'])
+				{  
+	                array_pop($right);  
+	            } 
+			}
+
+			echo str_repeat('   ', count($right)) . $forum['name'] . "<br />"; 
+
+			$right[] = $forum['right'];
+
+		}
+	}
+
 	public function find_all ()
 	{
 		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
@@ -55,7 +81,7 @@ class ForumModel
 			$data = array('data' => array());
 
 			// Build collection object
-			foreach ($forums as $forum)
+			foreach ($forums as $key => $forum)
 			{
 				$_forum = array(
 					'id' => $forum['id'],
@@ -80,13 +106,40 @@ class ForumModel
 					)
 				);
 
+				// A parent forum
 				if ($forum['parent'] == 0)
 				{
 					$data['data'][$forum['id']] = $_forum;
+					unset($forums[$key]);
 				}
 				else
 				{
-					$data['data'][$forum['parent']]['children'][] = $_forum;
+					// If this forum has a parent already set
+					if (isset($data['data'][$forum['parent']]))
+					{
+						$data['data'][$forum['parent']]['children'][$forum['id']] = $_forum;
+						unset($forums[$key]);
+					}
+				}
+			}
+
+			// if we still have forums then these are sub forums
+			if (count($forums))
+			{
+				foreach ($forums as $key => $forum)
+				{
+					$parent_id = $forum['parent'];
+
+					foreach ($data['data'] as $forum_id => $_forum)
+					{
+						foreach ($_forum['children'] as $id => $child)
+						{
+							if ($id == $parent_id)
+							{
+								$data['data'][$forum_id]['children'][$parent_id]['children'][] = $forum;
+							}
+						}
+					}
 				}
 			}
 

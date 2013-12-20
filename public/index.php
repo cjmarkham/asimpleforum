@@ -205,6 +205,10 @@ $app->get('/', function (Application $app) {
     return Route::get('home:index');
 });
 
+$app->get('/test', function (Application $app) {
+    return include 'test.php';
+});
+
 $app->get('/signup', function (Application $app) {
     return Route::get('auth:signup');
 });
@@ -325,17 +329,19 @@ $app->finish(function (Request $request) use ($app, $logger) {
     if (!$request->isXMLHttpRequest())
     {
         $time = 0;
-        foreach ($logger->queries as $query)
+        if (count($logger->queries))
         {
-           $time += $query['executionMS'];
-           $sql = preg_replace('/([A-Z]{2,})/', '<strong>$1</strong>', $query['sql']);
-           $queries[] = preg_replace('/\?/', '<strong style="color:red">?</strong>', $sql);
-        }
+            foreach ($logger->queries as $query)
+            {
+               $time += $query['executionMS'];
+               $sql = preg_replace('/([A-Z]{2,})/', '<strong>$1</strong>', $query['sql']);
+               $queries[] = preg_replace('/\?/', '<strong style="color:red">?</strong>', $sql);
+            }
 
-        $time = round($time, 4);
+            $time = round($time, 4);
 
-        $query_length = count($logger->queries);
-        $query_list = implode('<br /><hr />', $queries);
+            $query_length = count($logger->queries);
+            $query_list = implode('<br /><hr />', $queries);
 
 echo <<<HEREDOC
     <div id="logger">
@@ -350,6 +356,7 @@ echo <<<HEREDOC
         </button>
     </div>
 HEREDOC;
+        }
     }
 
 }, Application::LATE_EVENT);
