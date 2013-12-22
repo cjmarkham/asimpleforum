@@ -13,6 +13,7 @@ class TopicModel extends BaseModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
+		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'topics');
 	}
 
 	public function find_by_id ($id) 
@@ -38,10 +39,8 @@ class TopicModel extends BaseModel
 			return false;
 		}
 
-		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'topics');
-
 		$cache_key = 'forum-topic-count-' . $forum_id;
-		$this->app['cache']->collection = $collection;
+		$this->app['cache']->collection = $this->collection;
 
 		$total = $this->app['cache']->get($cache_key, function () use ($forum_id) {
 			$data = array(
@@ -100,10 +99,9 @@ class TopicModel extends BaseModel
 			$amount = 4;
 		}
 
-		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'topics');
 		$cache_key = 'topics-recent.' . $amount;
 
-		$this->app['cache']->collection = $collection;
+		$this->app['cache']->collection = $this->collection;
 
 		$topics = $this->app['cache']->get($cache_key, function () use ($amount) {
 
@@ -245,6 +243,11 @@ class TopicModel extends BaseModel
 			$time,
 			$forum_id
 		));
+
+		$this->app['cache']->collection = $this->collection;
+		$this->app['cache']->delete_group('topics-recent');
+		$this->app['cache']->delete('forum-topic-count-' . $forum_id);
+		$this->app['cache']->delete_group('forum-topics-' . $forum_id);
 
 		return json_encode(array(
 			'topic_id' => $topic_id,

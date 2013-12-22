@@ -8,10 +8,12 @@ use Symfony\Component\HttpFoundation\Request;
 class ForumModel 
 {
 	public $app;
+	private $collection;
 
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
+		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'forums');
 	}
 
 	public function find_by_id ($id)
@@ -23,10 +25,8 @@ class ForumModel
 			return false;
 		}
 
-		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
-
 		$cache_key = 'forum-' . $id;
-		$this->app['cache']->collection = $collection;
+		$this->app['cache']->collection = $this->collection;
 
 		$forum = $this->app['cache']->get($cache_key, function () use ($id) {
 			$data = array(
@@ -43,10 +43,9 @@ class ForumModel
 
 	public function find_all ()
 	{
-		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
 		$cache_key = 'forums.all';
 
-		$this->app['cache']->collection = $collection;
+		$this->app['cache']->collection = $this->collection;
 
 		// Look for data in cache
 		$forums = $this->app['cache']->get($cache_key, function () {
