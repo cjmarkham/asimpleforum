@@ -84,7 +84,9 @@ class TopicModel extends BaseModel
 		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'topics');
 		$cache_key = 'topics-recent.' . $amount;
 
-		$topics = $this->app['mongocache']->get($collection, $cache_key, function () use ($amount) {
+		$this->app['cache']->collection = $collection;
+
+		$topics = $this->app['cache']->get($cache_key, function () use ($amount) {
 
 			$topics = $this->app['db']->fetchAll(
 				'SELECT ' .  

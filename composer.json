@@ -6,6 +6,7 @@
         "silex/web-profiler": "1.0.*@dev",
         "symfony/twig-bridge": "~2.3",
         "cjmarkham/disk-cache": "dev-master",
+        "cjmarkham/mongo-cache": "dev-master",
         "symfony/validator": "~2.3",
         "facebook/php-sdk": "dev-master",
         "moriony/silex-mongo-provider": "*",
@@ -15,8 +16,7 @@
 
     "autoload" : {
         "psr-0" : {
-            "" : "src/",
-            "Rafal": "vendor/rafal/src/"
+            "" : "src/"
         }
     },
     "require-dev": {

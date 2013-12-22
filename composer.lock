@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "158d63c7cc1831674d6bba0a10842e10",
+    "hash": "c16d7a50f9582067089aec14ac18c970",
     "packages": [
         {
             "name": "cjmarkham/disk-cache",
@@ -42,14 +42,41 @@
             "time": "2013-06-09 18:08:52"
         },
         {
-            "name": "ckeditor",
-            "version": "4.3",
+            "name": "cjmarkham/mongo-cache",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ckeditor/ckeditor-releases.git",
-                "reference": "4.3.x/full"
+                "url": "https://github.com/cjmarkham/MongoCacheServiceProvider.git",
+                "reference": "19075a9b039dc6d70d71c5631bad84f3ecd5cc79"
             },
-            "type": "library"
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cjmarkham/MongoCacheServiceProvider/zipball/19075a9b039dc6d70d71c5631bad84f3ecd5cc79",
+                "reference": "19075a9b039dc6d70d71c5631bad84f3ecd5cc79",
+                "shasum": ""
+            },
+            "require": {
+                "moriony/silex-mongo-provider": "*",
+                "silex/silex": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MongoCache": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carl Markham",
+                    "email": "carl@cjmarkham.co.uk"
+                }
+            ],
+            "description": "A MongoDB Caching service for Silex",
+            "time": "2013-12-22 04:09:12"
         },
         {
             "name": "doctrine/common",
@@ -223,12 +250,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-php-sdk.git",
-                "reference": "43a66ce32cec82ad5b00c28fc80b0e3e579cfbb0"
+                "reference": "55f179f3741bfb3732d92b7c041b7e56966173a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk/zipball/43a66ce32cec82ad5b00c28fc80b0e3e579cfbb0",
-                "reference": "43a66ce32cec82ad5b00c28fc80b0e3e579cfbb0",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk/zipball/55f179f3741bfb3732d92b7c041b7e56966173a7",
+                "reference": "55f179f3741bfb3732d92b7c041b7e56966173a7",
                 "shasum": ""
             },
             "require": {
@@ -261,7 +288,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2013-12-03 19:19:43"
+            "time": "2013-12-17 00:24:57"
         },
         {
             "name": "moriony/silex-mongo-provider",
@@ -581,17 +608,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "2d8ece3c610726a73d0c95c885134efea182610e"
+                "reference": "30b2f954258361a10301189ddad8522462321924"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/2d8ece3c610726a73d0c95c885134efea182610e",
-                "reference": "2d8ece3c610726a73d0c95c885134efea182610e",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/30b2f954258361a10301189ddad8522462321924",
+                "reference": "30b2f954258361a10301189ddad8522462321924",
                 "shasum": ""
             },
             "require": {
@@ -631,21 +658,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-10-13 06:32:10"
+            "time": "2013-12-03 14:51:26"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "target-dir": "Symfony/Component/HttpFoundation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "1c4b897064f4f621031a0e3bc19fd7054d5e0315"
+                "reference": "8ee29656d6dd026ac5c195b9165ff730a6c88515"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/1c4b897064f4f621031a0e3bc19fd7054d5e0315",
-                "reference": "1c4b897064f4f621031a0e3bc19fd7054d5e0315",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/8ee29656d6dd026ac5c195b9165ff730a6c88515",
+                "reference": "8ee29656d6dd026ac5c195b9165ff730a6c88515",
                 "shasum": ""
             },
             "require": {
@@ -681,21 +708,21 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-13 21:27:40"
+            "time": "2013-11-28 10:26:47"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "target-dir": "Symfony/Component/HttpKernel",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "86fb9a609ea69d81070c2c38faf36cd545f85225"
+                "reference": "eb63adf4688db6fc47ef015c57cc3cac2e12e48f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/86fb9a609ea69d81070c2c38faf36cd545f85225",
-                "reference": "86fb9a609ea69d81070c2c38faf36cd545f85225",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/eb63adf4688db6fc47ef015c57cc3cac2e12e48f",
+                "reference": "eb63adf4688db6fc47ef015c57cc3cac2e12e48f",
                 "shasum": ""
             },
             "require": {
@@ -752,7 +779,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-14 07:58:51"
+            "time": "2013-12-16 14:36:05"
         },
         {
             "name": "symfony/property-access",
@@ -814,17 +841,17 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v2.3.7",
+            "version": "v2.3.8",
             "target-dir": "Symfony/Component/Routing",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "7d41463094752e87a0fae60316d236abecb8a034"
+                "reference": "f3622da652fc6a73ce9d85dbee4ec7ef425c8349"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/7d41463094752e87a0fae60316d236abecb8a034",
-                "reference": "7d41463094752e87a0fae60316d236abecb8a034",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/f3622da652fc6a73ce9d85dbee4ec7ef425c8349",
+                "reference": "f3622da652fc6a73ce9d85dbee4ec7ef425c8349",
                 "shasum": ""
             },
             "require": {
@@ -868,7 +895,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "http://symfony.com",
-            "time": "2013-09-29 19:41:41"
+            "time": "2013-12-14 11:06:34"
         },
         {
             "name": "symfony/security-core",
@@ -1796,6 +1823,7 @@
         "entea/silex-twig-simple-asset-extension": 20,
         "silex/web-profiler": 20,
         "cjmarkham/disk-cache": 20,
+        "cjmarkham/mongo-cache": 20,
         "facebook/php-sdk": 20,
         "tobiassjosten/facebook-service-provider": 20
     },

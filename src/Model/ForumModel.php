@@ -59,10 +59,12 @@ class ForumModel
 		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
 		$cache_key = 'forums.all';
 
-		// Look for data in mongo
-		$forums = $this->app['mongocache']->get($collection, $cache_key, function () {
+		$this->app['cache']->collection = $collection;
 
-			// If not in mongo get from mysql
+		// Look for data in cache
+		$forums = $this->app['cache']->get($cache_key, function () {
+
+			// If not in cache get from mysql
 			$forums = $this->app['db']->fetchAll(
 				'SELECT ' . 
 					'f.*, ' . 
