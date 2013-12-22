@@ -38,13 +38,32 @@ class TopicModel extends BaseModel
 			return false;
 		}
 
-		$total = $this->app['db']->fetchColumn('SELECT COUNT(*) FROM topics WHERE forum=?', array($forum_id));
+		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'topics');
 
-		$topics['pagination'] = $this->pagination($total, 10, $page);
+		$cache_key = 'forum-topic-count-' . $forum_id;
+		$this->app['cache']->collection = $collection;
 
-		$topics['data'] = $this->app['db']->fetchAll('SELECT t.*, p.name as lastPostName, p.id as lastPostId, u.username as author, us.username as lastPosterUsername FROM topics t JOIN users u ON t.poster=u.id JOIN users us ON us.id=t.lastPosterId LEFT JOIN posts p ON t.lastPostId=p.id WHERE t.forum=? ORDER BY sticky DESC, updated DESC ' . $topics['pagination']['sql_text'], array(
-			$forum_id
-		));
+		$total = $this->app['cache']->get($cache_key, function () use ($forum_id) {
+			$data = array(
+				'data' => $this->app['db']->fetchColumn('SELECT COUNT(*) FROM topics WHERE forum=?', array($forum_id))
+			);
+
+			return $data;
+		});
+
+		$topics['pagination'] = $this->pagination((int) $total['data'], 10, $page);
+
+		$cache_key = 'forum-topics-' . $forum_id . '.' . $topics['pagination']['sql_text'];
+
+		$topics['data'] = $this->app['cache']->get($cache_key, function () use ($topics, $forum_id) {
+			$data = array(
+				'data' => $this->app['db']->fetchAll('SELECT t.*, p.name as lastPostName, p.id as lastPostId, u.username as author, us.username as lastPosterUsername FROM topics t JOIN users u ON t.poster=u.id JOIN users us ON us.id=t.lastPosterId LEFT JOIN posts p ON t.lastPostId=p.id WHERE t.forum=? ORDER BY sticky DESC, updated DESC ' . $topics['pagination']['sql_text'], array(
+					$forum_id
+				))
+			);
+
+			return $data;
+		});
 
 		return $topics;
 	}

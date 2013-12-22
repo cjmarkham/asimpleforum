@@ -23,35 +23,22 @@ class ForumModel
 			return false;
 		}
 
-		return $this->app['db']->fetchAssoc('SELECT * FROM forums WHERE id=? LIMIT 1', array(
-			$id
-		));
-	}
+		$collection = $this->app['mongo']['default']->selectCollection('asf_forum', 'forums');
 
-	public function display_tree ($root)
-	{
-		$right = array();
+		$cache_key = 'forum-' . $id;
+		$this->app['cache']->collection = $collection;
 
-		$forums = $this->app['db']->fetchAll('SELECT name, `left`, `right` FROM forums WHERE `left` BETWEEN ? AND ? ORDER BY `left` ASC', array(
-			$root['left'],
-			$root['right']
-		));
+		$forum = $this->app['cache']->get($cache_key, function () use ($id) {
+			$data = array(
+				'data' => $this->app['db']->fetchAssoc('SELECT * FROM forums WHERE id=? LIMIT 1', array(
+					$id
+				))
+			);
 
-		foreach ($forums as $forum)
-		{
-			if (count($right) > 0)
-			{
-				while ($right[count($right) - 1] < $forum['right'])
-				{  
-	                array_pop($right);  
-	            } 
-			}
+			return $data;
+		});
 
-			echo str_repeat('   ', count($right)) . $forum['name'] . "<br />"; 
-
-			$right[] = $forum['right'];
-
-		}
+		return $forum['data'];
 	}
 
 	public function find_all ()

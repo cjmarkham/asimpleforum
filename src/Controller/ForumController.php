@@ -33,7 +33,7 @@ class ForumController
 			'title' 			=> $forum['name'],
 			'section'			=> 'forums',
 			'forum'				=> $forum,
-			'topics' 			=> $topics['data'],
+			'topics' 			=> $topics['data']['data'],
 			'pagination'		=> $topics['pagination']
 		));
 	}
