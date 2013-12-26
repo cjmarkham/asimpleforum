@@ -2,55 +2,31 @@
 <script>
 $(function () {
 
-	$.fn.editor = function (options) {
-		var width = $(this).width();
-		var height = $(this).height();
-		var buttons = $(options.buttons);
+	$.fn.graph = function (options) {
+		var width = options.width;
+		var height = options.height;
 
-		var self = this;
+		var self = $(this);
 
-		var el = $(this);
+		self.width = width;
+		self.height = height;
 
-		$(this).focus();
 
-		$(this).css({
-			width: 1,
-			height: 1,
-			resize: 'none',
-			border: 'none'
-		});
-
-		var el = $('<div />');
-		el.css({
-			height: height,
-			width: width
-		});
-		el.insertAfter($(this));
-
-		$(this).on('keyup', function () {
-			el.html($(this).val());
-		});
-
-		buttons.each(function () {
-			$(this).on('click', function () {
-				addTag(self.el, $(this));
-			})
-		})
-
+		
 	};
 
-	$('#reply').editor({
-		buttons: '#buttons'
+	$('#graph').graph({
+		width: 640,
+		height: 480,
+
+		type: 'bar',
+
+		data: {
+
+		}
 	});
 
 });
 </script>
 
-<ul class="list-unstyled list-inline" id="buttons">
-	<li>
-		<a data-open="<b>" data-close="</b>" href="javascript:void(0)">
-			Bold
-		</a>
-	</li>
-</ul>
-<textarea autofocus style="width:300px;height:150px;" id="reply"></textarea>
+<canvas id="graph"></canvas>

@@ -25,9 +25,19 @@ class TopicModel extends BaseModel
 			return false;
 		}
 
-		return $this->app['db']->fetchAssoc('SELECT * FROM topics WHERE id=? LIMIT 1', array(
-			$id
-		));
+		$cache_key = 'topic-' . $id;
+
+		$topic = $this->app['cache']->get($cache_key, function () use ($id) {
+			$data = array(
+				'data' => $this->app['db']->fetchAssoc('SELECT * FROM topics WHERE id=? LIMIT 1', array(
+					$id
+				))
+			);
+
+			return $data;
+		});
+
+		return $topic['data'];
 	}
 
 	public function find_by_forum ($forum_id, $page = 1)
@@ -50,7 +60,7 @@ class TopicModel extends BaseModel
 			return $data;
 		});
 
-		$topics['pagination'] = $this->pagination((int) $total['data'], 10, $page);
+		$topics['pagination'] = $this->pagination((int) $total['data'], $this->app['config']->board['topics_per_page'], $page);
 
 		$cache_key = 'forum-topics-' . $forum_id . '.' . $topics['pagination']['sql_text'];
 
@@ -223,7 +233,7 @@ class TopicModel extends BaseModel
 			'topic' => $topic_id,
 			'forum' => $forum_id,
 			'name' => $name,
-			'content' => nl2br($content),
+			'content' => $content,
 			'poster' => $user['id'],
 			'added' => $time,
 			'updated' => $time

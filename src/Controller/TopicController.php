@@ -36,7 +36,7 @@ class TopicController
 			'section'			=> 'forums',
 			'forum'				=> $forum,
 			'topic'				=> $topic,
-			'posts' 			=> $posts['data'],
+			'posts' 			=> $posts['data']['data'],
 			'pagination'		=> $posts['pagination']
 		));
 	}

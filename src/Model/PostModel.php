@@ -13,6 +13,8 @@ class PostModel extends BaseModel
 	 */
 	public $app;
 
+	private $collection;
+
 	/**
 	 * HTML allowed for post content
 	 * @var array
@@ -49,6 +51,7 @@ class PostModel extends BaseModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
+		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'posts');
 	}
 
 	/**
@@ -68,24 +71,52 @@ class PostModel extends BaseModel
 
 		$topics = array();
 
-		$total = $this->app['db']->fetchColumn('SELECT COUNT(*) FROM posts WHERE topic=?', array($topic_id));
+		$cache_key = 'topic-post-count-' . $topic_id;
+		$this->app['cache']->collection = $this->collection;
 
-		$posts['pagination'] = $this->pagination($total, (int) $this->app['config']->board['posts_per_page'], $page);
+		$total = $this->app['cache']->get($cache_key, function () use ($topic_id) {
+			$data = array(
+				'data' => $this->app['db']->fetchColumn('SELECT COUNT(*) FROM posts WHERE topic=?', array(
+					$topic_id
+				))
+			);
 
-		$posts['data'] = $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC ' . $posts['pagination']['sql_text'], array(
-			$topic_id
-		));
+			return $data;
+		});
 
-		foreach ($posts['data'] as $key => $post)
+		$posts['pagination'] = $this->pagination((int) $total['data'], (int) $this->app['config']->board['posts_per_page'], $page);
+
+		$cache_key = 'topic-posts-' . $topic_id . '.' . $posts['pagination']['sql_text'];
+
+		$posts['data'] = $this->app['cache']->get($cache_key, function () use ($posts, $topic_id) {
+			$data = array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC ' . $posts['pagination']['sql_text'], array(
+					$topic_id
+				))
+			);
+
+			return $data;
+		});
+
+		foreach ($posts['data']['data'] as $key => $post)
 		{
-			$likes = $this->app['db']->fetchAll('SELECT username FROM likes WHERE postId=? ORDER BY added DESC', array(
-				$post['id']
-			));
+			$cache_key = 'post-' . $post['id'] . '-likes';
 
-			foreach ($likes as $like)
+			$likes = $this->app['cache']->get($cache_key, function () use ($posts, $key, $post) {
+				$data = array(
+					'data' => $this->app['db']->fetchAll('SELECT username FROM likes WHERE postId=? ORDER BY added DESC', array(
+						$post['id']
+					))
+				);
+
+				return $data;
+			});
+
+			foreach ($likes['data'] as $like)
 			{
-				$posts['data'][$key]['likes'][] = $like['username'];
+				$posts['data']['data'][$key]['likes'][] = $like['username'];
 			}
+			
 		}
 
 		return $posts;
@@ -218,6 +249,11 @@ class PostModel extends BaseModel
 		$post_count = $this->app['db']->fetchColumn('SELECT COUNT(id) FROM posts WHERE topic=?', array(
 			$topic_id
 		));
+
+		$this->app['cache']->delete_group('topic-posts-' . $topic_id);
+		$this->app['cache']->delete_group('forum-topics-' . $topic['forum']);
+		$this->app['cache']->delete('topic-post-count-' . $topic_id);
+		$this->app['cache']->delete('forum-topic-count-' . $topic['forum']);
 
 		return json_encode(array(
 			'id' => $post_id,
@@ -383,6 +419,8 @@ class PostModel extends BaseModel
 		));
 
 		$_likes[] = $user['username'];
+
+		$this->app['cache']->delete('post-' . $post_id . '-likes');
 
 		return json_encode($_likes);
 
