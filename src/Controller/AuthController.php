@@ -9,7 +9,7 @@ class AuthController
 	public $app;
 
 	public function signup($request = array())
-	{
+	{ 
 		if ($request)
 		{
 			$data = array(
