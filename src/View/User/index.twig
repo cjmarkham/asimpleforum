@@ -1,4 +1,154 @@
 {% extends "Layout/main.twig" %}
 	
 {% block content %}
+	<section class="marginTop80 relative">
+		<ul class="list-unstyled list-inline" id="profile-stats">
+			<li title="Topics" data-toggle="tooltip">
+				<em class="fa fa-comment"></em> 24
+			</li>
+			<li title="Posts" data-toggle="tooltip">
+				<em class="fa fa-comments"></em> 16
+			</li>
+			<li title="Profile Views" data-toggle="tooltip">
+				<em class="fa fa-eye"></em> 123
+			</li>
+		</ul>
+
+		<header class="clearfix">
+			<div id="profile-avatar" class="huge pull-left">
+				<img width="100" height="100" src="/avatars/cjmarkham/big.png" alt=""  />
+			</div>
+			<div class="pull-left">
+				Cjmarkham
+			</div>
+		</header>
+
+		<div class="row">
+			<div class="col-md-6" id="profile-left">
+				<div id="profile-info" class="clearfix">
+					<div class="pull-left">
+						<h3>Carl Joseph Markham</h3>
+						<em>
+							Male from North East UK
+						</em>
+					</div>
+					<div class="pull-right">
+						<p>
+							<a href="javascript:void(0)" class="btn btn-primary">
+								Follow
+							</a>
+						</p>
+					</div>
+				</div>
+
+				<div id="profile-comments">
+					
+					<form method="post" action="javascript:void(0)" data-event="submit" data-action="profile.addComment">
+						<input type="hidden" name="profileId" value="{{ user.id }}" />
+						<textarea class="form-control" name="" placeholder="Write something..."></textarea>
+						<button class="form-control btn btn-primary">
+							Post
+						</button>	
+					</form>	
+
+					<ul class="list-unstyled">
+
+						{% for comment in comments %}
+
+							<li class="row">
+
+								<div class="col-md-3">
+									<div class="comment-author-info">
+										<div class="avatar big text-center">
+											<img width="70" height="70" src="/avatars/cjmarkham/big.png" alt="" />
+										</div>
+										<p>
+											<em class="fa fa-comments"></em> 2
+										</p>
+										<p>
+											<em class="fa fa-thumbs-up"></em> 6
+										</p>
+									</div>
+								</div>
+
+								<div class="col-md-9">
+									<div class="profile-comment">
+										<date>
+											{{ comment.added|date("jS M y, H:i") }}
+										</date>
+										<p>
+											Maecenas viverra libero non urna lacinia fermentum. Nulla facilisi. Integer tristique accumsan molestie. Fusce vel nisl sodales, lacinia elit nec, aliquam lorem. Nunc viverra bibendum sem.
+										</p>
+									</div>
+								</div>
+
+							</li>	
+
+						{% else %}
+
+							<li class="alert alert-warning">
+								No comments posted yet.
+							</li>
+
+						{% endfor %}
+
+					</ul>
+
+					{% if comments|length %}
+						<a href="javascrit:void(0)" class="form-control btn btn-primary">
+							Load more
+						</a>
+					{% endif %}
+
+				</div>
+			</div>
+
+			<div class="col-md-6" id="profile-right">
+				<div id="profile-post-history">
+					<ul class="list-unstyled">
+
+						{% for i in 0..9 %}
+
+							<li class="row">
+								<div class="col-md-4 relative">
+									<div class="circle"></div>
+									<div class="line"></div>
+									<date>
+										12th January 2014 8:44am
+									</date>
+								</div>
+								<div class="col-md-8">
+									<div class="profile-post">
+										<div class="clearfix">
+											<div class="pull-left">
+												<a href="" class="topic-name">
+													A post name
+												</a>
+											</div>
+											<div class="pull-right">
+												<em class="fa fa-comments"></em> 2
+												<em class="fa fa-eye"></em> 15
+											</div>
+										</div>
+
+										<p>
+											A post description
+										</p>
+									</div>
+								</div>
+							</li>
+
+						{% endfor %}
+
+					</ul>
+				</div>
+
+				<a href="javascrit:void(0)" class="form-control btn btn-primary">
+					Load more
+				</a>
+			</div>
+		</div>
+
+	</section>
+
 {% endblock %}
