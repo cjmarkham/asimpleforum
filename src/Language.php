@@ -15,11 +15,16 @@ class Language
 		$this->phrases = json_decode(file_get_contents($this->file), true);
 	}
 
-	public function phrase ($phrase)
+	public function phrase ($phrase, $replacements = array())
 	{
 		if (array_key_exists($phrase, $this->phrases))
 		{
-			return $this->phrases[$phrase];
+			$phrase = $this->phrases[$phrase];
+		}
+
+		if (count($replacements) > 0)
+		{
+			$phrase = vsprintf($phrase, $replacements);
 		}
 
 		return $phrase;

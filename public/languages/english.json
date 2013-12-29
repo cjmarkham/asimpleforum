@@ -11,6 +11,7 @@
 	"ALREADY_LIKED": "You have already liked this post.",
 
 	"TOPIC_POST_LIMIT": "you cannot create a new topic in this forum yet.",
+	"COMMENT_MIN_LENGTH": "Comments must be at least %d characters long.",
 	
 	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later."
 }
