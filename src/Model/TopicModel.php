@@ -202,6 +202,18 @@ class TopicModel extends BaseModel
 
 		$name = $request->get('title');
 		$content = $request->get('content');
+		$locked = $request->get('locked');
+		$sticky = $request->get('sticky');
+
+		if (!$locked)
+		{
+			$locked = 0;
+		}
+
+		if (!$sticky)
+		{
+			$sticky = 0;
+		}
 
 		if (!$name || !$content)
 		{
@@ -212,30 +224,34 @@ class TopicModel extends BaseModel
 
 		$name = strip_tags($name);
 
-		$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? AND forum=? ORDER BY added DESC LIMIT 1', array(
-			$user['id'],
-			$forum_id
-		));
-
-		$time_since_last = time() - (int) $user_last['added'];
-		
-		if ($time_since_last < 300)
+		if (!\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
-			$seconds = 300 - $time_since_last;
-			$minutes = round($seconds / 60);
-			$seconds = $seconds % 60;
-			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('TOPIC_POST_LIMIT', array($minutes, $seconds)));
-			return $response;
+			$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? AND forum=? ORDER BY added DESC LIMIT 1', array(
+				$user['id'],
+				$forum_id
+			));
+
+			$time_since_last = time() - (int) $user_last['added'];
+			
+			if ($time_since_last < 300)
+			{
+				$seconds = 300 - $time_since_last;
+				$minutes = round($seconds / 60);
+				$seconds = $seconds % 60;
+				$response->setStatusCode(403);
+				$response->setContent($this->app['language']->phrase('TOPIC_POST_LIMIT', array($minutes, $seconds)));
+				return $response;
+			}
 		}
 
-		$content = $content;
 		$time = time();
 
 		$this->app['db']->insert('topics', array(
 			'forum' => $forum_id,
 			'name' => $name,
 			'poster' => $user['id'],
+			'locked' => $locked,
+			'sticky' => $sticky,
 			'added' => $time,
 			'updated' => $time,
 			'lastPostId' => 0,
@@ -275,11 +291,14 @@ class TopicModel extends BaseModel
 		$this->app['cache']->delete_group('forum-topics-' . $forum_id);
 
 		return json_encode(array(
+			'id' => $topic_id,
 			'topic_id' => $topic_id,
 			'post_id' => $post_id,
 			'content' => $content,
 			'author' => $user['username'],
-			'forum_name' => $forum['name']
+			'forum_name' => $forum['name'],
+			'locked' => $locked,
+			'sticky' => $sticky
 		));
 	}
 }

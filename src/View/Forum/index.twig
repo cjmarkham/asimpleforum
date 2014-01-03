@@ -35,72 +35,19 @@
 
 		<div class="content">
 			{% for topic in topics %}
-				<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
-					<div class="col-md-5">
-						<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
-							{{ truncate(topic.name, 40) }}
-						</a>
-
-						<div class="topic-info">
-							{% if topic.locked %}
-								<i title="Locked" data-toggle="tooltip" class="fa fa-lock"></i>
-							{% endif %}
-
-							{% if topic.sticky %}
-								<i title="Sticky" data-toggle="tooltip" class="fa fa-thumb-tack"></i>
-							{% endif %}
-						</div>
-
-						<p class="topic-author">
-							<a href="" class="user-link">
-								{{ topic.author }}
-							</a>
-						</p>
-						<date class="date" title="{{ topic.added|date('c') }}">
-							{{ topic.added|date('jS M y, H:i') }}
-						</date>
-					</div>
-					<div class="col-md-3">
-						<p title="Views" data-toggle="tooltip" class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
-						<p title="Replies" data-toggle="tooltip" class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
-					</div>
-					<div class="text-right col-md-4">
-						<p>
-							{% if topic.lastPostName %}
-								{% set page = (topic.replies / config('board', 'posts_per_page'))|round %}
-								{% if page < 1 %}
-									{% set page = 1 %}
-								{% endif %}
-								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
-									{{ topic.lastPostName }}
-								</a>
-							{% else %}
-								<a href="" class="topic-name">
-									{{ topic.name }}
-								</a>
-							{% endif %}
-						</p>
-						<p>	
-							<a href="" class="user-link">
-								{{ topic.lastPosterUsername }}
-							</a>
-						</p>
-						<date class="date" title="{{ topic.updated|date('c') }}">
-							{{ topic.updated|date('jS M y. H:i') }}
-						</date>
-					</div>
-				</div>
+				
+				{{ include ('Partials/topic.twig') }}
 
 				{% if not loop.last %}
 					<div class="seperator"></div>
 				{% endif %}
 
 			{% else %}
-				<div>
-					<a href="javascript:void(0)" class="topc-name">
-						No Topics yet
-					</a>
-				</div>
+			<div>
+				<a href="javascript:void(0)" class="topc-name">
+					No Topics yet
+				</a>
+			</div>
 
 			{% endfor %}
 		</div>
@@ -133,12 +80,43 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<form method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
+					<form role="form" method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
 						<input type="hidden" name="forumId" value="{{ forum.id }}" />
-						<input type="text" name="name" class="form-control" placeholder="Topic title" />
-						<br />
-						<textarea class="form-control" name="post-content" id="post-content" placeholder="Add your post"></textarea>
-						<br />
+						<div class="form-group">
+							<input type="text" name="name" class="form-control" placeholder="Topic title" />
+						</div>
+						<div class="form-group">
+							<textarea class="form-control" name="post-content" id="post-content" placeholder="Add your post"></textarea>
+						</div>
+						
+						<section>
+							<h4>
+								Moderator options
+							</h4>
+							{% if hasPermission('LOCK_TOPIC') %}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="locked" value="1" />
+										Locked
+									</label>
+									<p class="help help-inline">
+										Only Administrators and Moderators can reply to a locked topic
+									</p>
+								</div>
+							{% endif %}
+							{% if hasPermission('STICKY_TOPIC') %}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="sticky" value="1" />
+										Sticky
+									</label>
+									<p class="help help-inline">
+										Topic will appear at the top of the forums topic list
+									</p>
+								</div>
+							{% endif %}
+						</section>
+						
 						<button class="btn btn-orange">
 							Create topic
 						</button>

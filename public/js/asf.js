@@ -260,25 +260,39 @@ ASF.prototype.addNewTopic = function (node) {
 	var forumId = node.find('input[name="forumId"]').val();
 	var title = node.find('input[name="name"]').val();
 	var content = node.find('textarea').val();
+	var locked = node.find('input[name="locked"]:checked').val();
+	var sticky = node.find('input[name="sticky"]:checked').val();
 
 	$.post('/topic/add_topic', {
 		forumId: forumId,
 		title: title,
-		content: content
+		content: content,
+		locked: locked,
+		sticky: sticky
 	}).done(function (response) {
 
 		response = JSON.parse(response);
 		
 		$.post('/partial/topic', {
 			params: {
-				topic_id: response.topic_id,
-				forum_id: response.forum_id,
-				forum_name: response.forum_name,
 				topic: {
-					title: title,
+					id: response.topic_id,
+					name: title,
+					views: 0,
+					replies: 0,
+					lastPostName: title,
+					lastPosterUsername: response.author,
+					lastPostTime: Math.round(new Date().getTime() / 1000),
+					lastPostId: response.post_id,
 					author: response.author,
 					content: response.content,
-					added: Math.round(new Date().getTime() / 1000)
+					added: Math.round(new Date().getTime() / 1000),
+					updated: Math.round(new Date().getTime() / 1000),
+					locked: response.locked,
+					sticky: response.sticky
+				},
+				forum: {
+					name: response.forum_name
 				}
 			}
 		}).done(function (html) {

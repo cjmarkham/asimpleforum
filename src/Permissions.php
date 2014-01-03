@@ -14,7 +14,13 @@ class Permissions
 
 	const EDIT_TOPICS = 8; // includes delete
 
-	const ADD_FORUMS = 16; // includes delete
+	const LOCK_TOPIC = 16;
+
+	const STICKY_TOPIC = 16;
+
+	const BYPASS_RESTRICTIONS = 32;
+
+	const ADD_FORUMS = 64;
 
 
 	public static function hasPermission ($action)
