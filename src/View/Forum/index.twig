@@ -89,11 +89,12 @@
 							<textarea class="form-control" name="post-content" id="post-content" placeholder="Add your post"></textarea>
 						</div>
 						
-						<section>
-							<h4>
-								Moderator options
-							</h4>
-							{% if hasPermission('LOCK_TOPIC') %}
+						{% if hasPermission('LOCK_TOPIC') %}
+							<section>
+								<h4>
+									Moderator options
+								</h4>
+							
 								<div class="checkbox">
 									<label>
 										<input type="checkbox" name="locked" value="1" />
@@ -103,8 +104,6 @@
 										Only Administrators and Moderators can reply to a locked topic
 									</p>
 								</div>
-							{% endif %}
-							{% if hasPermission('STICKY_TOPIC') %}
 								<div class="checkbox">
 									<label>
 										<input type="checkbox" name="sticky" value="1" />
@@ -114,8 +113,8 @@
 										Topic will appear at the top of the forums topic list
 									</p>
 								</div>
-							{% endif %}
-						</section>
+							</section>
+						{% endif %}
 
 						<button class="btn btn-orange">
 							Create topic
