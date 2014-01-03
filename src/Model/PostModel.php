@@ -101,6 +101,8 @@ class PostModel extends BaseModel
 
 		foreach ($posts['data']['data'] as $key => $post)
 		{
+			$posts['data']['data'][$key]['likes'] = array();
+
 			$cache_key = 'post-' . $post['id'] . '-likes';
 
 			$likes = $this->app['cache']->get($cache_key, function () use ($posts, $key, $post) {
@@ -450,6 +452,8 @@ class PostModel extends BaseModel
 			$post_id
 		));
 
+		$_likes = array();
+
 		foreach ($likes as $like)
 		{
 			$_likes[] = $like['username'];
@@ -470,6 +474,7 @@ class PostModel extends BaseModel
 
 		$_likes[] = $user['username'];
 
+		$this->app['cache']->collection = $this->collection;
 		$this->app['cache']->delete('post-' . $post_id . '-likes');
 
 		return json_encode($_likes);
