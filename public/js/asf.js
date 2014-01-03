@@ -376,11 +376,21 @@ ASF.prototype.quotePost = function (node) {
 	}).done(function (response) {
 		response = JSON.parse(response);
 
-		CKEDITOR.instances.reply.setData('<blockquote><span>' + author + '</span><p>' + response.content + '</p></blockquote>');
+		CKEDITOR.instances.reply.setData('<blockquote><span>' + author + '</span><p>' + response.content + '</p></blockquote><p id="end"></p>');
 
 		var modal = $('#quick-reply-modal');
 		modal.modal({
 			show: true
+		});
+
+		modal.on('shown.bs.modal', function () {
+			var editor = CKEDITOR.instances.reply;
+			var range = editor.createRange();
+
+			range.moveToElementEditEnd(range.root);
+			editor.getSelection().selectRanges([range])
+
+			editor.focus();	
 		});
 	});
 }
