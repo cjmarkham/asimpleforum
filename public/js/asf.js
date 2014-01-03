@@ -388,7 +388,8 @@ ASF.prototype.quotePost = function (node) {
 			var range = editor.createRange();
 
 			range.moveToElementEditEnd(range.root);
-			editor.getSelection().selectRanges([range])
+			editor.getSelection().selectRanges([range]);
+			editor.getSelection().scrollIntoView();
 
 			editor.focus();	
 		});
