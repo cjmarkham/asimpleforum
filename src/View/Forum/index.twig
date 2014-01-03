@@ -54,7 +54,7 @@
 	</section>
 
 	<div class="forum-options clearfix">
-			{% if not forum.locked %}
+			{% if not forum.locked or forum.locked and hasPermission('BYPASS_RESTRICTIONS') %}
 				<button class="hidden-no-user btn btn-orange" data-event="click" data-action="newTopicTrigger">
 					New topic
 				</button>
@@ -62,7 +62,7 @@
 					Login to create
 				</button>
 			{% else %}
-				<button class="btn btn-danger">
+				<button class="hidden-no-user btn btn-danger">
 					Locked
 				</button>
 			{% endif %}
@@ -116,7 +116,7 @@
 								</div>
 							{% endif %}
 						</section>
-						
+
 						<button class="btn btn-orange">
 							Create topic
 						</button>

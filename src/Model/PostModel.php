@@ -148,6 +148,13 @@ class PostModel extends BaseModel
 	        return $response;
 		}
 
+		if ($topic['locked'] && !\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
+		{
+			$response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase('TOPIC_LOCKED'));
+	        return $response;
+		}
+
 		$user = $this->app['session']->get('user');
 
 		if (!$user)
