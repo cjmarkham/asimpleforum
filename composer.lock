@@ -47,12 +47,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cjmarkham/MongoCacheServiceProvider.git",
-                "reference": "19075a9b039dc6d70d71c5631bad84f3ecd5cc79"
+                "reference": "1f22e8db27c7469eee799dab49f7adfde3c7ed18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cjmarkham/MongoCacheServiceProvider/zipball/19075a9b039dc6d70d71c5631bad84f3ecd5cc79",
-                "reference": "19075a9b039dc6d70d71c5631bad84f3ecd5cc79",
+                "url": "https://api.github.com/repos/cjmarkham/MongoCacheServiceProvider/zipball/1f22e8db27c7469eee799dab49f7adfde3c7ed18",
+                "reference": "1f22e8db27c7469eee799dab49f7adfde3c7ed18",
                 "shasum": ""
             },
             "require": {
@@ -76,7 +76,7 @@
                 }
             ],
             "description": "A MongoDB Caching service for Silex",
-            "time": "2013-12-22 04:09:12"
+            "time": "2013-12-29 12:57:23"
         },
         {
             "name": "doctrine/common",

@@ -49,8 +49,6 @@ $app['twig']->addExtension(new \Entea\Twig\Extension\AssetExtension(
 
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
 $config_function = new Twig_SimpleFunction('config', function ($file, $key = false) use ($app) {
-
-   
     if (property_exists($app['config'], $file))
     {
         if ($key)
@@ -62,12 +60,15 @@ $config_function = new Twig_SimpleFunction('config', function ($file, $key = fal
             return $app['config']->{$file};
         }
     } 
-  
+});
 
+$permissions_function = new Twig_SimpleFunction('hasPermission', function ($action) use ($app) {
+    return Permissions::hasPermission($action);
 });
 
 $app['twig']->addFunction($truncate);
 $app['twig']->addFunction($config_function);
+$app['twig']->addFunction($permissions_function);
 
 $app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
     'mongo.connections' => array(
@@ -152,7 +153,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
 
 Route::$app = $app;
 Message::$app = $app;
-$app['mongocache'] = new MongoCache($app);
+Permissions::$app = $app;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
@@ -164,6 +165,11 @@ $app['sessions'] = $app->share(function() use ($app) {
 
 $app['forum'] = $app->share(function() use ($app) {
     $model = new \Model\ForumModel($app);
+    return $model;
+});
+
+$app['group'] = $app->share(function() use ($app) {
+    $model = new \Model\GroupModel($app);
     return $model;
 });
 
@@ -197,7 +203,7 @@ include 'routes.php';
 
 if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
 {
-    $app['cache']->flush();
+    $app['cache']->flush($app, 'default', 'asf_forum');
 }
 
 $app->before(function (Request $request) use ($app) {

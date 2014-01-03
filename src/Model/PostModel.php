@@ -4,6 +4,7 @@ namespace Model;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class PostModel extends BaseModel
 {
@@ -129,10 +130,10 @@ class PostModel extends BaseModel
 	public function add (Request $request)
 	{
 		$topic_id = (int) $request->get('topicId');
+		$response = new Response();
 
 		if (!$topic_id)
 		{
-			$response = new Response();
 	        $response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
 	        return $response;
@@ -142,7 +143,6 @@ class PostModel extends BaseModel
 
 		if (!$topic)
 		{
-			$response = new Response();
 	        $response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
 	        return $response;
@@ -152,14 +152,52 @@ class PostModel extends BaseModel
 
 		if (!$user)
 		{
-			$response = new Response();
 	        $response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
 	        return $response;
 		}
 
+		if (!\Permissions::hasPermission('CREATE_POST')) 
+		{
+			$response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase('NO_PERMISSION'));
+	        return $response;
+		}
+
 		$name = $request->get('name');
 		$content = $request->get('content');
+
+		$constraints = new Assert\Collection(array(
+			'name' => array(
+				new Assert\NotBlank(array(
+					'message' => 'FILL_ALL_FIELDS'
+				)),
+				new Assert\Length(array('min' => 4)),
+				new Assert\Length(array('max' => 25))
+			),
+			'content' => array(
+				new Assert\NotBlank(array(
+					'message' => 'FILL_ALL_FIELDS'
+				)),
+				new Assert\Length(array('min' => 6))
+			)
+		));
+
+		$data = array(
+			'name' => $name,
+			'content' => $content
+		);
+
+		$errors = $this->app['validator']->validateValue($data, $constraints);
+
+		if (count($errors) > 0)
+		{
+			$response = new Response();
+	        $response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase(\Message::error($errors[0]->getMessage())));
+	        return $response;
+		}
+		
 		$content = strip_tags($content, implode(',', $this->allowed_html));
 		$time = time();
 
@@ -250,16 +288,21 @@ class PostModel extends BaseModel
 			$topic_id
 		));
 
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'posts');
+		$this->app['cache']->delete_group('topic-post-count-' . $topic_id);
 		$this->app['cache']->delete_group('topic-posts-' . $topic_id);
-		$this->app['cache']->delete_group('forum-topics-' . $topic['forum']);
-		$this->app['cache']->delete('topic-post-count-' . $topic_id);
-		$this->app['cache']->delete('forum-topic-count-' . $topic['forum']);
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'forums');
+		$this->app['cache']->delete_group('forum-' . $topic['forum']);
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'topics');
+		$this->app['cache']->delete('topic-' . $topic_id);
+
+		$page = (int) ceil($post_count / $this->app['config']->board['posts_per_page']);
 
 		return json_encode(array(
 			'id' => $post_id,
 			'username' => $user['username'],
 			'userId' => $user['id'],
-			'page' => (int) round($post_count / $this->app['config']->board['posts_per_page'])
+			'page' => $page
 		));
 	}
 

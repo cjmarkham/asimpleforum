@@ -90,11 +90,14 @@ class AuthModel
 
 		$hashed = $this->hash($this->app['config']->defaults['salt'] . $data['password']);
 
+		$default_group = $this->app['db']->fetchColumn('SELECT id FROM groups WHERE `default`=1 LIMIT 1');
+
 		$insert = $this->app['db']->insert('users', array(
 			'username' => $data['username'],
 			'password' => $hashed,
 			'email'    => $data['email'],
 			'ip'       => $_SERVER['REMOTE_ADDR'],
+			'group'	   => $default_group,
 			'regdate'  => time(),
 			'lastActive' => time()
 		));
@@ -105,6 +108,7 @@ class AuthModel
 			return false;
 		}
 
+		// Todo return success message
 		return true;
 	}
 
@@ -137,6 +141,8 @@ class AuthModel
 			$response->setContent('INVALID_CREDENTIALS');
 			return $response;
 		}
+
+		$user['group'] = $this->app['group']->find_by_id($user['group']);
 
 		$this->app['session']->set('user', $user);
 

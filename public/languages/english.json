@@ -3,6 +3,7 @@
 	"CONFIRM_TERMS": "Please confirm the terms and conditions.",
 	"INVALID_EMAIL": "Please enter a valid email address",
 	"PASSWORDS_DONT_MATCH": "Sorry, your entered passwords do not match.",
+	"INVALID_CREDENTIALS": "The credentials you have entered do not match our records.",
 
 	"LOGGED_IN_NOT_APPROVED": "You are logged in but your account has not yet been approved. Some functions will not be available until your account has been approved by a board team member.",
 	"MUST_BE_LOGGED_IN": "You must be logged in to do that.",
@@ -10,7 +11,7 @@
 	"NO_DOUBLE_POST": "You cannot add another post, please edit your last post.",
 	"ALREADY_LIKED": "You have already liked this post.",
 
-	"TOPIC_POST_LIMIT": "you cannot create a new topic in this forum yet.",
+	"TOPIC_POST_LIMIT": "You cannot create a new topic in this forum yet. Please wait %d minutes and %d seconds.",
 	"COMMENT_MIN_LENGTH": "Comments must be at least %d characters long.",
 	
 	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later."

@@ -55,34 +55,7 @@
 
 						{% for comment in comments %}
 
-							<li class="row">
-
-								<div class="col-md-3">
-									<div class="comment-author-info">
-										<div class="avatar big text-center">
-											<img width="70" height="70" src="/avatars/cjmarkham/big.png" alt="" />
-										</div>
-										<p>
-											<em class="fa fa-comments"></em> 2
-										</p>
-										<p>
-											<em class="fa fa-thumbs-up"></em> 6
-										</p>
-									</div>
-								</div>
-
-								<div class="col-md-9">
-									<div class="profile-comment">
-										<date>
-											{{ comment.added|date("jS M y, H:i") }}
-										</date>
-										<p>
-											Maecenas viverra libero non urna lacinia fermentum. Nulla facilisi. Integer tristique accumsan molestie. Fusce vel nisl sodales, lacinia elit nec, aliquam lorem. Nunc viverra bibendum sem.
-										</p>
-									</div>
-								</div>
-
-							</li>	
+							{{ include('partials/profileComment.twig') }}	
 
 						{% else %}
 
@@ -107,7 +80,7 @@
 				<div id="profile-post-history">
 					<ul class="list-unstyled">
 
-						{% for i in 0..9 %}
+						{% for i in 0..8 %}
 
 							<li class="row">
 								<div class="col-md-4 relative">

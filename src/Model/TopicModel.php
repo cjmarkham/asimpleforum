@@ -175,6 +175,13 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
+		if (!\Permissions::hasPermission('CREATE_TOPIC')) 
+		{
+			$response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase('NO_PERMISSION'));
+	        return $response;
+		}
+
 		$forum_id = (int) $request->get('forumId');
 
 		if (!$forum_id)
@@ -203,14 +210,22 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
-		$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? LIMIT 1', array(
-			$user['id']
+		$name = strip_tags($name);
+
+		$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? AND forum=? ORDER BY added DESC LIMIT 1', array(
+			$user['id'],
+			$forum_id
 		));
 
-		if ($user_last['forum'] == $forum_id && $user_last['added'] < time() - 300)
+		$time_since_last = time() - (int) $user_last['added'];
+		
+		if ($time_since_last < 300)
 		{
-			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('TOPIC_POST_LIMIT'));
+			$seconds = 300 - $time_since_last;
+			$minutes = round($seconds / 60);
+			$seconds = $seconds % 60;
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('TOPIC_POST_LIMIT', array($minutes, $seconds)));
 			return $response;
 		}
 

@@ -24,18 +24,21 @@
 						<date class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</date> - <a href="" class="topic-name">{{ post.name }}</a>
 					</div>
 					<div class="pull-right post-tools">
-						{% if user and post.poster == user.id %}
+						{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}
 							<a data-postId="{{ post.id }}" href="javascript:void(0)" data-event="click" data-action="editPost">
 								<i class="fa fa-pencil"></i>
 							</a>
 						{% endif %}
-						<a href="javascript:void(0)" data-event="click" data-action="reportPostTrigger" data-postId="{{ post.id }}">
-							<i class="fa fa-exclamation-triangle"></i>
-						</a>
-						<a href="javascript:void(0)" data-event="click" data-action="likePost" data-postId="{{ post.id }}">
-							<i class="fa fa-thumbs-up"></i>
-						</a>
-						{% if user and post.poster != user.id %}
+						{% if user %}
+							<a href="javascript:void(0)" data-event="click" data-action="reportPostTrigger" data-postId="{{ post.id }}">
+								<i class="fa fa-exclamation-triangle"></i>
+							</a>
+							<a href="javascript:void(0)" data-event="click" data-action="likePost" data-postId="{{ post.id }}">
+								<i class="fa fa-thumbs-up"></i>
+							</a>
+						{% endif %}
+
+						{% if user %}
 							<a href="javascript:void(0)" data-event="click" data-action="quotePost" data-postId="{{ post.id }}" data-author="{{ post.username }}">
 								<i title="Quote" data-toggle="tooltip" class="fa fa-comment"></i>
 							</a>

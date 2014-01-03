@@ -7,6 +7,7 @@
 .marginLeft10 {margin-left: 10px}
 .marginLeft30 {margin-left: 30px}
 .marginRight10 {margin-right:10px}
+.marginTop80 {margin-top:80px;}
 
 .greyGradient {
 	background: #ffffff; /* Old browsers */
@@ -173,6 +174,11 @@ section {
 	&.big {
 		width: 72px;
 		height: 72px;
+	}
+
+	&.huge {
+		width: 100px;
+		height: 100px;
 	}
 }
 
@@ -399,7 +405,21 @@ date {
 	overflow: hidden;
 }
 
+.modal-backdrop {
+	background: transparent;
+}
+
+.radius (@radius) {
+	-webkit-border-radius: @radius;
+	   -moz-border-radius: @radius;
+		    border-radius: @radius;
+}
+
 .modal-dialog {
+	width: 800px;
+	.radius(10px);
+	padding: 40px;
+	background: rgba(61, 120, 178, .6);
 
 	.modal-header {
 		color: #fff;
@@ -515,4 +535,183 @@ date {
 .subforum-list {
 	font-size: 12px;
 	margin-top: 4px;
+}
+
+#profile-avatar {
+	margin-right: 20px;
+	margin-top: -73px;
+	vertical-align: top;
+}
+
+#profile-stats {
+	position: absolute;
+	top: -50px;
+	right: 0;
+	font-size: 1.6em;
+	color: @lightBlue;
+}
+
+.relative {position: relative;}
+
+#profile-info {
+	background: @grey;
+	padding: 20px;
+	color: @lightBlue;
+
+	h3 {
+		margin-top: 0;
+		color: @orange;
+	}
+}
+
+#profile-post-history {
+	border-left: 5px solid @darkGrey;
+	min-height: 500px;
+
+	ul {
+		margin-bottom: 40px;
+	}
+
+	li {
+		margin-top: 10px;
+
+		.col-md-4, .col-md-2 {
+			height: 45px;
+			padding-top: 35px;
+			padding-right: 0;
+		}
+
+		.col-md-8, .col-md-10 {
+			padding-left: 0;
+		} 
+
+		.profile-post {
+			background: @grey;
+			padding: 20px;
+			height: 80px;
+
+			.pull-right {
+				color: @lightBlue;
+			}
+		}
+
+		.circle {
+			.radius(20px);
+			width: 20px;
+			height: 20px;
+			background: @darkGrey;
+			position: absolute;
+			left: 2px;
+			top: 28px;
+		}
+
+		.line {
+			height: 1px;
+			border: 3px solid @grey;
+		}
+
+		date {
+			position: absolute;
+			top: 15px;
+			left: 30px;
+			color: @orange;
+			height: 15px;
+			width: 160px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+}
+
+#profile-comments {
+	margin-top: 20px;
+
+	textarea {
+		resize: none;
+		height: 70px;
+		margin-bottom: 20px;
+	}
+
+	ul {
+
+		li {
+			margin-top: 10px;
+
+			.col-md-3 {
+				text-align: center;
+				height: 140px;
+				padding-right: 0;
+
+				.comment-author-info {
+					height: 134px;
+					border-top: 1px solid @darkGrey;
+					border-bottom: 1px solid @darkGrey;
+					border-left: 3px solid @darkGrey;
+					background: @grey;
+					padding: 10px 0;
+
+					.avatar {
+						margin: 0 auto 10px auto;
+					}
+
+					em {
+						color: @lightBlue;
+					}
+				}
+			}
+
+			.col-md-9 {
+				padding-left: 0;
+				
+
+				.profile-comment {
+					border-top: 1px solid @darkGrey;
+					border-bottom: 1px solid @darkGrey;
+					height: 134px;
+					padding: 10px;
+				}
+
+				date {
+					color: @orange;
+				}
+			}
+		}
+	}
+}	
+
+.transition (@secs) {
+	-webkit-transition: @secs all;
+}
+
+.profile-comment-options {
+	color: @orange;
+	opacity: .4;
+	cursor: pointer;
+	.transition(.2s);
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+/* Modal heights */
+#login-modal .modal-dialog {
+	
+}
+
+.post blockquote {
+	border-left-color: @darkGrey;
+	border-bottom: 1px solid @darkGrey;
+	margin-bottom: 10px;
+
+	span {
+
+	}
+
+	p {
+		margin: 10px 0 5px;
+		font-style: italic;
+		font-size: 14px;
+	}
 }

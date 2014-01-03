@@ -2,6 +2,8 @@ var ASF = function () {
 	var slowSpeed = 500;
 	var medSpeed  = 300;
 	var fastSpeed = 100;
+
+	var user = null;
 };
 
 ASF.prototype.login = function (node) {
@@ -18,10 +20,11 @@ ASF.prototype.login = function (node) {
 	}).done(function (response) {
 
 		$('#account-control').hide();
+		$('#login-modal').modal('hide');
 
 		$.get('/partial/userbox', function (html) {
-			self.elements.replace('userbox', {}, '#account-control', function () {
-				$('#account-control').fadeIn(self.medSpeed);
+			ASF.prototype.elements.replace('userbox', {}, '#account-control', function () {
+				$('#account-control').fadeIn(ASF.prototype.medSpeed);
 
 				var onlineCount = parseInt($('#sessions p:first span').text().trim(), 10);
 				var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
@@ -30,7 +33,7 @@ ASF.prototype.login = function (node) {
 				$('#sessions p:first span').text(onlineCount);
 				$('#sessions p:last span').text(guestCount);
 
-				$('#onlineList').fadeIn(self.medSpeed);
+				$('#onlineList').fadeIn(ASF.prototype.medSpeed);
 
 				var link = '<a data-user="' + username + '" href="/user/' + username + '">' + username + '</a>';
 
@@ -48,14 +51,20 @@ ASF.prototype.login = function (node) {
 							}
 						}
 					}).done(function (html) {
-						$('#onlineList').hide().html(html).fadeIn(self.medSpeed);
+						$('#onlineList').hide().html(html).fadeIn(ASF.prototype.medSpeed);
 					});
 				}
+
+				ASF.prototype.user = {
+					username: username
+				};
+				ASF.prototype.elements.toggleUserVisibility();
+				
 			});
 		});
 
 	}).fail(function (response) {
-		return self.error(response.responseText);
+		return ASF.prototype.error(response.responseText);
 	});
 };
 
@@ -79,11 +88,14 @@ ASF.prototype.logout = function (node) {
 		$('#sessions p:first span').text(onlineCount);
 		$('#sessions p:last span').text(guestCount);
 
-		$('.visible-user').fadeOut(self.medSpeed);
+		$('.visible-user').fadeOut(ASF.prototype.medSpeed);
 
-		self.elements.replace('userbox', {}, '#account-control', function () {
-			$('#account-control').fadeIn(self.medSpeed);
+		ASF.prototype.elements.replace('userbox', {}, '#account-control', function () {
+			$('#account-control').fadeIn(ASF.prototype.medSpeed);
 		});
+
+		ASF.prototype.user = undefined;
+		ASF.prototype.elements.toggleUserVisibility();
 	});
 
 };
@@ -146,21 +158,19 @@ ASF.prototype.addQuickReply = function (node) {
 
 		if (response.updated) {
 			$('#posts #post-' + response.id + ' .post-content').html(response.content);
-			self.hideQuickReply();
+			ASF.prototype.hideQuickReply();
 		} else {
 
 			var postCount = $('#posts .post').length;
 
-			if (postCount >= parseInt(self.config.board.posts_per_page, 10)) {
+			if (postCount >= parseInt(ASF.prototype.config.board.posts_per_page, 10)) {
 
 				var url = location.href;
 				if (location.hash) {
 					var url = location.href.replace(location.hash, '');
 				}
 
-				console.log(location.href);
-				
-				url = url.substring(0, location.href.length - 1);
+				url = url.replace(/\/([a-zA-Z]+)\-([0-9]+)\/([0-9]+)/, '/$1-$2/');
 				url = url + response.page + '#' + response.id;
 
 				window.location.href = url;
@@ -183,13 +193,13 @@ ASF.prototype.addQuickReply = function (node) {
 				var wrapper = $('<section />').attr('id', 'post-' + response.id).addClass('post');
 				wrapper.append(html);
 				$('#posts').append(wrapper);
-				self.hideQuickReply();
-				self.delegate();
+				ASF.prototype.hideQuickReply();
+				ASF.prototype.delegate();
 			});
 		}
 		
 	}).fail(function (response) {
-		return self.error(response.responseText);
+		return ASF.prototype.error(response.responseText);
 	});
 };
 
@@ -227,9 +237,9 @@ ASF.prototype.reportPost = function (node) {
 		reason: reason
 	}).done(function (response) {
 		$('#post-report-modal').modal('hide');
-		return self.message(response);
+		return ASF.prototype.message(response);
 	}).fail(function (response) {
-		return self.error(response.responseText);
+		return ASF.prototype.error(response.responseText);
 	});
 };
 
@@ -275,7 +285,7 @@ ASF.prototype.addNewTopic = function (node) {
 			node.find('input[name="name"]').val('');
 			node.find('textarea').val('');
 
-			self.hideModal(node);
+			ASF.prototype.hideModal(node);
 
 			var stickies = $('#topics .sticky').length;
 
@@ -295,12 +305,12 @@ ASF.prototype.addNewTopic = function (node) {
 				}
 			}
 
-			self.delegate();
+			ASF.prototype.delegate();
 		});
 
 	}).fail(function (response) {
 		node.trigger('fail');
-		self.error(response.responseText);
+		ASF.prototype.error(response.responseText);
 		return false;
 	})
 };
@@ -352,9 +362,9 @@ ASF.prototype.quotePost = function (node) {
 	}).done(function (response) {
 		response = JSON.parse(response);
 
-		var modal = $('#quick-reply-modal');
-		modal.find('textarea').val('[quote=' + author + ']' + response.content.replace(/<br \/>/g, "\n") + "[/quote]\n");
+		CKEDITOR.instances.reply.setData('<blockquote><span>' + author + '</span><p>' + response.content + '</p></blockquote>');
 
+		var modal = $('#quick-reply-modal');
 		modal.modal({
 			show: true
 		});
@@ -371,7 +381,7 @@ ASF.prototype.likePost = function (node) {
 		postId: postId
 	}).done(function (response) {
 
-		self.elements.replace('postLikes', {
+		ASF.prototype.elements.replace('postLikes', {
 			post: {
 				likes: JSON.parse(response),
 				id: postId
@@ -379,7 +389,7 @@ ASF.prototype.likePost = function (node) {
 		}, '.like-row[data-postId="' + postId + '"]');
 
 	}).fail(function (response) {
-		self.error(response.responseText);
+		ASF.prototype.error(response.responseText);
 		return false;
 	});
 }
@@ -403,5 +413,61 @@ ASF.prototype.elements.replace = function (element, params, replace, callback) {
 		if (typeof callback == 'function') {
 			callback()
 		}
+	});
+};
+
+ASF.prototype.elements.toggleUserVisibility = function () {
+	console.log(ASF.prototype.user);
+
+	if (typeof ASF.prototype.user == 'undefined') {
+		$('.hidden-no-user').hide();
+		$('.hidden-user').show();
+	} else {
+		$('.hidden-no-user').show();
+		$('.hidden-user').hide();
+	}
+};
+
+ASF.prototype.profile = function () {};
+
+ASF.prototype.profile.addComment = function (node) {
+	var self = ASF.prototype;
+
+	var node = $(node);
+
+	var userId = node.find('[name="profileId"]').val();
+	var comment = node.find('textarea').val();
+
+	$.post('/user/addComment', {
+		profileId: userId,
+		comment: comment
+	}).done(function (response) {
+		response = JSON.parse(response);
+
+		$.post('/partial/profileComment', {
+			params: {
+				comment: {
+					added: response.added,
+					comment: response.comment,
+					username: response.username,
+					likes: 0,
+					comments: 0
+				},
+				profile: {
+					id: response.profileId
+				}
+			}
+		}).done(function (html) {
+
+			if (!$('.profile-comment').length) {
+				node.next().html(html);
+			} else {
+				node.next().prepend(html);
+			}
+		});
+
+	}).fail(function (response) {
+		ASF.prototype.error(response.responseText);
+		return false;
 	});
 };

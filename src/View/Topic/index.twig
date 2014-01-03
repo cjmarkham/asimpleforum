@@ -78,21 +78,19 @@
 	</section>
 
 	<div class="post-buttons clearfix">
-		<div class="pull-left">
+		
+		<div class="pull-left">	
 			{% if topic.locked %}
 				<button class="btn btn-danger">
 					Locked
 				</button>	
 			{% else %}
-				{% if user %}
-					<button class="btn btn-orange" data-event="click" data-action="showQuickReply">
-						Add Reply
-					</button>
-				{% else %}
-					<button class="btn btn-info">
-						Login to reply
-					</button>
-				{% endif %}
+				<button class="hidden-no-user btn btn-orange" data-event="click" data-action="showQuickReply">
+					Add Reply
+				</button>
+				<button data-toggle="modal" data-target="#login-modal" class="hidden-user btn btn-danger">
+					Login to reply
+				</button>
 			{% endif %}
 		</div>
 
@@ -115,10 +113,6 @@
 	<div class="modal fade" id="post-report-modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Report a post</h4>
-				</div>
 				<div class="modal-body">
 					<p>Please choose a reason for reporting this post.</p>
 					<form method="post" action="javascript:void(0)" data-event="submit" data-action="reportPost">
@@ -143,10 +137,6 @@
 	<div class="modal fade" id="quick-reply-modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Quick Reply</h4>
-				</div>
 				<div class="modal-body">
 					<form method="post" action="javascript:void(0)" data-event="submit" data-action="addQuickReply">
 						<input type="hidden" name="topicId" value="{{ topic.id }}" />
@@ -162,6 +152,7 @@
 						</a>
 
 						<script>
+
 							CKEDITOR.replace('reply');
 						</script>
 					</form>

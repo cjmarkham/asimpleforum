@@ -71,7 +71,7 @@ $app->get('/{forum_name}/{topic_name}-{topic_id}/{page}', function (Application 
 
 $app->get('/{forum_name}/{topic_name}-{topic_id}', function (Application $app, $topic_name, $topic_id) {
     return Route::get('topic:index', $topic_name, $topic_id);
-});
+})->assert('topic_name', '([a-zA-Z0-9<>_-\s]+)');
 
 $app->post('/topic/{method}', function (Request $request, $method) use ($app) {
     if (!method_exists($app['topic'], $method))
@@ -91,4 +91,14 @@ $app->post('/post/{method}', function (Request $request, $method) use ($app) {
         return $response;
     }
     return $app['post']->$method($request);
+});
+
+$app->post('/user/{method}', function (Request $request, $method) use ($app) {
+    if (!method_exists($app['user'], $method))
+    {
+        $response = new Response();
+        $response->setStatusCode(403);
+        return $response;
+    }
+    return $app['user']->$method($request);
 });

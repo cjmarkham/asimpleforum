@@ -107,21 +107,18 @@
 	</section>
 
 	<div class="forum-options clearfix">
-		{% if user %}
 			{% if not forum.locked %}
-				<button class="btn btn-orange" data-event="click" data-action="newTopicTrigger">
+				<button class="hidden-no-user btn btn-orange" data-event="click" data-action="newTopicTrigger">
 					New topic
+				</button>
+				<button class="hidden-user btn btn-danger" data-toggle="modal" data-target="#login-modal">
+					Login to create
 				</button>
 			{% else %}
 				<button class="btn btn-danger">
 					Locked
 				</button>
 			{% endif %}
-		{% else %}
-			<button class="btn btn-danger">
-				Login to create
-			</button>
-		{% endif %}
 
 		{% include('Partials/pagination.twig') with {
 			prefix: forum.name|url_encode ~ '-' ~ forum.id ~ '/',
@@ -131,13 +128,10 @@
 {% endblock %}
 
 {% block modals %}
+	{{ parent() }}
 	<div class="modal fade" id="create-topic-modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Create topic</h4>
-				</div>
 				<div class="modal-body">
 					<form method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
 						<input type="hidden" name="forumId" value="{{ forum.id }}" />

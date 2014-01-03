@@ -1,12 +1,26 @@
 var asf = new ASF();
 $(function () {
+
+	asf.elements.toggleUserVisibility();
+
 	$(document.body).fadeIn();
 
 	$(document).on('submit', '[data-event="submit"]', function (e) {
 		var action = $(this).data('action');
 
-		if (typeof asf[action] == 'function') {
-			asf[action](this);
+		var parts = action.split('.');
+		var method = asf;
+
+		if (parts.length === 1) {
+			method = method[action];
+		} else {
+			$(parts).each(function () {
+				method = method[this];
+			})
+		}
+
+		if (typeof method == 'function') {
+			method(this);
 		} else {
 			console.error('No function ASF.' + action);
 		}
