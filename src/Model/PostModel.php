@@ -418,6 +418,9 @@ class PostModel extends BaseModel
 			$id
 		));
 
+		$this->app['cache']->collection = $this->collection;
+		$this->app['cache']->delete_group('topic-posts-' . $post['topic']);
+
 		return json_encode(array(
 			'content' => $content
 		));
