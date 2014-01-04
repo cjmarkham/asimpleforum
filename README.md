@@ -1,5 +1,6 @@
 asimpleforum
 =
+[![Build Status](https://travis-ci.org/cjmarkham/asimpleforum.png?branch=master)](https://travis-ci.org/cjmarkham/asimpleforum)
 
 Contribution
 =
