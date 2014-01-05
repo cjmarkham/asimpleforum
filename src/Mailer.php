@@ -15,8 +15,6 @@ class Mailer
 	{
 		self::compile();
 
-		var_dump($to);
-
 		$headers = "From: " . $from . "\r\n";
 		$headers .= "Reply-To: ". $from . "\r\n";
 		$headers .= "MIME-Version: 1.0\r\n";
@@ -24,8 +22,7 @@ class Mailer
 
 		try
 		{
-			$send = mail('doddsey65@hotmail.com', 'doddsey65@hotmail.com', self::$template, $headers);
-			var_dump($send);
+			$send = mail($from, $to, self::$template, $headers);
 		}
 		catch (\Exception $e)
 		{

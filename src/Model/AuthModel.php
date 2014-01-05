@@ -110,8 +110,14 @@ class AuthModel
 
 		if ($this->app['config']->board['confirmEmail'] === true)
 		{
-			Mailer::setTemplate('confirmEmail');
-			Mailer::send($data['email'], $this->app['config']->board['noReplyEmail'], 'Email Confirmation');
+			\Mailer::setTemplate('emailConfirmation', array(
+				'username' => $data['username'],
+				'boardTitle' => $this->app['config']->board['name'],
+				'boardUrl'   => $this->app['config']->board['url'],
+				'confirmCode' => base64_encode($data['email'] . '- ' . $this->app['db']->lastInsertId())
+			));
+
+			\Mailer::send($data['email'], $this->app['config']->email['noReply'], 'Email confirmation');
 		}
 
 		// Todo return success message
