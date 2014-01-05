@@ -97,7 +97,7 @@ class AuthModel
 			'password' => $hashed,
 			'email'    => $data['email'],
 			'ip'       => $_SERVER['REMOTE_ADDR'],
-			'group'	   => $default_group,
+			'perm_group'=> $default_group,
 			'regdate'  => time(),
 			'lastActive' => time()
 		));
