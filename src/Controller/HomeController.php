@@ -12,8 +12,8 @@ class HomeController
 
 		\Mailer::setTemplate('emailConfirmation', array(
 			'username' => 'cjmarkham',
-			'boardTitle' => $this->app['config']->board('name'),
-			'boardUrl'   => $this->app['config']->board('url'),
+			'boardTitle' => $this->app['config']->board['name'],
+			'boardUrl'   => $this->app['config']->board['url'],
 			'confirmCode' => base64_encode('doddsey65@hotmail.com-1')
 		));
 
