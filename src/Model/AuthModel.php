@@ -108,6 +108,12 @@ class AuthModel
 			return false;
 		}
 
+		if ($this->app['config']->board['confirmEmail'] === true)
+		{
+			Mailer::setTemplate('confirmEmail');
+			Mailer::send($data['email'], $this->app['config']->board['noReplyEmail'], 'Email Confirmation');
+		}
+
 		// Todo return success message
 		return true;
 	}
