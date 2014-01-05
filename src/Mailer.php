@@ -24,7 +24,7 @@ class Mailer
 
 		try
 		{
-			$send = mail('doddsey65@hotmail.com', 'doddsey65@hotmail.com', 'self::$template', $headers);
+			$send = mail('doddsey65@hotmail.com', 'doddsey65@hotmail.com', self::$template, $headers);
 			var_dump($send);
 		}
 		catch (\Exception $e)
