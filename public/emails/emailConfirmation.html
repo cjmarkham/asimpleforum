@@ -2,6 +2,25 @@
 <head>
 
 </head>
-<body>
-	Email for {{ username }}
+<body style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;">
+	<div style="height: 30px;
+padding: 13px 8px 0;
+background: url(/images/section-header.png);
+color: #fff;
+text-shadow: 0 1px 1px #08192b;
+font-weight: bold;
+border-radius: 5px 5px 0 0;">
+			Welcome to {{ boardTitle }} {{ username }}
+	</div>
+	<div style="background: #f2f2f2;
+padding: 10px;color:#79828b">
+		<p>Before you can use all of the features of our board you will need to confirm your email address.</p>
+		<p>This process is as simple as clicking the link below.</p>
+		<br />
+		<p>
+			Once you have confirmed your email you will be able to access all of the features of our board.
+		</p>
+		<p>Click this link to confirm your email address, or copy and paste it into your browsers address bar.</p>
+		<a style="color:#f46626" href="">{{ boardUrl }}/user/confirmEmail/{{ confirmCode }}</a>
+	</div>
 </body>
