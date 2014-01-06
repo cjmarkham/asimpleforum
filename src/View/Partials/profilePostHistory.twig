@@ -1,0 +1,24 @@
+{% if posts|length %}
+	{% for post in posts %}
+		<li class="row">
+			<div class="col-md-4 relative">
+				<div class="circle"></div>
+				<div class="line"></div>
+				<date class="date" title="{{ post.added|date('c') }}">
+					{{ post.added|date('jS M y, H:i') }}
+				</date>
+			</div>
+			<div class="col-md-8">
+				<div class="profile-post">
+					<a href="" class="topic-name">
+						{{ post.name }}
+					</a>
+
+					<p>
+						{{ truncate(post.content, 200)|raw }}
+					</p>
+				</div>
+			</div>
+		</li>
+	{% endfor %}
+{% endif %}

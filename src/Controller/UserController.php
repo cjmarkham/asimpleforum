@@ -15,12 +15,12 @@ class UserController
 			return $this->app->redirect('/');
 		}
 
-		$comments = $this->app['user']->find_comments($user['id'], 1);
+		$comments = $this->app['user']->find_comments($user['data']['id'], 1);
 
 		return $this->app['twig']->render('User/index.twig', array(
-			'title' 			=> $user['username'],
+			'title' 			=> $user['data']['username'],
 			'section'			=> 'members',
-			'profile'			=> $user,
+			'profile'			=> $user['data']['profile']['data'],
 			'comments'			=> $comments['data']['data']
 		));
 	}

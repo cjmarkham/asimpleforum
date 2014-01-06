@@ -55,6 +55,31 @@ class PostModel extends BaseModel
 		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'posts');
 	}
 
+	public function find_by_user (Request $request)
+	{
+		$user_id = (int) $request->get('user_id');
+		$page = (int) $request->get('page');
+
+		if (!$user_id)
+		{
+			return false;
+		}
+
+		$cache_key = 'user-posts-' . $user_id . '.' . $page;
+
+		$posts['data'] = $this->app['cache']->get($cache_key, function () use ($user_id, $page) {
+			$data = array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.poster=? ORDER BY added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
+					$user_id
+				))
+			);
+
+			return $data;
+		});
+
+		return json_encode($posts);
+	}
+
 	/**
 	 * Get a list of posts for a topic
 	 * @param  int  $topic_id

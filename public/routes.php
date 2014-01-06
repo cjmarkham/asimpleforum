@@ -28,6 +28,10 @@ $app->get('/logout', function (Application $app) {
     return Route::get('auth:logout');
 });
 
+$app->get('/user/{username}/{page}', function (Application $app, $username, $page) {
+    return Route::get('user:index', $username, $page);
+})->assert('page', '([0-9]+)');
+
 $app->get('/user/{username}', function (Application $app, $username) {
     return Route::get('user:index', $username);
 });

@@ -22,9 +22,9 @@
 
 		{% if user %}
 		<script>
-			ASF.prototype.user = JSON.parse('{{ user|json_encode|raw }}');
+			asf.user = JSON.parse('{{ user|json_encode|raw }}');
 
-			ASF.prototype.config = JSON.parse('{{ config|json_encode|raw }}');
+			asf.config = JSON.parse('{{ config|json_encode|raw }}');
 		</script>
 		{% endif %}
 	{% endblock %}

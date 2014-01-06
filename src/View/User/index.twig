@@ -1,5 +1,15 @@
 {% extends "Layout/main.twig" %}
-	
+
+{% block scripts %}
+	{{ parent() }}
+
+	<script>
+	$(function () {
+		asf.profile.loadPostHistory(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-post-history ul'});
+	});
+	</script>
+{% endblock %}
+
 {% block content %}
 	<section class="marginTop80 relative">
 		<ul class="list-unstyled list-inline" id="profile-stats">
@@ -27,9 +37,9 @@
 			<div class="col-md-6" id="profile-left">
 				<div id="profile-info" class="clearfix">
 					<div class="pull-left">
-						<h3>Carl Joseph Markham</h3>
+						<h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
 						<em>
-							Male from North East UK
+							<em class="fa fa-{{ profile.gender|lower }}"></em> {{ profile.gender|lower|capitalize }} from {{ profile.location }}
 						</em>
 					</div>
 					<div class="pull-right">
@@ -66,13 +76,6 @@
 						{% endfor %}
 
 					</ul>
-
-					{% if comments|length %}
-						<a href="javascrit:void(0)" class="form-control btn btn-primary">
-							Load more
-						</a>
-					{% endif %}
-
 				</div>
 			</div>
 
@@ -80,45 +83,13 @@
 				<div id="profile-post-history">
 					<ul class="list-unstyled">
 
-						{% for i in 0..8 %}
-
-							<li class="row">
-								<div class="col-md-4 relative">
-									<div class="circle"></div>
-									<div class="line"></div>
-									<date>
-										12th January 2014 8:44am
-									</date>
-								</div>
-								<div class="col-md-8">
-									<div class="profile-post">
-										<div class="clearfix">
-											<div class="pull-left">
-												<a href="" class="topic-name">
-													A post name
-												</a>
-											</div>
-											<div class="pull-right">
-												<em class="fa fa-comments"></em> 2
-												<em class="fa fa-eye"></em> 15
-											</div>
-										</div>
-
-										<p>
-											A post description
-										</p>
-									</div>
-								</div>
-							</li>
-
-						{% endfor %}
-
 					</ul>
 				</div>
 
-				<a href="javascrit:void(0)" class="form-control btn btn-primary">
-					Load more
+				<a href="javascript:void(0)" data-page="2" class="btn btn-primary form-control" data-event="click" data-params="{{{user_id: profile.id, container: '#profile-post-history ul'}|json_encode}}" data-action="profile.loadPostHistory">
+					Load More
 				</a>
+
 			</div>
 		</div>
 
