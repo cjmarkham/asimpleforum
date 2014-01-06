@@ -108,6 +108,10 @@ class AuthModel
 			return false;
 		}
 
+		$insert = $this->app['db']->insert('profiles', array(
+			'id' => $this->app['db']->lastInsertId()
+		));
+
 		if ($this->app['config']->board['confirmEmail'] === true)
 		{
 			\Mailer::setTemplate('emailConfirmation', array(
