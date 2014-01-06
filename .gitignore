@@ -2,3 +2,4 @@ config
 cache
 Capfile
 vendor
+node_modules
