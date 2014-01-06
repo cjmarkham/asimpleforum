@@ -22,16 +22,36 @@ class UserModel extends BaseModel
 		$this->app = $app;
 	}
 
-	public function find_by_username($username)
+	public function find_by_username ($username)
 	{
 		if (!$username)
 		{
 			return false;
 		}
 
-		$user = $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate FROM users WHERE username=? LIMIT 1', array(
-			$username
-		));
+		$cache_key = 'user-' . $username;
+		$user = $this->app['cache']->get($cache_key, function () use ($username) {
+			$data = array(
+				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate FROM users WHERE username=? LIMIT 1', array(
+					$username
+				))
+			);
+
+			return $data;
+		});
+
+		$cache_key = 'user-profile-' . $user['data']['id'];
+		$profile = $this->app['cache']->get($cache_key, function () use ($user) {
+			$data = array(
+				'data' => $this->app['db']->fetchAssoc('SELECT * FROM profiles WHERE id=? LIMIT 1', array(
+					$user['data']['id']
+				))
+			);
+
+			return $data;
+		});
+
+		$user['data']['profile'] = $profile;
 
 		return $user;
 	}
