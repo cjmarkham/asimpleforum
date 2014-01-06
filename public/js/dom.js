@@ -16,7 +16,7 @@ $(function () {
 		} else {
 			$(parts).each(function () {
 				method = method[this];
-			})
+			});
 		}
 
 		if (typeof method == 'function') {
@@ -28,9 +28,21 @@ $(function () {
 
 	$(document).on('click', '[data-event="click"]', function (e) {
 		var action = $(this).data('action');
+		var params = $(this).data('params');
+
+		var parts = action.split('.');
+		var method = asf;
+
+		if (parts.length === 1) {
+			method = method[action];
+		} else {
+			$(parts).each(function () {
+				method = method[this];
+			});
+		}
 
 		if (typeof asf[action] == 'function') {
-			asf[action](this);
+			method(this, params);
 		} else {
 			console.error('No function ASF.' + action);
 		}
@@ -65,7 +77,7 @@ $(function () {
 
 		if (textarea[0].setSelectionRange) {
 			var length = textarea.val().length * 2;
-        	textarea[0].setSelectionRange(length, length);
+			textarea[0].setSelectionRange(length, length);
 		} else {
 			textarea.val(textarea.val());
 		}
@@ -88,7 +100,7 @@ $(function () {
 		mouseenter: function () {
 
 			var self = $(this);
-			var topicId = $(this).closest('.topic').attr('id').replace('topic-', '')
+			var topicId = $(this).closest('.topic').attr('id').replace('topic-', '');
 
 			if ($('#preview-' + topicId).length) {
 				self.popover({

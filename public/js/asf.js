@@ -9,7 +9,7 @@ var ASF = function () {
 ASF.prototype.login = function (node) {
 	var self = this;
 
-	var node = $(node);
+	node = $(node);
 
 	var username = node.find('input[name="username"]').val();
 	var password = node.find('input[name="password"]').val();
@@ -77,7 +77,7 @@ ASF.prototype.logout = function (node) {
 	$.get('/logout').done(function () {
 		$('#users [data-user="' + username + '"]').remove();
 
-		if ($('#users a').length == 0) {
+		if ($('#users a').length === 0) {
 			$('#sessions section').fadeOut();
 		}
 
@@ -121,7 +121,7 @@ ASF.prototype.message = function (message, error) {
 };
 
 ASF.prototype.notification = function (image, title, message) {
-	if (window.webkitNotifications.checkPermission() == 0) {
+	if (window.webkitNotifications.checkPermission() === 0) {
 		window.webkitNotifications.createNotification(
 			image, 
 			title,
@@ -133,16 +133,16 @@ ASF.prototype.notification = function (image, title, message) {
 ASF.prototype.showQuickReply = function () {
 	$('#quick-reply-modal').modal({
 		show: true
-	})
+	});
 };
 
 ASF.prototype.hideQuickReply = function () {
 	$('#quick-reply-modal').modal('hide');
 	$('#quick-reply-modal textarea').val('');
-}
+};
 
 ASF.prototype.addQuickReply = function (node) {
-	var node = $(node);
+	node = $(node);
 	var self = this;
 	var content = node.find('textarea').val();
 	var name = node.find('input[name="name"]').val();
@@ -167,7 +167,7 @@ ASF.prototype.addQuickReply = function (node) {
 
 				var url = location.href;
 				if (location.hash) {
-					var url = location.href.replace(location.hash, '');
+					url = location.href.replace(location.hash, '');
 				}
 
 				url = url.replace(/\/([a-zA-Z]+)\-([0-9]+)\/([0-9]+)/, '/$1-$2/');
@@ -208,7 +208,7 @@ ASF.prototype.delegate = function () {
 };
 
 ASF.prototype.reportPostTrigger = function (node) {
-	var node = $(node);
+	node = $(node);
 	var postId = node.attr('data-postId');
 
 	var modal = $('#post-report-modal');
@@ -221,7 +221,7 @@ ASF.prototype.reportPostTrigger = function (node) {
 };
 
 ASF.prototype.reportPost = function (node) {
-	var node = $(node);
+	node = $(node);
 	var self = this;
 
 	var postId = node.find('input[name="postId"]').val();
@@ -244,7 +244,7 @@ ASF.prototype.reportPost = function (node) {
 };
 
 ASF.prototype.hideModal = function (node) {
-	var node = $(node);
+	node = $(node);
 
 	node.closest('.modal').modal('hide');
 };
@@ -254,7 +254,7 @@ ASF.prototype.newTopicTrigger = function () {
 };
 
 ASF.prototype.addNewTopic = function (node) {
-	var node = $(node);
+	node = $(node);
 	var self = this;
 
 	var forumId = node.find('input[name="forumId"]').val();
@@ -312,7 +312,7 @@ ASF.prototype.addNewTopic = function (node) {
 				$(html).insertAfter(seperator);
 			} else {
 
-				if (topicCount == 0) {
+				if (topicCount === 0) {
 					$('#topics .content').html(html);
 				} else {
 					$('#topics .content').prepend(html, seperator);
@@ -326,11 +326,11 @@ ASF.prototype.addNewTopic = function (node) {
 		node.trigger('fail');
 		ASF.prototype.error(response.responseText);
 		return false;
-	})
+	});
 };
 
 ASF.prototype.editPost = function (node) {
-	var node = $(node);
+	node = $(node);
 
 	var postId = node.attr('data-postId');
 
@@ -362,10 +362,10 @@ ASF.prototype.editPost = function (node) {
 
 		});
 	});
-}
+};
 
 ASF.prototype.quotePost = function (node) {
-	var node = $(node);
+	node = $(node);
 	var postId = node.attr('data-postId');
 	var author = node.attr('data-author');
 	
@@ -394,7 +394,7 @@ ASF.prototype.quotePost = function (node) {
 			editor.focus();	
 		});
 	});
-}
+};
 
 ASF.prototype.likePost = function (node) {
 	node = $(node);
@@ -417,7 +417,7 @@ ASF.prototype.likePost = function (node) {
 		ASF.prototype.error(response.responseText);
 		return false;
 	});
-}
+};
 
 ASF.prototype.elements = function () {};
 
@@ -436,7 +436,7 @@ ASF.prototype.elements.replace = function (element, params, replace, callback) {
 		replace.html(response);
 
 		if (typeof callback == 'function') {
-			callback()
+			callback();
 		}
 	});
 };
@@ -458,7 +458,7 @@ ASF.prototype.profile = function () {};
 ASF.prototype.profile.addComment = function (node) {
 	var self = ASF.prototype;
 
-	var node = $(node);
+	node = $(node);
 
 	var userId = node.find('[name="profileId"]').val();
 	var comment = node.find('textarea').val();
@@ -495,4 +495,10 @@ ASF.prototype.profile.addComment = function (node) {
 		ASF.prototype.error(response.responseText);
 		return false;
 	});
+};
+
+ASF.prototype.profile.loadPostHistory = function (node, params) {
+	params = JSON.parse(params);
+
+	console.log(params);
 };
