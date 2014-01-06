@@ -18,6 +18,7 @@ class UserController
 		return $this->app['twig']->render('User/index.twig', array(
 			'title' 			=> $user['data']['username'],
 			'section'			=> 'members',
+			'profileId'			=> $user['data']['id'],
 			'profile'			=> $user['data']['profile']['data']
 		));
 	}
