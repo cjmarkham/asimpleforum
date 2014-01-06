@@ -34,7 +34,7 @@ class Permissions
 
 		$constant = constant('self::' . $action);
 
-		return $user['perm_group']['permission'] & $constant;
+		return $user['group']['permission'] & $constant;
 	}
 
 	public static function setPermissions (array $permissions)
