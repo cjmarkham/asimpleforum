@@ -10,7 +10,7 @@
 			</div>
 			<div class="col-md-8">
 				<div class="profile-post">
-					<a href="" class="topic-name">
+					<a href="/{{ post.forumName|url_encode }}/{{ post.topicName|url_encode }}-{{ post.topic }}/1#{{ post.id }}" class="topic-name">
 						{{ post.name }}
 					</a>
 

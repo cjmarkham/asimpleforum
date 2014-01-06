@@ -69,13 +69,15 @@ class PostModel extends BaseModel
 
 		$posts['data'] = $this->app['cache']->get($cache_key, function () use ($user_id, $page) {
 			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.poster=? ORDER BY added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, t.name as topicName, f.name as forumName, u.username FROM posts p JOIN users u ON p.poster=u.id JOIN topics t ON t.id=p.topic JOIN forums f ON f.id=t.forum WHERE p.poster=? ORDER BY added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
 					$user_id
 				))
 			);
 
 			return $data;
 		});
+
+		// need to pull all posts from each topic just to find out which page this post will be on
 
 		return json_encode($posts);
 	}
