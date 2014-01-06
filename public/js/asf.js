@@ -485,14 +485,32 @@ var asf = {
 			});
 		},
 
+		likeComment: function (node) {
+			node = $(node);
+
+			var commentId = node.attr('data-commentId');
+			var username = asf.user.username;
+
+			$.post('/user/likeComment', {
+				commentId: commentId,
+				username: username
+			}).done(function (response) {
+				var prevLikes = parseInt($('[data-comment="' + commentId + '"]').text(), 10);
+				var newLikes = prevLikes + 1;
+
+				$('[data-comment="' + commentId + '"]').text(newLikes);
+
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+		},
+
 		loadPostHistory: function (node, params) {
 
 			var page = parseInt($(node).attr('data-page'), 10);
 			if (!page) {
 				page = 1;
 			}
-
-			console.log(page);
 
 			var container = $(params.container);
 
@@ -504,7 +522,7 @@ var asf = {
 				response = JSON.parse(response);
 				var data = response.data.data;
 
-				if (!data.length || data.length <= 4) {
+				if (!data.length) {
 					$(node).remove();
 					return false;
 				}
@@ -515,9 +533,52 @@ var asf = {
 					}
 				}).done(function (html) {
 					container.hide().html(html).fadeIn(300);
-					$(node).attr('data-page', page + 1);
+
+					if (node !== null) {
+						$(node).attr('data-page', page + 1);
+					}
 				});
 				
+			}).fail(function (response) {
+
+			});
+		},
+
+		loadComments: function (node, params) {
+			var page = parseInt($(node).attr('data-page'), 10);
+			if (!page) {
+				page = 1;
+			}
+
+			var container = $(params.container);
+
+			$.post('/user/find_comments', {
+				user_id: params.user_id,
+				page: page
+			}).done(function (response) {
+				response = JSON.parse(response);
+				var data = response.data.data;
+
+				if (!data.length) {
+					$(node).remove();
+					return false;
+				}
+
+				$.post('/partial/profileComments', {
+					params: {
+						comments: data,
+						profile: {
+							id: params.user_id
+						}
+					}
+				}).done(function (html) {
+
+					container.hide().html(html).fadeIn(300);
+
+					if (node !== null) {
+						$(node).attr('data-page', page + 1);
+					}
+				});
 			}).fail(function (response) {
 
 			});
