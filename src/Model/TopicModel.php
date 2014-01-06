@@ -175,7 +175,6 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
-		die(var_dump(\Permissions::hasPermission('CREATE_TOPIC')));
 		if (!\Permissions::hasPermission('CREATE_TOPIC')) 
 		{
 			$response->setStatusCode(400);
