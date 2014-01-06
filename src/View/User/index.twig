@@ -6,6 +6,7 @@
 	<script>
 	$(function () {
 		asf.profile.loadPostHistory(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-post-history ul'});
+		asf.profile.loadComments(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-comments ul'});
 	});
 	</script>
 {% endblock %}
@@ -62,28 +63,20 @@
 					</form>	
 
 					<ul class="list-unstyled">
-
-						{% for comment in comments %}
-
-							{{ include('partials/profileComment.twig') }}	
-
-						{% else %}
-
-							<li class="alert alert-warning">
-								No comments posted yet.
-							</li>
-
-						{% endfor %}
-
+						<li class="alert alert-warning">
+							No comments posted yet
+						</li>
 					</ul>
 				</div>
+
+				<a href="javascript:void(0)" data-page="2" class="btn btn-primary form-control" data-event="click" data-params="{{{user_id: profile.id, container: '#profile-comments ul'}|json_encode}}" data-action="profile.loadComments">
+					Load More
+				</a>
 			</div>
 
 			<div class="col-md-6" id="profile-right">
 				<div id="profile-post-history">
-					<ul class="list-unstyled">
-
-					</ul>
+					<ul class="list-unstyled"></ul>
 				</div>
 
 				<a href="javascript:void(0)" data-page="2" class="btn btn-primary form-control" data-event="click" data-params="{{{user_id: profile.id, container: '#profile-post-history ul'}|json_encode}}" data-action="profile.loadPostHistory">
