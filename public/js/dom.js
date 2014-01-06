@@ -1,4 +1,3 @@
-var asf = new ASF();
 $(function () {
 
 	asf.elements.toggleUserVisibility();
@@ -41,7 +40,7 @@ $(function () {
 			});
 		}
 
-		if (typeof asf[action] == 'function') {
+		if (typeof method == 'function') {
 			method(this, params);
 		} else {
 			console.error('No function ASF.' + action);
