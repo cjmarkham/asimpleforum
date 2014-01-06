@@ -12,6 +12,8 @@ class Permissions
 
 	const EDIT_POSTS = 4; // includes delete
 
+	const EDIT_COMMENTS = 4; // includes delete
+
 	const EDIT_TOPICS = 8; // includes delete
 
 	const LOCK_TOPIC = 16;
