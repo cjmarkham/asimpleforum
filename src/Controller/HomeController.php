@@ -2,9 +2,13 @@
 
 namespace Controller;
 
-class HomeController
+class HomeController extends Controller
 {
-	public $app;
+	public function __construct(\Silex\Application $app)
+	{
+		$this->app = $app;
+		$this->init();
+	}
 
 	public function index()
 	{
@@ -14,6 +18,6 @@ class HomeController
 			'title' 			=> 'Home',
 			'section'			=> 'index',
 			'forums' 			=> $forums
-		));
+		) + $this->extras);
 	}
 }
