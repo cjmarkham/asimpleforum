@@ -40,7 +40,6 @@ class Route
 		}
 
 		$controller = new $path(self::$app);
-		$controller->app = self::$app;
 
 		$params = func_get_args();
 		array_shift($params);
