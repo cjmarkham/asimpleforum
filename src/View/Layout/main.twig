@@ -2,10 +2,8 @@
 <head>
 
 	{% block css %}
-		<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" /> -->
 		<link rel="stylesheet" href="/css/bootstrap.css" />
-		<link rel="stylesheet" href="/css/fontawesome/css/font-awesome.css" />
+		<link rel="stylesheet" href="/font-awesome/css/font-awesome.css" />
 		<link rel="stylesheet" href="/css/main.css" />
 	{% endblock %}
 
@@ -19,8 +17,6 @@
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
 		
-		<!-- <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> -->
 		<script src="/js/jquery.js"></script>
 		<script src="/js/bootstrap.js"></script>
 		<script src="/js/asf.js"></script>
@@ -30,6 +26,15 @@
 		{% if user %}
 		<script>
 			asf.user = JSON.parse('{{ user|json_encode|raw }}');
+
+			asf.page = {
+				url: location.href,
+				section: '{{ section }}'
+			};
+
+			{% if section == 'forums' %}
+				asf.forum = '{{ forum|json_encode|raw }}'
+			{% endif %}
 
 			asf.config = JSON.parse('{{ config|json_encode|raw }}');
 		</script>
@@ -41,13 +46,29 @@
 	
 	<header id="header">
 
-		<div class="container" id="logo">
-			<a href="/">
-				<img src="/images/{{ config('board', 'logo') }}" alt="" />
-			</a>
+		<div class="container">
+			<div class="row">
+				<div id="logo" class="col-md-9">
+					<a href="/">
+						<img src="/images/{{ config('board', 'logo') }}" alt="" />
+					</a>
+				</div>
+				<div id="quick-search" class="col-md-3">
+					<form name="search-form" method="post" action="" class="form-horizontal">
+						<div class="form-group">
+							<input type="text" name="query" class="typeahead form-control" autocomplete="off" placeholder="Quick search" />
+							<button class="fa fa-search">&nbsp;</button>
+							<select id="search-form-indicator" {% if section != 'forums' %}class="hide"{% endif %}>
+								<option selected value="this">This forum</option>
+								<option value="all">All forums</option>
+							</select>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 
-		<nav class="container" id="main-nav">
+		<div class="container" id="main-nav">
 			<ul class="list-unstyled list-inline">
 				{% for link in nav_links %}
 					<li {% if section == link.section %}class="active"{% endif %}>
@@ -57,7 +78,7 @@
 					</li>
 				{% endfor %}
 			</ul>
-		</nav>
+		</div>
 	</header>
 
 	<div id="message-block"></div>
