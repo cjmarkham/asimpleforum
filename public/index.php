@@ -168,6 +168,11 @@ $app['forum'] = $app->share(function() use ($app) {
     return $model;
 });
 
+$app['search'] = $app->share(function() use ($app) {
+    $model = new \Model\SearchModel($app);
+    return $model;
+});
+
 $app['group'] = $app->share(function() use ($app) {
     $model = new \Model\GroupModel($app);
     return $model;
@@ -250,7 +255,7 @@ $app->finish(function (Request $request) use ($app, $logger) {
             $query_length = count($logger->queries);
             $query_list = implode('<br /><hr />', $queries);
 
-echo <<<HEREDOC
+/*echo <<<HEREDOC
     <div id="logger">
         <button onclick="$(this).next().slideToggle()" class="btn btn-danger">
             Queries: $query_length
@@ -262,7 +267,7 @@ echo <<<HEREDOC
             Query Time: $time
         </button>
     </div>
-HEREDOC;
+HEREDOC;*/
         }
     }
 
