@@ -26,7 +26,10 @@
 		{% if user %}
 		<script>
 			asf.user = JSON.parse('{{ user|json_encode|raw }}');
+		</script>
+		{% endif %}
 
+		<script>
 			asf.page = {
 				url: location.href,
 				section: '{{ section }}'
@@ -37,8 +40,8 @@
 			{% endif %}
 
 			asf.config = JSON.parse('{{ config|json_encode|raw }}');
+
 		</script>
-		{% endif %}
 	{% endblock %}
 </head>
 
