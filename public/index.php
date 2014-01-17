@@ -206,6 +206,16 @@ $app['language'] = $app->share(function() use ($app) {
 // Routes
 include 'routes.php';
 
+if ($app['debug'] === true) 
+{
+    $app->register(new Whoops\Provider\Silex\WhoopsServiceProvider);
+
+    $app['whoops'] = $app->extend('whoops', function($whoops) {
+        $whoops->pushHandler(new DeleteWholeProjectHandler);
+        return $whoops;
+    });
+}
+
 if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
 {
     $app['cache']->flush($app, 'default', 'asf_forum');
