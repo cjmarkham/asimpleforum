@@ -2,9 +2,13 @@
 
 namespace Controller;
 
-class ForumController
+class ForumController extends Controller
 {
-	public $app;
+	public function __construct(\Silex\Application $app)
+	{
+		$this->app = $app;
+		$this->init();
+	}
 
 	public function index($name, $forum_id, $page = 1)
 	{
@@ -35,6 +39,6 @@ class ForumController
 			'forum'				=> $forum,
 			'topics' 			=> $topics['data']['data'],
 			'pagination'		=> $topics['pagination']
-		));
+		) + $this->extras);
 	}
 }

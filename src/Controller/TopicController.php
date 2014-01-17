@@ -2,9 +2,13 @@
 
 namespace Controller;
 
-class TopicController
+class TopicController extends Controller
 {
-	public $app;
+	public function __construct(\Silex\Application $app)
+	{
+		$this->app = $app;
+		$this->init();
+	}
 
 	public function index ($topic_name, $topic_id, $page = 1)
 	{
@@ -38,6 +42,6 @@ class TopicController
 			'topic'				=> $topic,
 			'posts' 			=> $posts['data']['data'],
 			'pagination'		=> $posts['pagination']
-		));
+		) + $this->extras);
 	}
 }
