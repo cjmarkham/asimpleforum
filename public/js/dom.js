@@ -137,10 +137,11 @@ $(function () {
 	$('[data-toggle="tooltip"]').tooltip({
 		placement: $(this).data('placement')
 	});		
-		
-	$(document).on('scroll', function (e) {
+	
+	// Navbar placement
+	$(document).on('scroll', function () {
 		var amount = $(this).scrollTop();
-		var scrolled = $('#main-nav').css('position') == 'fixed' ? true: false;
+		var scrolled = $('#main-nav').css('position') == 'fixed' ? true : false;
 		var logo = $('#logo img').clone();
 
 		if (amount >= 105) {
@@ -153,7 +154,7 @@ $(function () {
 				});
 
 				$('#main-nav ul').css('width', 'auto');
-				$('#main-nav').prepend(logo);
+				$('#main-nav').prepend(logo).removeClass('container');
 
 				$('#main-nav').css({
 					position: 'fixed',
@@ -181,13 +182,12 @@ $(function () {
 
 				$('#main-nav').css({
 					position: 'relative',
-					marginLeft: 0,
 					left: 0,
 					margin: '0 auto',
 					'border-radius': '5px 5px 0 0'
 				}).animate({
 					width: '1170px'
-				}, 100);
+				}, 100).addClass('container');
 			}
 		}
 	});
