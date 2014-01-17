@@ -40,6 +40,28 @@ class TopicModel extends BaseModel
 		return $topic['data'];
 	}
 
+	public function find_by_name ($name)
+	{
+		if (!$name)
+		{
+			return false;
+		}
+
+		$cache_key = 'topic-' . $name;
+
+		$topic = $this->app['cache']->get($cache_key, function () use ($name) {
+			$data = array(
+				'data' => $this->app['db']->fetchAssoc('SELECT t.id, t.name, f.name as forumName FROM topics t JOIN forums f ON f.id=t.forum WHERE t.name=? LIMIT 1', array(
+					$name
+				))
+			);
+
+			return $data;
+		});
+
+		return $topic['data'];
+	}
+
 	public function find_by_forum ($forum_id, $page = 1)
 	{
 		$forum_id = (int) $forum_id;
