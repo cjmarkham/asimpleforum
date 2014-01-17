@@ -24,6 +24,10 @@ $app->get('/search', function (Application $app) {
     return Route::get('search:index');
 });
 
+$app->get('/search', function (Application $app) {
+    return Route::get('search:index');
+});
+
 $app->get('/search/{query}/{selection}', function (Application $app, $query, $selection) {
     return Route::get('search:get', $query, $selection);
 });
