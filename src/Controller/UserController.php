@@ -23,7 +23,8 @@ class UserController extends Controller
 			'title' 			=> $user['data']['username'],
 			'section'			=> 'members',
 			'profileId'			=> $user['data']['id'],
-			'profile'			=> $user['data']['profile']['data']
+			'profileUser'		=> $user['data'],
+			'profile'			=> $user['data']['profile']
 		) + $this->extras);
 	}
 }

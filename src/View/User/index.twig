@@ -7,6 +7,10 @@
 	$(function () {
 		asf.profile.loadPostHistory(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-post-history ul'});
 		asf.profile.loadComments(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-comments ul'});
+		
+		{% if user.id != profile.id %}
+			asf.profile.updateViews({{ profile.id }});
+		{% endif %}
 	});
 	</script>
 {% endblock %}
@@ -15,13 +19,13 @@
 	<section class="marginTop80 relative">
 		<ul class="list-unstyled list-inline" id="profile-stats">
 			<li title="Topics" data-toggle="tooltip">
-				<em class="fa fa-comment"></em> 24
+				<em class="fa fa-comment"></em> {{ profileUser.topics }}
 			</li>
 			<li title="Posts" data-toggle="tooltip">
-				<em class="fa fa-comments"></em> 16
+				<em class="fa fa-comments"></em> {{ profileUser.posts }}
 			</li>
 			<li title="Profile Views" data-toggle="tooltip">
-				<em class="fa fa-eye"></em> 123
+				<em class="fa fa-eye"></em> {{ profile.views }}
 			</li>
 		</ul>
 
@@ -30,7 +34,7 @@
 				<img width="100" height="100" src="/avatars/cjmarkham/big.png" alt=""  />
 			</div>
 			<div class="pull-left">
-				Cjmarkham
+				{{ profileUser.username }}
 			</div>
 		</header>
 
