@@ -77,8 +77,8 @@
 			</div>
 		</div>
 
-		<div class="container" id="main-nav">
-			<ul class="list-unstyled list-inline">
+		<div class="container clearfix" id="main-nav">
+			<ul class="list-unstyled list-inline pull-left">
 				{% for link in nav_links %}
 					<li {% if section == link.section %}class="active"{% endif %}>
 						<a href="{{ link.link }}">
@@ -87,6 +87,17 @@
 					</li>
 				{% endfor %}
 			</ul>
+			<div id="user-quick-access" class="pull-right">
+				{% if user %}
+					<a href="/user/{{ user.username }}">
+						{{ user.username }}
+					</a>
+						&bull;
+					<a href="/logout">
+						Logout
+					</a>
+				{% endif %}
+			</div>
 		</div>
 	</header>
 

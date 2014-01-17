@@ -307,8 +307,13 @@ class TopicModel extends BaseModel
 			$forum_id
 		));
 
+		$this->app['db']->executeQuery('UPDATE users SET topics=topics+1, posts=posts+1 WHERE id=? LIMIT 1', array(
+			$user['id']
+		));
+
 		$this->app['cache']->collection = $this->collection;
 		$this->app['cache']->delete_group('topics-recent');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'forums');
 		$this->app['cache']->delete('forum-topic-count-' . $forum_id);
 		$this->app['cache']->delete_group('forum-topics-' . $forum_id);
 

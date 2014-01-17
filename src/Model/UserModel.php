@@ -32,7 +32,7 @@ class UserModel extends BaseModel
 		$cache_key = 'user-' . $username;
 		$user = $this->app['cache']->get($cache_key, function () use ($username) {
 			$data = array(
-				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate FROM users WHERE username=? LIMIT 1', array(
+				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate,topics,posts FROM users WHERE username=? LIMIT 1', array(
 					$username
 				))
 			);
@@ -40,20 +40,29 @@ class UserModel extends BaseModel
 			return $data;
 		});
 
-		$cache_key = 'user-profile-' . $user['data']['id'];
-		$profile = $this->app['cache']->get($cache_key, function () use ($user) {
-			$data = array(
-				'data' => $this->app['db']->fetchAssoc('SELECT * FROM profiles WHERE id=? LIMIT 1', array(
-					$user['data']['id']
-				))
-			);
-
-			return $data;
-		});
+		$profile = $this->app['db']->fetchAssoc('SELECT * FROM profiles WHERE id=? LIMIT 1', array(
+			$user['data']['id']
+		));
 
 		$user['data']['profile'] = $profile;
 
 		return $user;
+	}
+
+	public function update_views (Request $request) 
+	{
+		$user_id = (int) $request->get('userId');
+
+		if (!$user_id)
+		{
+			return false;
+		}
+
+		$this->app['db']->executeQuery('UPDATE profiles SET views=views+1 WHERE id=? LIMIT 1', array(
+			$user_id
+		));
+
+		return true;
 	}
 
 	public function find_comments (Request $request)

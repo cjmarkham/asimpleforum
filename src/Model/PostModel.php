@@ -334,6 +334,10 @@ class PostModel extends BaseModel
 
 		$page = (int) ceil($post_count / $this->app['config']->board['posts_per_page']);
 
+		$this->app['db']->executeQuery('UPDATE users SET posts=posts+1 WHERE id=? LIMIT 1', array(
+			$user['id']
+		));
+
 		return json_encode(array(
 			'id' => $post_id,
 			'username' => $user['username'],

@@ -639,6 +639,7 @@ date {
 			background: @grey;
 			padding: 20px;
 			height: 150px;
+			border-left: 4px solid @darkGrey;
 
 			.pull-right {
 				color: @lightBlue;
@@ -654,7 +655,8 @@ date {
 			.radius(20px);
 			width: 20px;
 			height: 20px;
-			background: @darkGrey;
+			background: #fff;
+			border: 4px solid @darkGrey;
 			position: absolute;
 			left: 2px;
 			top: 58px;
@@ -662,17 +664,18 @@ date {
 
 		.line {
 			height: 1px;
-			border: 3px solid @grey;
+			border: 3px solid @darkGrey;
 		}
 
 		date {
 			position: absolute;
 			top: 45px;
-			left: 30px;
+			left: 20px;
 			color: @orange;
 			height: 15px;
 			width: 160px;
 			overflow: hidden;
+			text-align: center;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
@@ -874,4 +877,17 @@ section h4 {
 	top: 0;
 	left: 0;
 	border: 0;
+}
+
+#user-quick-access {
+	padding-top: 10px;
+	color: #fff;
+
+	a {
+		color: #d4e5f5;
+		text-shadow: 0 1px 1px #08192b;
+		padding: 0 10px;
+		font-weight: bold;
+		font-size: 14px;
+	}
 }
