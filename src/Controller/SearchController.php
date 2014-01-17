@@ -14,7 +14,32 @@ class SearchController extends Controller
 
 	public function index ()
 	{
+		$query = null;
+		$section = null;
+		$results = null;
 
+		$query = $this->app['request']->get('query');
+		$section = $this->app['request']->get('section');
+
+		if ($query && $section)
+		{
+			if ($section == 'forums')
+			{
+				$results = $this->app['search']->get($query, 'all');
+			}
+			else
+			{
+				$results = $this->app['search']->users($query);
+			}
+		}
+
+		return $this->app['twig']->render('Search/index.twig', array(
+			'title' 			=> 'Search',
+			'section'			=> 'search',
+			'query'				=> $query,
+			'searchin'			=> $section,
+			'results'			=> $results
+		) + $this->extras);
 	}
 
 	public function typeahead (Request $request)
