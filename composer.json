@@ -11,7 +11,8 @@
         "facebook/php-sdk": "dev-master",
         "moriony/silex-mongo-provider": "*",
         "doctrine/dbal": "2.2.*",
-        "tobiassjosten/facebook-service-provider": "dev-master"
+        "tobiassjosten/facebook-service-provider": "dev-master",
+        "filp/whoops": "1.*"
     },
 
     "autoload" : {
