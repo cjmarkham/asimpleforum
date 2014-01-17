@@ -15,6 +15,13 @@ class SearchModel
 		$this->app = $app;
 	}
 
+	public function users ($query)
+	{
+		return $this->app['db']->fetchAll('SELECT u.*, p.* FROM users u JOIN profiles p ON p.id=u.id WHERE u.username LIKE ? LIMIT 10', array(
+			'%' . $query . '%'
+		));
+	}
+
 	public function get ($query, $selection)
 	{
 		$forum_sql = 'SELECT ' . 
