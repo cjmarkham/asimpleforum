@@ -1,0 +1,182 @@
+{% extends "Layout/main.twig" %}
+
+{% block content %}
+	<section>
+
+		{% if query == null %}
+			<header>
+				Search
+			</header>
+			<div class="content">
+				<form method="get" action="/search" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-md-2 control-label">
+							Query
+						</label>
+						<div class="col-sm-10">
+							<input required type="text" class="form-control" name="query" placeholder="Query" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-2 control-label">
+							Search in
+						</label>
+						<div class="col-md-10">
+							<div class="radio-inline">
+								<label>
+									<input required type="radio" name="section" value="forums" />
+									Forums
+								</label>
+							</div>
+							<div class="radio-inline">
+								<label>
+									<input required type="radio" name="section" value="users" />
+									Users
+								</label>
+
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-10 col-md-offset-2">
+							<button class="btn btn-primary">
+								Search
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		{% else %}
+
+			<section>
+				<header>
+					Searching for "<em>{{ query }}</em>"
+				</header>
+				<div class="content">
+					{% if searchin == 'forums' %}
+
+						{% for topic in results.topics %}
+							{% set forum = {id: topic.forum, name: topic.forumName} %}
+
+							<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
+								<div class="col-md-5">
+									<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
+										{{ truncate(topic.name, 40) }}
+									</a>
+									 in 
+									<a href="/{{ forum.name|url_encode }}-{{ forum.id }}/1">
+										{{ forum.name }}
+									</a>
+
+									<div class="topic-info">
+										{% if topic.locked %}
+											<i title="Locked" data-toggle="tooltip" class="fa fa-lock"></i>
+										{% endif %}
+
+										{% if topic.sticky %}
+											<i title="Sticky" data-toggle="tooltip" class="fa fa-thumb-tack"></i>
+										{% endif %}
+									</div>
+
+									<p class="topic-author">
+										<a href="" class="user-link">
+											{{ topic.author }}
+										</a>
+									</p>
+									<date class="date" title="{{ topic.added|date('c') }}">
+										{{ topic.added|date('jS M y, H:i') }}
+									</date>
+								</div>
+								<div class="col-md-3">
+									<p title="Views" data-toggle="tooltip" class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
+									<p title="Replies" data-toggle="tooltip" class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
+								</div>
+								<div class="text-right col-md-4">
+									<p>
+										{% if topic.lastPostName %}
+											{% set page = (topic.replies / config('board', 'posts_per_page'))|round %}
+											{% if page < 1 %}
+												{% set page = 1 %}
+											{% endif %}
+											<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
+												{{ topic.lastPostName }}
+											</a>
+										{% else %}
+											<a href="" class="topic-name">
+												{{ topic.name }}
+											</a>
+										{% endif %}
+									</p>
+									<p>	
+										<a href="" class="user-link">
+											{{ topic.lastPosterUsername }}
+										</a>
+									</p>
+									<date class="date" title="{{ topic.updated|date('c') }}">
+										{{ topic.updated|date('jS M y. H:i') }}
+									</date>
+								</div>
+							</div>
+
+							{% if not loop.last %}
+								<div class="seperator"></div>
+							{% endif %}
+					
+						{% else %}
+							<p class="alert alert-warning">
+								No topics found matching "<em>{{ query }}</em>"
+							</p>
+						{% endfor %}
+
+					{% else %}
+
+						{% for user in results %}
+
+							<div class="clearfix search-result-user">
+								<div class="pull-left">
+									<a href="/user/{{ user.username }}">
+										<img class="avatar big" alt="{{ user.username }}" title="{{ user.username }}" src="/avatars/{{ user.username }}/big.png" />
+									</a>
+								</div>
+								<div class="marginLeft20 pull-left">
+									<h4>
+										<a href="/user/{{ user.username }}" class="user-link">
+											{{ user.username }} {% if user.first_name %}- <small>{{ user.first_name }} {{ user.last_name }}</small>{% endif %}
+										</a>
+									</h4>
+									<p class="profile-info">
+										<em>
+											<em class="fa fa-{{ user.gender|lower }}"></em>
+											{{ user.gender|capitalize }} from {{ user.location }}
+										</em>
+									</p>
+
+									<p class="post-info">
+										<em class="fa fa-pencil" title="Topics" data-toggle="tooltip"></em> 15
+										<em class="fa fa-pencil" title="Posts" data-toggle="tooltip"></em> 21
+									</p>
+								</div>
+								<div class="pull-right">
+
+								</div>
+							</div>
+
+							{% if not loop.last %}
+								<div class="seperator"></div>
+							{% endif %}
+
+						{% else %}
+							<p class="alert alert-warning">
+								No users found matching "<em>{{ query }}</em>"
+							</p>
+						{% endfor %}
+
+					{% endif %}
+
+				</div>
+			</section>
+
+		{% endif %}
+	</section>
+{% endblock %}
