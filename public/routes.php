@@ -20,12 +20,28 @@ $app->post('/signup', function (Request $request) {
     return Route::get('auth:signup', $request);
 });
 
+$app->get('/search', function (Application $app) {
+    return Route::get('search:index');
+});
+
+$app->get('/search/{query}/{selection}', function (Application $app, $query, $selection) {
+    return Route::get('search:get', $query, $selection);
+});
+
+$app->post('/search/typeahead', function (Request $request) {
+    return Route::get('search:typeahead', $request);
+});
+
 $app->post('/login', function (Request $request) use ($app) {
     return $app['auth']->login($request);
 });
 
 $app->get('/logout', function (Application $app) {
     return Route::get('auth:logout');
+});
+
+$app->get('/download', function (Application $app) {
+    return Route::get('download:index');
 });
 
 $app->get('/user/{username}/{page}', function (Application $app, $username, $page) {
