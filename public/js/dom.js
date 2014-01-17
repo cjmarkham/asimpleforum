@@ -4,6 +4,61 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	// Quick search typeahead
+	$('.typeahead').typeahead({
+		minLength : 3,
+		source: function(query, process) {
+			var selection = null;
+
+			var selector = $('#search-form-indicator option:selected');
+
+			if (selector.val() === 'this' && asf.page.section === 'forums') {
+				var forum = JSON.parse(asf.forum);
+				selection = forum.id;
+			}
+
+            $.post('/search/typeahead', { 
+            	query: query,
+            	selection: selection
+            }, function(results) {
+            	results = JSON.parse(results);
+            	var data = [];
+
+            	// Show forum name along side topic name if applicable
+            	for (var i in results) {
+            		var string = results[i].name;
+
+            		if (results[i].forum) {
+            			string += ' in <span class="forum-name">' + results[i].forum + '</span>'; 
+            		}
+
+            		data.push(string);
+            	}
+                process(data);
+            });
+        }, 
+        updater: function (item) {
+        	item = item.toLowerCase().replace(/ in <span class=\"forum-name\">(.*)<\/span>/, '');
+        	item = encodeURIComponent(item);
+        	
+        	var url = '/search/' + item;
+        	var append = $('#search-form-indicator option:selected').val() && asf.page.section == 'forum' ? asf.forum.id : 'all';
+
+        	url += '/' + append;
+
+            document.location = url;
+            return item;
+        },
+        sorter: function (items) {
+            items.unshift(this.query);
+
+            for (var i = 0; i < items.length; i++) {
+            	items[i] = items[i].replace(/<(?!\/?span(?=>|\s.*>))\/?.*?>/g, '');
+            }
+            return items;
+        }
+	});
+
 	$(document).on('submit', '[data-event="submit"]', function (e) {
 		var action = $(this).data('action');
 
@@ -143,9 +198,14 @@ $(function () {
 		var amount = $(this).scrollTop();
 		var scrolled = $('#main-nav').css('position') == 'fixed' ? true : false;
 		var logo = $('#logo img').clone();
+		var search = $('#quick-search');
 
 		if (amount >= 105) {
 			if (!scrolled) {
+
+				search.addClass('pull-right').css({
+					marginTop: -5 + 'px'
+				});
 
 				logo.css({
 					height: 30,
@@ -153,8 +213,11 @@ $(function () {
 					marginRight: 20
 				});
 
-				$('#main-nav ul').css('width', 'auto');
-				$('#main-nav').prepend(logo).removeClass('container');
+				$('#main-nav ul').css('width', ($(window).width() / 2) + 'px').addClass('pull-left');
+				$('#main-nav').append(search)
+							.prepend(logo)
+							.removeClass('container')
+							.addClass('clearfix');
 
 				$('#main-nav').css({
 					position: 'fixed',
@@ -171,6 +234,10 @@ $(function () {
 		} else {
 			if (scrolled) {
 
+				search.removeClass('pull-right').css({
+					marginTop: '10px'
+				});
+
 				logo.css({
 					height: 50,
 					'float': 'none',
@@ -178,8 +245,12 @@ $(function () {
 					marginTop: 0
 				});
 
-				$('#main-nav img').remove();
+				// Put search box back
+				$('#header > .container > .row').append(search);
 
+				$('#main-nav img, #main-nav #quick-search').remove();
+
+				$('#main-nav ul').removeClass('pull-left');
 				$('#main-nav').css({
 					position: 'relative',
 					left: 0,
@@ -187,7 +258,7 @@ $(function () {
 					'border-radius': '5px 5px 0 0'
 				}).animate({
 					width: '1170px'
-				}, 100).addClass('container');
+				}, 100).addClass('container').removeClass('clearfix');
 			}
 		}
 	});
