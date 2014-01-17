@@ -444,6 +444,12 @@ var asf = {
 
 	profile: {
 
+		updateViews: function (profileId) {
+			$.post('/user/update_views', {
+				userId: profileId
+			});
+		},
+
 		addComment: function (node) {
 
 			node = $(node);
