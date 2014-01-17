@@ -4,9 +4,13 @@ namespace Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class AuthController
+class AuthController extends Controller
 {
-	public $app;
+	public function __construct(\Silex\Application $app)
+	{
+		$this->app = $app;
+		$this->init();
+	}
 
 	public function signup($request = array())
 	{ 
@@ -24,8 +28,7 @@ class AuthController
 
 			if ($signup_attempt === true)
 			{
-				header ('Location: /');
-				exit;
+				$this->app->redirect('/');
 			}
 		}
 
@@ -33,13 +36,11 @@ class AuthController
 			'title' 			=> 'Sign up',
 			'section'			=> 'members',
 			'data'				=> isset($data) ? $data : null
-		));
+		) + $this->extras);
 	}
 
 	public function logout ()
 	{
-		$this->app['session']->remove('user');
-
-		return $this->app->redirect('/');
+		return $this->app['session']->remove('user');
 	}
 }

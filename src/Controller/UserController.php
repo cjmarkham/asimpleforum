@@ -2,9 +2,13 @@
 
 namespace Controller;
 
-class UserController
+class UserController extends Controller
 {
-	public $app;
+	public function __construct(\Silex\Application $app)
+	{
+		$this->app = $app;
+		$this->init();
+	}
 
 	public function index($username)
 	{
@@ -20,6 +24,6 @@ class UserController
 			'section'			=> 'members',
 			'profileId'			=> $user['data']['id'],
 			'profile'			=> $user['data']['profile']['data']
-		));
+		) + $this->extras);
 	}
 }
