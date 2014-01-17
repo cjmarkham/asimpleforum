@@ -43,11 +43,58 @@ body {
 #header, #footer {
 	height: 156px;
 	background: url(/images/header-background.png);
-	padding-top: 40px;
 
 	#logo {
 		padding: 0;
-		margin-bottom: 14px;
+		margin-bottom: 24px;
+
+		a {
+			display: block;
+		}
+	}
+}
+
+#header {
+	padding-top: 30px;
+}
+
+#footer {
+	padding-top: 40px;
+}
+
+#quick-search {
+	margin-top: 10px;
+	position: relative;
+	
+	input {
+		border: 0;
+		border-top: 1px solid #3d78b2;
+		background: #0d2c49;
+		padding-right: 35px;
+		color: #f4f4f4;
+	}
+
+	button {
+		background: 0;
+		color: #fff;
+		border: 0;
+		position: absolute;
+		top: 10px;
+		right: 0;
+	}
+
+	#search-form-indicator {
+		position: absolute;
+		font-size: 11px;
+		top: 10px;
+		right: 30px;
+		color: #fff;
+		background: #0d2c49;
+		border: 0;
+
+		&:focus, &:active {
+			outline: 0;
+		}
 	}
 }
 
@@ -111,6 +158,7 @@ body {
 	background: @white;
 	z-index: 5;
 	position: relative;
+	margin-bottom: 120px;
 }
 
 #main-full {
@@ -743,4 +791,57 @@ section h4 {
 
 #package-list {
 	
+}
+
+.nav-tabs {
+	margin-bottom: 20px;
+	border: 0;
+	background: #0d2c49;
+	border-top: 1px solid #3d78b2;
+	padding: 10px 10px 0;
+	.topRadius5();
+	height: 50px;
+
+	li {
+
+		a {
+			color: #d4e5f5;
+			text-shadow: 0 1px 1px #08192b;
+			padding: 10px 20px;
+			font-weight: bold;
+			border: 0;
+
+			&:hover {
+				background: transparent;
+				color: #d4e5f5;
+				border: 0;
+			}
+		}
+
+		&.active {
+
+			background: #fff;
+			background: -moz-linear-gradient(top,#fff 0,#fff 50%,#e8e8e8 51%,#f0f0f0 52%,#fff 100%);
+			background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#fff),color-stop(50%,#fff),color-stop(51%,#e8e8e8),color-stop(52%,#f0f0f0),color-stop(100%,#fff));
+			background: -webkit-linear-gradient(top,#fff 0,#fff 50%,#e8e8e8 51%,#f0f0f0 52%,#fff 100%);
+			background: -o-linear-gradient(top,#fff 0,#fff 50%,#e8e8e8 51%,#f0f0f0 52%,#fff 100%);
+			background: -ms-linear-gradient(top,#fff 0,#fff 50%,#e8e8e8 51%,#f0f0f0 52%,#fff 100%);
+			background: linear-gradient(to bottom,#fff 0,#fff 50%,#e8e8e8 51%,#f0f0f0 52%,#fff 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff',endColorstr='#ffffff',GradientType=0);
+			border-radius: 5px 5px 0 0;
+
+			a {
+				border: 0;
+				color: #2f588c;
+				text-shadow: 0 1px 1px #fff;
+				background: transparent;
+
+				&:hover {
+					background: transparent;
+					color: #2f588c;
+					border: 0;
+				}
+			}
+		}
+	}
 }
