@@ -12,6 +12,7 @@ class HomeController extends Controller
 
 	public function index()
 	{
+		var_dump(base64_decode("ZG9kZHNleTY1QGhvdG1haWwuY29tLSAw"));
 		$forums = $this->app['forum']->find_all();
 
 		return $this->app['twig']->render('Home/index.twig', array(

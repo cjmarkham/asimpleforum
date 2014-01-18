@@ -148,8 +148,10 @@ class AuthModel
 			return false;
 		}
 
-		$insert = $this->app['db']->insert('profiles', array(
-			'id' => $this->app['db']->lastInsertId()
+		$user_id = $this->app['db']->lastInsertId();
+
+		$this->app['db']->insert('profiles', array(
+			'id' => $user_id
 		));
 
 		if ($this->app['config']->board['confirmEmail'])
@@ -158,7 +160,7 @@ class AuthModel
 				'username' => $data['username'],
 				'boardTitle' => $this->app['config']->board['name'],
 				'boardUrl'   => $this->app['config']->board['url'],
-				'confirmCode' => base64_encode($data['email'] . '- ' . $this->app['db']->lastInsertId())
+				'confirmCode' => base64_encode($data['email'] . '-' . $user_id)
 			));
 
 			\Mailer::send($data['email'], $this->app['config']->email['noReply'], 'Email confirmation');
