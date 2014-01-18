@@ -2,8 +2,6 @@
 
 namespace ASF\Test;
 
-require dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
-
 class MailerTest extends \PHPUnit_Framework_TestCase
 {
 	public function testSend()

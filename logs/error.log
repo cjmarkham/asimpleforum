@@ -110,3 +110,17 @@ test@asimpleforum.com
 
 doddsey65@hotmail.com
 
+============================== 18-01-14 06:44 pm ==============================
+Failed to send email
+mail(): Failed to connect to mailserver at "localhost" port 25, verify your "SMTP" and "smtp_port" setting in php.ini or use ini_set()
+
+From: test@asimpleforum.com
+Reply-To: test@asimpleforum.com
+MIME-Version: 1.0
+Content-Type: text/html; charset=ISO-8859-1
+
+
+test@asimpleforum.com
+
+doddsey65@hotmail.com
+
