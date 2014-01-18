@@ -112,7 +112,7 @@ var asf = {
 
 		var el = $('<div />');
 		el.addClass('alert alert-' + type);
-		el.text(message);
+		el.html(message);
 
 		$('#message-block').append(el);
 
