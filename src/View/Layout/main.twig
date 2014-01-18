@@ -87,13 +87,13 @@
 					</li>
 				{% endfor %}
 			</ul>
-			<div id="user-quick-access" class="pull-right">
+			<div id="user-quick-access" class="hidden-no-user pull-right">
 				{% if user %}
 					<a href="/user/{{ user.username }}">
 						{{ user.username }}
 					</a>
 						&bull;
-					<a href="/logout">
+					<a href="javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
 						Logout
 					</a>
 				{% endif %}
