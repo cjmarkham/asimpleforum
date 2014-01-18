@@ -7,9 +7,11 @@
 
 	<script>
 	$(function () {
-		$.post('/topic/update_views', {
-			id: '{{ topic.id }}',
-		});
+		{% if user and topic.poster != user.id or not user %}
+			$.post('/topic/update_views', {
+				id: '{{ topic.id }}',
+			});
+		{% endif %}
 
 		asf.topics.loadMorePosts({{ topic.id }}, {{ page }});
 

@@ -163,6 +163,11 @@ class TopicModel extends BaseModel
 			'views' => $topic['views'] + 1
 		), array('id' => $id));
 
+		$this->app['cache']->collection = $this->collection;
+
+		$this->app['cache']->delete('topic-' . $topic['name']);
+		$this->app['cache']->delete('topic-' . $topic['id']);
+
 		return true;
 	}
 
