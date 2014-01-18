@@ -205,7 +205,7 @@ var asf = {
 
 	hideQuickReply: function () {
 		$('#quick-reply-modal').modal('hide');
-		$('#quick-reply-modal textarea').val('');
+		CKEDITOR.instances.reply.setData('');
 	},
 
 	addQuickReply: function (node) {
@@ -228,22 +228,6 @@ var asf = {
 				asf.hideQuickReply();
 			} else {
 
-				var postCount = $('#posts .post').length;
-
-				if (postCount >= parseInt(asf.config.board.posts_per_page, 10)) {
-
-					var url = location.href;
-					if (location.hash) {
-						url = location.href.replace(location.hash, '');
-					}
-
-					url = url.replace(/\/([a-zA-Z]+)\-([0-9]+)\/([0-9]+)/, '/$1-$2/');
-					url = url + response.page + '#' + response.id;
-
-					window.location.href = url;
-					return;
-				}
-
 				$.post('/partial/post', {
 					params: {
 						post: {
@@ -262,6 +246,17 @@ var asf = {
 					$('#posts').append(wrapper);
 					asf.hideQuickReply();
 					asf.delegate();
+
+					var noPosts = $('#no-posts');
+
+					if (noPosts.length) {
+						wrapper.append(noPosts.clone());
+						noPosts.remove();
+					}
+
+					$(document.body).animate({
+						scrollTop: $(window).height()
+					});
 				});
 			}
 			
