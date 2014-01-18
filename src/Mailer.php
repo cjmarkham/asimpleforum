@@ -22,11 +22,18 @@ class Mailer
 
 		try
 		{
-			$send = mail($from, $to, self::$template, $headers);
+			mail($from, $to, self::$template, $headers);
 		}
 		catch (\Exception $e)
 		{
-			die($e->getMessage());
+			$content = $e->getMessage();
+			$content .= "\n\n" . $headers;
+			$content .= "\n\n" . $from;
+			$content .= "\n\n" . $to;
+
+			\Logger::error('Failed to send email', $content);
+			
+			exit;
 		}
 	}
 
