@@ -88,13 +88,22 @@ class PostModel extends BaseModel
 	 * @param  int $page    
 	 * @return array The list of posts and pagination data
 	 */
-	public function find_by_topic ($topic_id, $page = 1)
+	public function findByTopic (Request $request)
 	{
-		$topic_id = (int) $topic_id;
+		$topic_id = (int) $request->get('topicId');
+		$offset = (int) $request->get('offset');
+		$page = (int) $request->get('page');
 
 		if (!$topic_id)
 		{
 			return false;
+		}
+
+		$limit = 10;
+
+		if ($page)
+		{
+			$limit = $page * $limit;
 		}
 
 		$topics = array();
@@ -102,9 +111,11 @@ class PostModel extends BaseModel
 		$cache_key = 'topic-post-count-' . $topic_id;
 		$this->app['cache']->collection = $this->collection;
 
-		$total = $this->app['cache']->get($cache_key, function () use ($topic_id) {
+		$cache_key = 'topic-posts-' . $topic_id . '.' . $offset . $limit;
+
+		$posts = $this->app['cache']->get($cache_key, function () use ($topic_id, $offset, $limit) {
 			$data = array(
-				'data' => $this->app['db']->fetchColumn('SELECT COUNT(*) FROM posts WHERE topic=?', array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC LIMIT ' . $offset . ', ' . $limit, array(
 					$topic_id
 				))
 			);
@@ -112,23 +123,9 @@ class PostModel extends BaseModel
 			return $data;
 		});
 
-		$posts['pagination'] = $this->pagination((int) $total['data'], (int) $this->app['config']->board['posts_per_page'], $page);
-
-		$cache_key = 'topic-posts-' . $topic_id . '.' . $posts['pagination']['sql_text'];
-
-		$posts['data'] = $this->app['cache']->get($cache_key, function () use ($posts, $topic_id) {
-			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC ' . $posts['pagination']['sql_text'], array(
-					$topic_id
-				))
-			);
-
-			return $data;
-		});
-
-		foreach ($posts['data']['data'] as $key => $post)
+		foreach ($posts['data'] as $key => $post)
 		{
-			$posts['data']['data'][$key]['likes'] = array();
+			$posts['data'][$key]['likes'] = array();
 
 			$cache_key = 'post-' . $post['id'] . '-likes';
 
@@ -144,12 +141,12 @@ class PostModel extends BaseModel
 
 			foreach ($likes['data'] as $like)
 			{
-				$posts['data']['data'][$key]['likes'][] = $like['username'];
+				$posts['data'][$key]['likes'][] = $like['username'];
 			}
 			
 		}
 
-		return $posts;
+		return json_encode($posts);
 	}
 
 	/**

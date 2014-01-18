@@ -10,6 +10,15 @@
 		$.post('/topic/update_views', {
 			id: '{{ topic.id }}',
 		});
+
+		asf.topics.loadMorePosts({{ topic.id }}, {{ page }});
+
+		$(document).on('scroll', function () {
+			
+			if ($(window).scrollTop() == $(this).height() - $(window).height()) {
+				asf.topics.loadMorePosts({{ topic.id }});
+			}
+		});
 	});
 	</script>
 	
@@ -24,57 +33,52 @@
 		</a>
 	</li>	
 	<li class="next">&gt;</li>
-	
-
-	{% if pagination.pages.current > 1 %}
-		<li>
-			<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1">
-				{{ topic.name }}
-			</a>
-		</li>	
-		<li class="next">&gt;</li>
-		<li>
-			<a href="">
-				Page {{ pagination.pages.current }}
-			</a>
-		</li>
-
-	{% else %}
-		<li>
-			<a href="">
-				{{ topic.name }}
-			</a>
-		</li>	
-	{% endif %}
+	<li>
+		<a href="">
+			{{ topic.name }}
+		</a>
+	</li>	
 {% endblock %}
 
 {% block content %}
 	
+	<div class="post-buttons marginBottom10 clearfix">
+		
+		<div class="pull-left">	
+			{% if topic.locked %}
+				<button class="btn btn-danger">
+					Locked
+				</button>	
+			{% else %}
+				<button class="hidden-no-user btn btn-orange" data-event="click" data-action="showQuickReply">
+					Add Reply
+				</button>
+				<button data-toggle="modal" data-target="#login-modal" class="hidden-user btn btn-danger">
+					Login to reply
+				</button>
+			{% endif %}
+		</div>
+	</div>
+
 	<section id="posts">
-		{% for post in posts %}
 			
-			<section class="post" id="post-{{ post.id }}">
-				{% if loop.first %}
-					<header class="clearfix">
-						<div class="pull-left">
-							{{ post.name }}
-						</div>
-						<div class="pull-right text-right">
-							<span data-toggle="tooltip" title="Views">
-								<i class="fa fa-eye"></i> {{ topic.views }}
-							</span>
-							<span data-toggle="tooltip" title="Replies">
-								<i class="fa fa-pencil"></i> {{ topic.replies }}
-							</span>
-						</div>
-					</header>
-				{% endif %}
+		<header class="clearfix">
+			<div class="pull-left">
+				{{ topic.name }}
+			</div>
+			<div class="pull-right text-right">
+				<span data-toggle="tooltip" title="Views" class="marginRight10">
+					<i class="fa fa-eye"></i> {{ topic.views }}
+				</span>
+				<span data-toggle="tooltip" title="Replies">
+					<i class="fa fa-pencil"></i> {{ topic.replies }}
+				</span>
+			</div>
+		</header>
 
-				{% include('Partials/post.twig') %}
+		<div id="post-list">
 
-			</section>
-
-		{% endfor %}
+		</div>
 	</section>
 
 	<div class="post-buttons clearfix">
@@ -93,15 +97,6 @@
 				</button>
 			{% endif %}
 		</div>
-
-		{% if pagination %}
-
-			{% include('Partials/pagination.twig') with {
-				prefix: forum.name|url_encode ~ '/' ~ topic.name|url_encode ~ '-' ~ topic.id ~ '/',
-				suffix: ''
-			} %}
-
-		{% endif %}
 	</div>
 
 

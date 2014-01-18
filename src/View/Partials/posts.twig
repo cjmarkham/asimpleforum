@@ -1,0 +1,70 @@
+{% if posts is defined %}
+	{% for post in posts %}
+		<div class="content post" id="post-{{ post.id }}">
+			<a name="{{ post.id }}"></a>
+			<div class="clearfix">
+				<div class="post-author">
+					<div class="avatar big">
+						<img width="70" height="70" src="/avatars/{{ post.username }}/big.png" alt="" />
+					</div>
+					<p class="truncate w80">
+						<a href="user/{{ post.username }}" class="user-link resize">
+							{{ post.username }}
+						</a>
+					</p>
+					<p title="Group" class="group">
+						<i class="fa fa-group"></i> Admin
+					</p>
+					<p title="Posts" class="post-count">
+						<i class="fa fa-pencil"></i> 200
+					</p>
+				</div>
+				<div class="post-body">
+					<div class="post-info">
+						<div class="clearfix">
+							<div class="pull-left">
+								<date class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</date> - <a href="" class="topic-name">{{ post.name }}</a>
+							</div>
+							<div class="pull-right post-tools">
+								{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}
+									<a data-postId="{{ post.id }}" href="javascript:void(0)" data-event="click" data-action="editPost">
+										<i class="fa fa-pencil"></i>
+									</a>
+								{% endif %}
+								{% if user %}
+									<a href="javascript:void(0)" data-event="click" data-action="reportPostTrigger" data-postId="{{ post.id }}">
+										<i class="fa fa-exclamation-triangle"></i>
+									</a>
+									<a href="javascript:void(0)" data-event="click" data-action="likePost" data-postId="{{ post.id }}">
+										<i class="fa fa-thumbs-up"></i>
+									</a>
+								{% endif %}
+
+								{% if user %}
+									<a href="javascript:void(0)" data-event="click" data-action="quotePost" data-postId="{{ post.id }}" data-author="{{ post.username }}">
+										<i title="Quote" data-toggle="tooltip" class="fa fa-comment"></i>
+									</a>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="post-content">
+						{{ post.content|raw }}
+					</div>
+					<div class="post-extras clearfix">
+						{% if post.edits > 0 %}
+							<div class="edit-count pull-left">
+								Edited {{ post.edits }} times
+							</div>
+						{% endif %}
+						{{ include ('Partials/postLikes.twig') }}
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% else %}
+	<p id="no-posts">
+		No more posts
+	</p>
+{% endif %}

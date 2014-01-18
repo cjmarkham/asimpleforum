@@ -5,6 +5,84 @@ var asf = {
 
 	user: null,
 
+	forums: {
+
+		loadMoreTopics: function (forumId) {
+
+			var offset = $('.topic').length;
+
+			if ($('#no-topics').length) {
+				return false;
+			}
+
+			$.post('/topic/findByForum', {
+				offset: offset,
+				forumId: forumId
+			}).done(function (response) {
+				response = JSON.parse(response);
+				var data = response.data;
+
+				$.post('/partial/topics', {
+					params: {
+						topics: data
+					}
+				}).done(function (html) {
+					$('#topics .content').append(html);
+				});
+
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+		}
+
+	},
+
+	topics: {
+	
+		loadMorePosts: function (topicId, page) {
+
+			var offset = $('.post').length;
+
+			if ($('#no-posts').length) {
+				return false;
+			}
+
+			console.log(page);
+
+			$.post('/post/findByTopic', {
+				offset: offset,
+				topicId: topicId,
+				page: page
+			}).done(function (response) {
+				response = JSON.parse(response);
+				var data = response.data;
+
+				$.post('/partial/posts', {
+					params: {
+						posts: data
+					}
+				}).done(function (html) {
+					$('#post-list').append(html);
+
+					if (location.hash) {
+						var postId = location.hash.replace('#', '');
+						var post = $('#post-' + postId);
+						var postOffset = post.offset();
+
+						$(document.body).animate({
+							scrollTop: postOffset.top - 60
+						});
+					}
+				});
+
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+
+		}
+	
+	},
+
 	login: function (node) {
 		var self = this;
 
@@ -307,6 +385,8 @@ var asf = {
 						$('#topics .content').prepend(html, seperator);
 					}
 				}
+
+				$(document.body).animate({scrollTop: 0});
 
 				asf.delegate();
 			});

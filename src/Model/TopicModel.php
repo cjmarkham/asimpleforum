@@ -62,41 +62,85 @@ class TopicModel extends BaseModel
 		return $topic['data'];
 	}
 
-	public function find_by_forum ($forum_id, $page = 1)
+	public function findByForum (Request $request)
 	{
-		$forum_id = (int) $forum_id;
-		
+		$forum_id = (int) $request->get('forumId');
+		$offset = (int) $request->get('offset');
+
 		if (!$forum_id)
 		{
-			return false;
+			$response = new Response();
+			$response->setStatusCode(500);
+			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			return $response;
 		}
 
-		$cache_key = 'forum-topic-count-' . $forum_id;
 		$this->app['cache']->collection = $this->collection;
 
-		$total = $this->app['cache']->get($cache_key, function () use ($forum_id) {
-			$data = array(
-				'data' => $this->app['db']->fetchColumn('SELECT COUNT(*) FROM topics WHERE forum=?', array($forum_id))
-			);
-
-			return $data;
-		});
-
-		$topics['pagination'] = $this->pagination((int) $total['data'], $this->app['config']->board['topics_per_page'], $page);
-
-		$cache_key = 'forum-topics-' . $forum_id . '.' . $topics['pagination']['sql_text'];
-
-		$topics['data'] = $this->app['cache']->get($cache_key, function () use ($topics, $forum_id) {
-			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT t.*, p.name as lastPostName, p.id as lastPostId, u.username as author, us.username as lastPosterUsername FROM topics t JOIN users u ON t.poster=u.id JOIN users us ON us.id=t.lastPosterId LEFT JOIN posts p ON t.lastPostId=p.id WHERE t.forum=? ORDER BY sticky DESC, updated DESC ' . $topics['pagination']['sql_text'], array(
+		$cache_key = 'topics-forum-' . $forum_id . '.' . $offset;
+		$topics = $this->app['cache']->get($cache_key, function () use ($forum_id, $offset) {
+			$topics = $this->app['db']->fetchAll(
+				'SELECT ' . 
+					't.*, ' . 
+					'p.name as lastPostName, p.id as lastPostId, p.content, ' . 
+					'u.username as author, us.username as lastPosterUsername, ' . 
+					'f.name as forumName ' . 
+				'FROM topics t ' . 
+				'JOIN users u ' . 
+				'ON t.poster=u.id ' . 
+				'JOIN users us ' . 
+				'ON us.id=t.lastPosterId ' . 
+				'LEFT JOIN posts p ' . 
+				'ON t.lastPostId=p.id ' . 
+				'JOIN forums f ' . 
+				'ON f.id=t.forum ' . 
+				'WHERE t.forum=? ' . 
+				'ORDER BY sticky DESC, updated DESC ' . 
+				'LIMIT ' . $offset . ', 10', 
+				array(
 					$forum_id
-				))
+				)
 			);
+
+			$data = array('data' => array());
+
+			foreach ($topics as $topic)
+			{
+				$_topic = array(
+					'id' => $topic['id'],
+					'name' => $topic['name'],
+					'views' => $topic['views'],
+					'replies' => $topic['replies'],
+					'added' => $topic['added'],
+					'updated' => $topic['updated'],
+					'sticky'	=> $topic['sticky'],
+					'locked'	=> $topic['locked'],
+					'author' => array(
+						'id' => $topic['poster'],
+						'username' => $topic['author']
+					),
+					'forum' => array(
+						'id' => $topic['forum'],
+						'name' => $topic['forumName']
+					),
+					'lastPost' => array(
+						'id' => $topic['lastPostId'],
+						'name' => $topic['lastPostName'],
+						'content' => $topic['content'],
+						'user' => array(
+							'id' => $topic['lastPosterId'],
+							'username' => $topic['author']
+						)
+					)
+				);
+
+				$data['data'][] = $_topic;
+			}
 
 			return $data;
 		});
 
-		return $topics;
+		return json_encode($topics);
 	}
 
 	public function update_views (Request $request)
@@ -326,9 +370,7 @@ class TopicModel extends BaseModel
 
 		$this->app['cache']->collection = $this->collection;
 		$this->app['cache']->delete_group('topics-recent');
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'forums');
-		$this->app['cache']->delete('forum-topic-count-' . $forum_id);
-		$this->app['cache']->delete_group('forum-topics-' . $forum_id);
+		$this->app['cache']->delete_group('topics-forum-' . $forum_id);
 
 		return json_encode(array(
 			'id' => $topic_id,

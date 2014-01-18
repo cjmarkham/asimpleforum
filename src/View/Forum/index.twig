@@ -5,6 +5,19 @@
 
 	<script src="/ckeditor/ckeditor.js"></script>
 
+	<script>
+	$(function () {
+		asf.forums.loadMoreTopics({{ forum.id }});
+		
+		$(document).on('scroll', function () {
+			
+			if ($(window).scrollTop() == $(this).height() - $(window).height()) {
+				asf.forums.loadMoreTopics({{ forum.id }});
+			}
+		});
+	})
+	</script>
+
 {% endblock %}
 
 {% block crumbs %}
@@ -15,41 +28,31 @@
 			{{ forum.name }}
 		</a>
 	</li>
-
-	{% if pagination.pages.current > 1 %}
-		<li class="next">&gt;</li>
-		<li>
-			<a href="">
-				Page {{ pagination.pages.current }}
-			</a>
-		</li>
-	{% endif %}
 {% endblock %}
 
 {% block content %}
-	
+	<div class="forum-options marginBottom10 clearfix">
+		{% if not forum.locked or forum.locked and hasPermission('BYPASS_RESTRICTIONS') %}
+			<button class="hidden-no-user btn btn-orange" data-event="click" data-action="newTopicTrigger">
+				New topic
+			</button>
+			<button class="hidden-user btn btn-danger" data-toggle="modal" data-target="#login-modal">
+				Login to create
+			</button>
+		{% else %}
+			<button class="hidden-no-user btn btn-danger">
+				Locked
+			</button>
+		{% endif %}
+	</div>
+
 	<section id="topics">
 		<header>
 			{{ forum.name }}
 		</header>
 
 		<div class="content">
-			{% for topic in topics %}
-				
-				{{ include ('Partials/topic.twig') }}
-
-				{% if not loop.last %}
-					<div class="seperator"></div>
-				{% endif %}
-
-			{% else %}
-			<div>
-				<a href="javascript:void(0)" class="topc-name">
-					No Topics yet
-				</a>
-			</div>
-
-			{% endfor %}
+			
 		</div>
 	</section>
 
@@ -66,11 +69,6 @@
 				Locked
 			</button>
 		{% endif %}
-
-		{% include('Partials/pagination.twig') with {
-			prefix: forum.name|url_encode ~ '-' ~ forum.id ~ '/',
-			suffix: ''
-		} %}
 	</div>
 {% endblock %}
 

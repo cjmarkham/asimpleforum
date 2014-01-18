@@ -28,20 +28,12 @@ class TopicController extends Controller
 
 		$forum = $this->app['forum']->find_by_id($topic['forum']);
 
-		$posts = $this->app['post']->find_by_topic($topic_id, (int) $page);
-
-		if (empty($posts['data']))
-		{
-			return $this->app->redirect('/' . urlencode($forum['name']) . '/' . urlencode($topic['name']) . '-' . $topic_id . '/1');
-		}
-
 		return $this->app['twig']->render('Topic/index.twig', array(
 			'title' 			=> $topic['name'],
 			'section'			=> 'forums',
 			'forum'				=> $forum,
 			'topic'				=> $topic,
-			'posts' 			=> $posts['data']['data'],
-			'pagination'		=> $posts['pagination']
+			'page'				=> $page
 		) + $this->extras);
 	}
 
