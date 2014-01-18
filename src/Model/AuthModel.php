@@ -152,7 +152,7 @@ class AuthModel
 			'id' => $this->app['db']->lastInsertId()
 		));
 
-		if ($this->app['config']->board['confirmEmail'] === true)
+		if ($this->app['config']->board['confirmEmail'] == true)
 		{
 			\Mailer::setTemplate('emailConfirmation', array(
 				'username' => $data['username'],
