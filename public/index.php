@@ -13,16 +13,19 @@ $app['config'] = new Config;
 if (strpos($_SERVER['HTTP_HOST'], 'dev') !== false)
 {
     $app['debug'] = true;
+    $app['local'] = true;
     $app['config']->base = 'development';
 }
 else if (strpos($_SERVER['HTTP_HOST'], 'staging') !== false)
 {
     $app['debug'] = true;
+    $app['local'] = false;
     $app['config']->base = 'staging';
 }
 else
 {
     $app['debug'] = false;
+    $app['local'] = false;
     $app['config']->base = 'production';
 }
 
