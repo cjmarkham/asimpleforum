@@ -31,21 +31,6 @@
 {% endblock %}
 
 {% block content %}
-	<div class="forum-options marginBottom10 clearfix">
-		{% if not forum.locked or forum.locked and hasPermission('BYPASS_RESTRICTIONS') %}
-			<button class="hidden-no-user btn btn-orange" data-event="click" data-action="newTopicTrigger">
-				New topic
-			</button>
-			<button class="hidden-user btn btn-danger" data-toggle="modal" data-target="#login-modal">
-				Login to create
-			</button>
-		{% else %}
-			<button class="hidden-no-user btn btn-danger">
-				Locked
-			</button>
-		{% endif %}
-	</div>
-
 	<section id="topics">
 		<header>
 			{{ forum.name }}

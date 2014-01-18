@@ -42,24 +42,6 @@
 
 {% block content %}
 	
-	<div class="post-buttons marginBottom10 clearfix">
-		
-		<div class="pull-left">	
-			{% if topic.locked %}
-				<button class="btn btn-danger">
-					Locked
-				</button>	
-			{% else %}
-				<button class="hidden-no-user btn btn-orange" data-event="click" data-action="showQuickReply">
-					Add Reply
-				</button>
-				<button data-toggle="modal" data-target="#login-modal" class="hidden-user btn btn-danger">
-					Login to reply
-				</button>
-			{% endif %}
-		</div>
-	</div>
-
 	<section id="posts">
 			
 		<header class="clearfix">
