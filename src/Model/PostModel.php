@@ -108,14 +108,13 @@ class PostModel extends BaseModel
 
 		$topics = array();
 
-		$cache_key = 'topic-post-count-' . $topic_id;
 		$this->app['cache']->collection = $this->collection;
 
 		$cache_key = 'topic-posts-' . $topic_id . '.' . $offset . $limit;
 
 		$posts = $this->app['cache']->get($cache_key, function () use ($topic_id, $offset, $limit) {
 			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM posts p JOIN users u ON p.poster=u.id WHERE p.topic=? ORDER BY added ASC LIMIT ' . $offset . ', ' . $limit, array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username, u.posts as userPosts, g.name as `group` FROM posts p JOIN users u ON p.poster=u.id JOIN groups g ON g.id=u.perm_group WHERE p.topic=? ORDER BY added ASC LIMIT ' . $offset . ', ' . $limit, array(
 					$topic_id
 				))
 			);
