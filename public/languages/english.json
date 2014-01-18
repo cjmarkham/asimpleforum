@@ -5,7 +5,7 @@
 	"PASSWORDS_DONT_MATCH": "Sorry, your entered passwords do not match.",
 	"INVALID_CREDENTIALS": "The credentials you have entered do not match our records.",
 
-	"LOGGED_IN_NOT_APPROVED": "You are logged in but your account has not yet been approved. Some functions will not be available until your account has been approved by a board team member.",
+	"NOT_APPROVED": "Your email address has not been confirmed.\nYou will not be able to log in until it has been.\n\nCheck your emails for instructions on how to do so.",
 	"MUST_BE_LOGGED_IN": "You must be logged in to do that.",
 
 	"NO_DOUBLE_POST": "You cannot add another post, please edit your last post.",
