@@ -485,7 +485,7 @@ var asf = {
 			node = $(node);
 
 			var userId = node.find('[name="profileId"]').val();
-			var comment = node.find('textarea').val();
+			var comment = node.find('textarea').val().trim();
 
 			$.post('/user/addComment', {
 				profileId: userId,
@@ -496,6 +496,7 @@ var asf = {
 				$.post('/partial/profileComment', {
 					params: {
 						comment: {
+							id: response.id,
 							added: response.added,
 							comment: response.comment,
 							username: response.username,
@@ -507,6 +508,24 @@ var asf = {
 						}
 					}
 				}).done(function (html) {
+
+					node.find('textarea').val('');
+					var seconds = 300;
+
+					var updateTimeLeft = setInterval(function () {
+						seconds -= 1;
+
+						var minutes = Math.floor(seconds / 60);
+						secondsPer60 = seconds % 60;
+
+						node.find('button').attr('disabled', true).text(minutes + ' minutes and ' + secondsPer60 + ' seconds left');
+
+						if (minutes <= 0 && seconds <= 0) {
+							node.find('button').attr('disabled', false).text('Post');
+							clearInterval(updateTimeLeft);
+						}
+
+					}, 1000);
 
 					if (!$('.profile-comment').length) {
 						node.next().html(html);

@@ -240,8 +240,28 @@ class UserModel extends BaseModel
 			return $response;
 		}
 
-		// Todo: Add time limit
 		$time = time();
+
+		if (!\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
+		{
+			$lastAdded = $this->app['db']->fetchColumn('SELECT added FROM profile_comments WHERE profile=? AND author=? ORDER BY added DESC LIMIT 1', array(
+				$profile_id,
+				$user['id']
+			));
+
+			$time_since_last = $time - (int) $lastAdded;
+
+			if ($time_since_last < 300)
+			{
+				$seconds = 300 - $time_since_last;
+				$minutes = round($seconds / 60);
+				$seconds = $seconds % 60;
+
+				$response->setStatusCode(403);
+				$response->setContent($this->app['language']->phrase('COMMENT_POST_LIMIT', array($minutes, $seconds)));
+				return $response;
+			}
+		}
 
 		$this->app['db']->insert('profile_comments', array(
 			'profile' => $profile_id,
@@ -253,6 +273,7 @@ class UserModel extends BaseModel
 		$this->app['cache']->delete_group('profile-comments-' . $profile_id);
 
 		return json_encode(array(
+			'id'	=> $this->app['db']->lastInsertId(),
 			'comment' => $comment,
 			'added' => $time,
 			'username' => $user['username'],
