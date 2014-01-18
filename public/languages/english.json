@@ -4,7 +4,9 @@
 	"INVALID_EMAIL": "Please enter a valid email address",
 	"PASSWORDS_DONT_MATCH": "Sorry, your entered passwords do not match.",
 	"INVALID_CREDENTIALS": "The credentials you have entered do not match our records.",
-
+	"USERNAME_TAKED": "Sorry, that username has been taken. Please choose a different one.",
+	"EMAIL_REGISTERED": "That email address has already been registered.",
+	 
 	"NOT_APPROVED": "Your email address has not been confirmed.\nYou will not be able to log in until it has been.\n\nCheck your emails for instructions on how to do so.",
 	"MUST_BE_LOGGED_IN": "You must be logged in to do that.",
 
