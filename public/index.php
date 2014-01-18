@@ -212,11 +212,6 @@ include 'routes.php';
 if ($app['debug'] === true) 
 {
     $app->register(new Whoops\Provider\Silex\WhoopsServiceProvider);
-
-    $app['whoops'] = $app->extend('whoops', function($whoops) {
-        $whoops->pushHandler(new DeleteWholeProjectHandler);
-        return $whoops;
-    });
 }
 
 if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
@@ -226,11 +221,6 @@ if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
 
 $app->before(function (Request $request) use ($app) {
     $user = $app['session']->get('user');
-
-    if (!empty($user) && $user['approved'] == 0) 
-    {
-        \Message::alert('LOGGED_IN_NOT_APPROVED');
-    }
 
     $app['sessions']->update();
     $sessions = $app['sessions']->get();
