@@ -22,7 +22,7 @@ class Mailer
 
 		try
 		{
-			mail($from, $to, self::$template, $headers);
+			mail($to, $from, self::$template, $headers);
 		}
 		catch (\Exception $e)
 		{
