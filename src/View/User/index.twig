@@ -31,7 +31,7 @@
 
 		<header class="clearfix">
 			<div id="profile-avatar" class="huge pull-left">
-				<img width="100" height="100" src="/avatars/cjmarkham/big.png" alt=""  />
+				<img width="100" height="100" src="/avatars/{{ profileUser.username }}/big.png" alt=""  />
 			</div>
 			<div class="pull-left">
 				{{ profileUser.username }}
@@ -49,9 +49,15 @@
 					</div>
 					<div class="pull-right">
 						<p>
-							<a href="javascript:void(0)" class="btn btn-primary">
-								Follow
-							</a>
+							{% if following %}
+								<a href="javascript:void(0)" class="btn btn-success" data-event="click" data-action="profile.unfollow" data-userId="{{ profileUser.id }}">
+									Unfollow
+								</a>
+							{% else %}
+								<a href="javascript:void(0)" class="btn btn-primary" data-event="click" data-action="profile.follow" data-userId="{{ profileUser.id }}">
+									Follow
+								</a>
+							{% endif %}
 						</p>
 					</div>
 				</div>

@@ -19,12 +19,21 @@ class UserController extends Controller
 			return $this->app->redirect('/');
 		}
 
+		$loggedInUser = $this->app['session']->get('user');
+		$following = false;
+
+		if ($loggedInUser)
+		{
+			$following = $this->app['user']->check_following($loggedInUser['id'], $user['data']['id']);
+		}
+
 		return $this->app['twig']->render('User/index.twig', array(
 			'title' 			=> $user['data']['username'],
 			'section'			=> 'members',
 			'profileId'			=> $user['data']['id'],
 			'profileUser'		=> $user['data'],
-			'profile'			=> $user['data']['profile']
+			'profile'			=> $user['data']['profile'],
+			'following'			=> $following
 		) + $this->extras);
 	}
 }

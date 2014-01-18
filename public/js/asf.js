@@ -444,6 +444,36 @@ var asf = {
 
 	profile: {
 
+		follow: function (node) {
+			node = $(node);
+			var userId = node.attr('data-userId');
+
+			$.post('/user/follow', {
+				userId: userId
+			}).done(function () {
+				node.text('Unfollow');
+				node.removeClass('btn-primary').addClass('btn-success');
+				node.attr('data-action', 'profile.unfollow');
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+		},
+
+		unfollow: function (node) {
+			node = $(node);
+			var userId = node.attr('data-userId');
+
+			$.post('/user/unfollow', {
+				userId: userId
+			}).done(function () {
+				node.text('Follow');
+				node.removeClass('btn-success').addClass('btn-primary');
+				node.attr('data-action', 'profile.follow');
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+		},
+
 		updateViews: function (profileId) {
 			$.post('/user/update_views', {
 				userId: profileId

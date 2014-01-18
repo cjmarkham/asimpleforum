@@ -49,6 +49,105 @@ class UserModel extends BaseModel
 		return $user;
 	}
 
+	public function check_following($user_id, $following_id)
+	{
+		$user_id = (int) $user_id;
+		$following_id = (int) $following_id;
+
+		if (!$user_id || !$following_id)
+		{
+			return false;
+		}
+
+		return $this->app['db']->fetchColumn('SELECT user_id FROM followers WHERE user_id=? AND following=? LIMIT 1', array(
+			$user_id,
+			$following_id
+		));
+	}
+
+	public function follow (Request $request)
+	{
+		$response = new Response;
+		$user_id = (int) $request->get('userId');
+
+		if (!$user_id)
+		{
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			return $response;
+		}
+
+		$user = $this->app['session']->get('user');
+
+		if (!$user)
+		{
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			return $response;
+		}
+
+		$check = $this->app['db']->fetchAssoc('SELECT user_id FROM followers WHERE user_id=? AND following=? LIMIT 1', array(
+			$user['id'],
+			$user_id
+		));
+
+		if ($check)
+		{
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('ALREADY_FOLLOWING'));
+			return $response;
+		}
+
+		$this->app['db']->insert('followers', array(
+			'user_id' => $user['id'],
+			'following' => $user_id,
+			'added' => time()
+		));
+
+		return true;
+	}
+
+	public function unfollow (Request $request)
+	{
+		$response = new Response;
+		$user_id = (int) $request->get('userId');
+
+		if (!$user_id)
+		{
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			return $response;
+		}
+
+		$user = $this->app['session']->get('user');
+
+		if (!$user)
+		{
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			return $response;
+		}
+
+		$check = $this->app['db']->fetchAssoc('SELECT user_id FROM followers WHERE user_id=? AND following=? LIMIT 1', array(
+			$user['id'],
+			$user_id
+		));
+
+		if (!$check)
+		{
+			$response->setStatusCode(403);
+			$response->setContent($this->app['language']->phrase('NOT_FOLLOWING'));
+			return $response;
+		}
+
+		$this->app['db']->delete('followers', array(
+			'user_id' => $user['id'],
+			'following' => $user_id
+		));
+
+		return true;
+	}
+
 	public function update_views (Request $request) 
 	{
 		$user_id = (int) $request->get('userId');
