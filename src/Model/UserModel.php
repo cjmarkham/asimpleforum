@@ -166,6 +166,8 @@ class UserModel extends BaseModel
 
 	public function find_comments (Request $request)
 	{
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
+
 		$user_id = (int) $request->get('user_id');
 		$page = (int) $request->get('page');
 
@@ -270,6 +272,7 @@ class UserModel extends BaseModel
 			'added' => $time
 		));
 
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
 		$this->app['cache']->delete_group('profile-comments-' . $profile_id);
 
 		return json_encode(array(
@@ -296,8 +299,9 @@ class UserModel extends BaseModel
 		}
 
 		// Check if liked already
-		$check = $this->app['db']->fetchColumn('SELECT username FROM profile_comment_likes WHERE username=? LIMIT 1', array(
-			$username
+		$check = $this->app['db']->fetchColumn('SELECT username FROM profile_comment_likes WHERE username=? AND profile_comment=? LIMIT 1', array(
+			$username,
+			$comment_id
 		));
 
 		if ($check)
@@ -313,6 +317,7 @@ class UserModel extends BaseModel
 			'added' => time()
 		));
 
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
 		$cache_key = 'profile-comment-' . $comment_id . '-likes';
 		$this->app['cache']->delete($cache_key);
 
