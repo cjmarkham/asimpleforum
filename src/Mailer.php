@@ -2,7 +2,7 @@
 
 class Mailer
 {
-	private static $template = null;
+	public static $template = null;
 	private static $params = array();
 
 	public static function setTemplate ($template, $params = array())
@@ -35,9 +35,11 @@ class Mailer
 			
 			exit;
 		}
+
+		return true;
 	}
 
-	private static function compile ()
+	public static function compile ()
 	{
 		$params = self::$params;
 

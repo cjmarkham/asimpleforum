@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit>
-    <php>
-        <env name="APP_ENV" value="development"/>
-    </php>
+<phpunit bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="ASF Test Suite">
-            <directory>tests/ASF</directory>
+            <directory>tests/ASF/Test</directory>
         </testsuite>
     </testsuites>
     <filter>
