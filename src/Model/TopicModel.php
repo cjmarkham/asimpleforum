@@ -142,12 +142,15 @@ class TopicModel extends BaseModel
 					't.*, ' .  
 					'u.id as lastPosterId, u.username, ' .  
 					'f.name as forumName, ' .  
-					'p.name as lastPostName, p.content ' . 
+					'p.name as lastPostName, p.content, ' . 
+					'us.id as authorId, us.username as authorUsername ' . 
 				'FROM topics t ' . 
 				'JOIN posts p ' . 
 				'ON p.id=t.lastPostId ' . 
 				'JOIN users u ' .  
 				'ON p.poster=u.id ' .  
+				'JOIN users us ' .  
+				'ON t.poster=us.id ' .  
 				'JOIN forums f ' .  
 				'ON t.forum=f.id ' .  
 				'ORDER BY updated ' . 
@@ -161,12 +164,22 @@ class TopicModel extends BaseModel
 				$_topic = array(
 					'id' => $topic['id'],
 					'name' => $topic['name'],
+					'views' => $topic['views'],
+					'replies' => $topic['replies'],
+					'added' => $topic['added'],
 					'updated' => $topic['updated'],
+					'sticky'	=> $topic['sticky'],
+					'locked'	=> $topic['locked'],
+					'author' => array(
+						'id' => $topic['poster'],
+						'username' => $topic['authorUsername']
+					),
 					'forum' => array(
 						'id' => $topic['forum'],
 						'name' => $topic['forumName']
 					),
 					'lastPost' => array(
+						'id' => $topic['lastPostId'],
 						'name' => $topic['lastPostName'],
 						'content' => $topic['content'],
 						'user' => array(

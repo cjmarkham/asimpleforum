@@ -1,0 +1,85 @@
+{% extends "Layout/main.twig" %}
+
+{% block content %}
+	
+	<section id="topics">
+		<header>
+			Newest Topics
+		</header>
+
+		<div class="content">
+			{% for topic in topics %}
+				
+				<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
+					<div class="col-md-5">
+						<a href="/{{ topic.forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
+							{{ truncate(topic.name, 40) }} in {{ topic.forum.name }}
+						</a>
+
+						<div class="topic-info">
+							{% if topic.locked %}
+								<i title="Locked" data-toggle="tooltip" class="fa fa-lock"></i>
+							{% endif %}
+
+							{% if topic.sticky %}
+								<i title="Sticky" data-toggle="tooltip" class="fa fa-thumb-tack"></i>
+							{% endif %}
+						</div>
+
+						<p class="topic-author">
+							<a href="" class="user-link">
+								{{ topic.author.username }}
+							</a>
+						</p>
+						<date class="date" title="{{ topic.added|date('c') }}">
+							{{ topic.added|date('jS M y, H:i') }}
+						</date>
+					</div>
+					<div class="col-md-3">
+						<p title="Views" data-toggle="tooltip" class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
+						<p title="Replies" data-toggle="tooltip" class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
+					</div>
+					<div class="text-right col-md-4">
+						<p>
+							{% if topic.lastPost.name %}
+								{% set page = (topic.replies / config('board', 'posts_per_page'))|round %}
+								{% if page < 1 %}
+									{% set page = 1 %}
+								{% endif %}
+								<a href="/{{ topic.forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPost.id }}" class="topic-name">
+									{{ topic.lastPost.name }}
+								</a>
+							{% else %}
+								<a href="" class="topic-name">
+									{{ topic.name }}
+								</a>
+							{% endif %}
+						</p>
+						<p>	
+							<a href="" class="user-link">
+								{{ topic.lastPost.user.username }}
+							</a>
+						</p>
+						<date class="date" title="{{ topic.updated|date('c') }}">
+							{{ topic.updated|date('jS M y. H:i') }}
+						</date>
+					</div>
+				</div>
+
+				{% if not loop.last %}
+					<div class="seperator"></div>
+				{% endif %}
+
+			{% else %}
+
+				<div>
+					<a href="javascript:void(0)" class="topc-name">
+						No Topics yet
+					</a>
+				</div>
+
+			{% endfor %}
+		</div>
+	</section>
+
+{% endblock %}

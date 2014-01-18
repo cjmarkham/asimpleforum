@@ -12,6 +12,10 @@ $app->get('/test', function (Application $app) {
     return include 'test.php';
 });
 
+$app->get('/new-topics', function (Application $app) {
+   return Route::get('topic:newest');
+});
+
 $app->get('/signup', function (Application $app) {
     return Route::get('auth:signup');
 });

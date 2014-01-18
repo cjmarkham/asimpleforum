@@ -44,4 +44,15 @@ class TopicController extends Controller
 			'pagination'		=> $posts['pagination']
 		) + $this->extras);
 	}
+
+	public function newest ()
+	{
+		$topics = $this->app['topic']->find_recent(10);
+
+		return $this->app['twig']->render('Topic/newest.twig', array(
+			'title' 			=> 'Newest Topics',
+			'section'			=> 'new-topics',
+			'topics'			=> $topics
+		) + $this->extras);
+	}
 }
