@@ -17,46 +17,46 @@ $(function () {
 				selection = forum.id;
 			}
 
-            $.post('/search/typeahead', { 
-            	query: query,
-            	selection: selection
-            }, function(results) {
-            	results = JSON.parse(results);
-            	var data = [];
+			$.post('/search/typeahead', { 
+				query: query,
+				selection: selection
+			}, function(results) {
+				results = JSON.parse(results);
+				var data = [];
 
-            	// Show forum name along side topic name if applicable
-            	for (var i in results) {
-            		var string = results[i].name;
+				// Show forum name along side topic name if applicable
+				for (var i in results) {
+					var string = results[i].name;
 
-            		if (results[i].forum) {
-            			string += ' in <span class="forum-name">' + results[i].forum + '</span>'; 
-            		}
+					if (results[i].forum) {
+						string += ' in <span class="forum-name">' + results[i].forum + '</span>'; 
+					}
 
-            		data.push(string);
-            	}
-                process(data);
-            });
-        }, 
-        updater: function (item) {
-        	item = item.toLowerCase().replace(/ in <span class=\"forum-name\">(.*)<\/span>/, '');
-        	item = encodeURIComponent(item);
-        	
-        	var url = '/search/' + item;
-        	var append = $('#search-form-indicator option:selected').val() && asf.page.section == 'forum' ? asf.forum.id : 'all';
+					data.push(string);
+				}
+				process(data);
+			});
+		}, 
+		updater: function (item) {
+			item = item.toLowerCase().replace(/ in <span class=\"forum-name\">(.*)<\/span>/, '');
+			item = encodeURIComponent(item);
+			
+			var url = '/search/' + item;
+			var append = $('#search-form-indicator option:selected').val() && asf.page.section == 'forum' ? asf.forum.id : 'all';
 
-        	url += '/' + append;
+			url += '/' + append;
 
-            document.location = url;
-            return item;
-        },
-        sorter: function (items) {
-            items.unshift(this.query);
+			document.location = url;
+			return item;
+		},
+		sorter: function (items) {
+			items.unshift(this.query);
 
-            for (var i = 0; i < items.length; i++) {
-            	items[i] = items[i].replace(/<(?!\/?span(?=>|\s.*>))\/?.*?>/g, '');
-            }
-            return items;
-        }
+			for (var i = 0; i < items.length; i++) {
+				items[i] = items[i].replace(/<(?!\/?span(?=>|\s.*>))\/?.*?>/g, '');
+			}
+			return items;
+		}
 	});
 
 	$(document).on('submit', '[data-event="submit"]', function (e) {
