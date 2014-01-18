@@ -516,7 +516,7 @@ var asf = {
 						seconds -= 1;
 
 						var minutes = Math.floor(seconds / 60);
-						secondsPer60 = seconds % 60;
+						var secondsPer60 = seconds % 60;
 
 						node.find('button').attr('disabled', true).text(minutes + ' minutes and ' + secondsPer60 + ' seconds left');
 
