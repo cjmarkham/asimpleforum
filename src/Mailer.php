@@ -26,14 +26,7 @@ class Mailer
 		}
 		catch (\Exception $e)
 		{
-			$content = $e->getMessage();
-			$content .= "\n\n" . $headers;
-			$content .= "\n\n" . $from;
-			$content .= "\n\n" . $to;
-
-			\Logger::error('Failed to send email', $content);
-			
-			exit;
+			throw new \Exception('Failed to send mail');
 		}
 
 		return true;
