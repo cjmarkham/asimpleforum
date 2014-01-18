@@ -19,7 +19,7 @@ class Language
 	{
 		if (array_key_exists($phrase, $this->phrases))
 		{
-			$phrase = $this->phrases[$phrase];
+			$phrase = nl2br($this->phrases[$phrase]);
 		}
 
 		if (count($replacements) > 0)
