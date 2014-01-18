@@ -24,6 +24,8 @@ class UserModel extends BaseModel
 
 	public function find_by_username ($username)
 	{
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'users');
+		
 		if (!$username)
 		{
 			return false;

@@ -14,11 +14,51 @@ class AuthModel
 		$this->app = $app;
 	}
 
+	public function confirmEmail ($email, $user_id)
+	{
+		$response = new Response();
+		$user_id = (int) $user_id;
+
+		if (!$user_id || !$email)
+		{
+			\Message::error('UNKNOWN_ERROR');
+			return false;
+		}
+
+		$check = $this->app['db']->fetchAssoc('SELECT id, username, email, approved FROM users WHERE id=? AND email=? LIMIT 1', array(
+			$user_id,
+			$email
+		));
+
+		if (!$check)
+		{
+			\Message::error('NO_USER');
+			return false;
+		}
+
+		if ($check['approved'] == 1)
+		{
+			\Message::error('ALREADY_CONFIRMED_EMAIL');
+			return false;
+		}
+
+		$this->app['db']->update('users', array(
+			'approved' => 1
+		), array('id' => $user_id));
+
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'users');
+		$this->app['cache']->delete('user-' . $check['username']);
+
+		\Message::alert('EMAIL_CONFIRMED');
+		return true;
+	}
+
 	public function signup (array $data)
 	{
 		if (empty($data))
 		{
 			\Message::error('UNKNOWN_ERROR');
+			return false;
 		}
 
 		$constraints = new Assert\Collection(array(
@@ -135,6 +175,8 @@ class AuthModel
 
 	public function login (Request $request)
 	{
+		$response = new Response();
+
 		$username = $request->get('username');
 		$password = $request->get('password');
 
@@ -144,17 +186,22 @@ class AuthModel
 
 		if (!$user)
 		{
-			$response = new Response();
 			$response->setStatusCode(400);
-			$response->setContent('NO_USER');
+			$response->setContent($this->app['language']->phrase('NO_USER'));
 			return $response;
 		}
 
 		if ($user['password'] !== $this->hash($this->app['config']->defaults['salt'] . $password))
 		{
-			$response = new Response();
 			$response->setStatusCode(400);
-			$response->setContent('INVALID_CREDENTIALS');
+			$response->setContent($this->app['language']->phrase('INVALID_CREDENTIALS'));
+			return $response;
+		}
+
+		if (!$user['approved'])
+		{
+			$response->setStatusCode(400);
+			$response->setContent($this->app['language']->phrase('NOT_APPROVED'));
 			return $response;
 		}
 
