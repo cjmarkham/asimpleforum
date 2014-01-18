@@ -12,7 +12,6 @@ class HomeController extends Controller
 
 	public function index()
 	{
-		var_dump($this->app['config']->board['confirmEmail']);
 		$forums = $this->app['forum']->find_all();
 
 		return $this->app['twig']->render('Home/index.twig', array(
