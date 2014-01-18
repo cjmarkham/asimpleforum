@@ -36,4 +36,17 @@ class UserController extends Controller
 			'following'			=> $following
 		) + $this->extras);
 	}
+
+	public function confirmEmail ($code)
+	{
+		list ($email, $user_id) = explode('-', base64_decode($code));
+
+		$confirmed = $this->app['auth']->confirmEmail($email, $user_id);
+
+		return $this->app['twig']->render('User/confirmEmail.twig', array(
+			'title' 			=> 'Confirm email',
+			'section'			=> 'members',
+			'confirmed'			=> $confirmed
+		) + $this->extras);
+	}
 }

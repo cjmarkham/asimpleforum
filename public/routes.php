@@ -60,6 +60,10 @@ $app->get('/user/{username}', function (Application $app, $username) {
     return Route::get('user:index', $username);
 });
 
+$app->get('/user/confirmEmail/{code}', function (Application $app, $code) {
+    return Route::get('user:confirmEmail', $code);
+});
+
 $app->post('/partial/{name}', function (Request $request, $name) use ($app) {
 
     $params = $request->get('params');
