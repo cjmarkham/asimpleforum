@@ -19,7 +19,7 @@ class HomeController extends Controller
 			'confirmCode' => base64_encode('doddsey65@hotmail.com' . '- ' . 1)
 		));
 
-		\Mailer::send('doddsey65@hotmail.com', $this->app['config']->email['noReply'], 'Email confirmation');
+		\Mailer::send('doddsey65@hotmail.com', 'info@asimpleforum.com' 'Email confirmation');
 	
 		\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
 
