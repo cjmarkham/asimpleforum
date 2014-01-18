@@ -203,7 +203,7 @@ class AuthModel
 			return $response;
 		}
 
-		if (!$user['approved'])
+		if (!$user['approved'] && $this->app['config']->board['confirmEmail'])
 		{
 			$response->setStatusCode(400);
 			$response->setContent($this->app['language']->phrase('NOT_APPROVED'));
