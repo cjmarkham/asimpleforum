@@ -164,7 +164,7 @@ class AuthModel
 			\Mailer::send($data['email'], $this->app['config']->email['noReply'], 'Email confirmation');
 		}
 
-		// Todo return success message
+		\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
 		return true;
 	}
 
