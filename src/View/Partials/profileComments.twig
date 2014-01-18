@@ -1,5 +1,5 @@
 {% for comment in comments %}
-	<li class="row profile-comment">
+	<li class="row profile-comment-{{ comment.id }}">
 
 		<div class="col-md-3">
 			<div class="comment-author-info">
@@ -28,7 +28,7 @@
 						{% endif %}
 
 						{% if user.id is defined and user.id == profile.id or hasPermission('EDIT_POSTS') %}
-							<em class="fa fa-times"></em>
+							<em data-event="click" data-action="profile.deleteComment" data-commentId="{{ comment.id }}" class="fa fa-times"></em>
 						{% endif %}
 					</div>
 				</div>

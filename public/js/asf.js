@@ -480,6 +480,21 @@ var asf = {
 			});
 		},
 
+		deleteComment: function (node) {
+			node = $(node);
+			var commentId = node.attr('data-commentId');
+
+			$.post('/user/deleteComment', {
+				commentId: commentId
+			}).done(function () {
+				var container = $('.profile-comment-' + commentId);
+				container.remove();
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+
+		},
+
 		addComment: function (node) {
 
 			node = $(node);

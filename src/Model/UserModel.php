@@ -180,7 +180,7 @@ class UserModel extends BaseModel
 
 		$comments['data'] = $this->app['cache']->get($cache_key, function () use ($user_id, $page) {
 			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM profile_comments p LEFT JOIN users u ON u.id=p.author WHERE p.profile=? ORDER BY p.added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username FROM profile_comments p LEFT JOIN users u ON u.id=p.author WHERE p.profile=? AND p.deleted=0 ORDER BY p.added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
 					$user_id
 				))
 			);
@@ -282,6 +282,57 @@ class UserModel extends BaseModel
 			'username' => $user['username'],
 			'profileId' => $profile_id
 		));
+	}
+
+	public function deleteComment (Request $request)
+	{
+		$comment_id = (int) $request->get('commentId');
+		$response = new Response;
+
+		if (!$comment_id)
+		{
+			$response->setStatusCode(500);
+			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			return $response;
+		}
+
+		$comment = $this->app['db']->fetchAssoc('SELECT * FROM profile_comments WHERE id=? LIMIT 1', array(
+			$comment_id
+		));
+
+		if (!$comment)
+		{
+			$response->setStatusCode(500);
+			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			return $response;
+		}
+
+		$user = $this->app['session']->get('user');
+
+		if (!$user)
+		{
+			$response->setStatusCode(500);
+			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			return $response;
+		}
+
+		if ($user['id'] != $comment['author'] && !\Permissions::hasPermission('EDIT_POSTS'))
+		{
+			$response->setStatusCode(500);
+			$response->setContent($this->app['language']->phrase('NO_PERMISSION'));
+			return $response;
+		}
+
+		$this->app['db']->update('profile_comments', array(
+			'deleted' => 1
+		), array('id' => $comment_id));
+
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
+
+		$this->app['cache']->delete('profile-comment-' . $comment_id);
+		$this->app['cache']->delete_group('profile-comments-' . $comment['profile']);
+
+		return true;
 	}
 
 	public function likeComment (Request $request)
