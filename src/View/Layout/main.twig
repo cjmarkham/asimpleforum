@@ -2,7 +2,7 @@
 <head>
 
 	{% block css %}
-		<link rel="stylesheet" href="/css/bootstrap.css" />
+		<link rel="stylesheet" href="/vendor/css/bootstrap.css" />
 		<link rel="stylesheet" href="/font-awesome/css/font-awesome.css" />
 		<link rel="stylesheet" href="/css/main.css" />
 	{% endblock %}
@@ -17,10 +17,11 @@
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
 		
-		<script src="/js/jquery.js"></script>
-		<script src="/js/bootstrap.js"></script>
+		<script src="/vendor/js/jquery.js"></script>
+		<script src="/vendor/js/bootstrap.js"></script>
+		<script src="/vendor/js/timeago.js"></script>
+		
 		<script src="/js/asf.js"></script>
-		<script src="/js/timeago.js"></script>
 		<script src="/js/dom.js"></script>
 
 		{% if user %}
