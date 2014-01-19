@@ -168,6 +168,10 @@ class TopicModel extends BaseModel
 		$this->app['cache']->delete('topic-' . $topic['name']);
 		$this->app['cache']->delete('topic-' . $topic['id']);
 
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'views');
+		
+		$views = $this->app['cache']->append('topic-views-54', time());
+		
 		return true;
 	}
 
