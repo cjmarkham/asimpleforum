@@ -32,7 +32,7 @@
 			<div class="text-right col-md-4">
 				<p>
 					{% if topic.lastPost.name %}
-						{% set page = (topic.replies / config('board', 'posts_per_page'))|round %}
+						{% set page = (topic.replies / config('board', 'postsPerPage'))|round %}
 						{% if page < 1 %}
 							{% set page = 1 %}
 						{% endif %}

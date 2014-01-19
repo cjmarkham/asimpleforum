@@ -46,7 +46,7 @@ class AuthModel
 			'approved' => 1
 		), array('id' => $user_id));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'users');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'users');
 		$this->app['cache']->delete('user-' . $check['username']);
 
 		\Message::alert('EMAIL_CONFIRMED');
@@ -128,7 +128,7 @@ class AuthModel
 			return false;
 		}
 
-		$hashed = $this->hash($this->app['config']->defaults['salt'] . $data['password']);
+		$hashed = $this->hash($this->app['defaults']['salt'] . $data['password']);
 
 		$default_group = $this->app['db']->fetchColumn('SELECT id FROM groups WHERE `default`=1 LIMIT 1');
 
@@ -154,16 +154,16 @@ class AuthModel
 			'id' => $user_id
 		));
 
-		if ($this->app['config']->board['confirmEmail'])
+		if ($this->app['board']['confirmEmail'])
 		{
 			\Mailer::setTemplate('emailConfirmation', array(
 				'username' => $data['username'],
-				'boardTitle' => $this->app['config']->board['name'],
-				'boardUrl'   => $this->app['config']->board['url'],
+				'boardTitle' => $this->app['board']['name'],
+				'boardUrl'   => $this->app['board']['url'],
 				'confirmCode' => base64_encode($data['email'] . '-' . $user_id)
 			));
 
-			\Mailer::send($data['email'], $this->app['config']->email['noReply'], 'Email confirmation');
+			\Mailer::send($data['email'], $this->app['email']['noReply'], 'Email confirmation');
 		
 			\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
 		}
@@ -198,14 +198,14 @@ class AuthModel
 			return $response;
 		}
 
-		if ($user['password'] !== $this->hash($this->app['config']->defaults['salt'] . $password))
+		if ($user['password'] !== $this->hash($this->app['defaults']['salt'] . $password))
 		{
 			$response->setStatusCode(400);
 			$response->setContent($this->app['language']->phrase('INVALID_CREDENTIALS'));
 			return $response;
 		}
 
-		if (!$user['approved'] && $this->app['config']->board['confirmEmail'])
+		if (!$user['approved'] && $this->app['board']['confirmEmail'])
 		{
 			$response->setStatusCode(400);
 			$response->setContent($this->app['language']->phrase('NOT_APPROVED'));

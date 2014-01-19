@@ -8,34 +8,15 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 
-$app['config'] = new Config;
-
-if (strpos($_SERVER['HTTP_HOST'], 'dev') !== false)
-{
-    $app['debug'] = true;
-    $app['local'] = true;
-    $app['config']->base = 'development';
-}
-else if (strpos($_SERVER['HTTP_HOST'], 'staging') !== false)
-{
-    $app['debug'] = false;
-    $app['local'] = false;
-    $app['config']->base = 'staging';
-}
-else
-{
-    $app['debug'] = false;
-    $app['local'] = false;
-    $app['config']->base = 'production';
-}
-
-$app['config']->load();
+$env = getenv('APP_ENV') ?: 'production';
+$app['env'] = $env;
+$app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__ . '/../config/' . $env . '.json'));
 
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new \Silex\Provider\SessionServiceProvider(), array(
     'session.storage.options' => array(
-        'name' => $app['config']->cookie['name'],
-        'cookie_domain' => $app['config']->cookie['domain']
+        'name' => $app['cookie']['name'],
+        'cookie_domain' => $app['cookie']['domain']
     )
 ));
 
@@ -51,18 +32,15 @@ $app['twig']->addExtension(new \Entea\Twig\Extension\AssetExtension(
 ));
 
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
-$config_function = new Twig_SimpleFunction('config', function ($file, $key = false) use ($app) {
-    if (property_exists($app['config'], $file))
+$config_function = new Twig_SimpleFunction('config', function ($section, $key = false) use ($app) {
+    if (isset($app[$section]))
     {
-        if ($key)
+        if (is_array($app[$section]))
         {
-            return $app['config']->{$file}[$key];
+            return $app[$section][$key];
         }
-        else
-        {
-            return $app['config']->{$file};
-        }
-    } 
+        return $app[$section];
+    }
 });
 
 $permissions_function = new Twig_SimpleFunction('hasPermission', function ($action) use ($app) {
@@ -73,26 +51,17 @@ $app['twig']->addFunction($truncate);
 $app['twig']->addFunction($config_function);
 $app['twig']->addFunction($permissions_function);
 
-$app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
-    'mongo.connections' => array(
-        'default' => array(
-            'server' => 'mongodb://' . $app['config']->database['host'] . ':' . $app['config']->database['port'],
-            'options' => array("connect" => true)
-        )
-    )
-));
-
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'    => 'pdo_mysql',
-        'dbname'   => $app['config']->database['name'],
-        'host'      => $app['config']->database['host'],
-        'user'      => $app['config']->database['user'],
-        'password'  => $app['config']->database['password'],
+        'dbname'   => $app['database']['name'],
+        'host'      => $app['database']['host'],
+        'user'      => $app['database']['user'],
+        'password'  => $app['database']['password'],
     ),
 ));
 
-if ($app['config']->defaults['cache'] === 'disk')
+if ($app['defaults']['cache'] === 'disk')
 {
     $app->register(new DiskCache\DiskCacheServiceProvider(), array(
         'diskcache.cache_dir' => dirname(__DIR__) . '/cache'
@@ -102,6 +71,15 @@ if ($app['config']->defaults['cache'] === 'disk')
 } 
 else
 {
+    $app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
+        'mongo.connections' => array(
+            'default' => array(
+                'server' => 'mongodb://' . $app['mongo']['host'] . ':' . $app['mongo']['port'],
+                'options' => array("connect" => true)
+            )
+        )
+    ));
+        
     $app->register(new MongoCache\MongoCacheServiceProvider());
     $app['cache'] = $app['mongocache'];
 }
@@ -123,16 +101,15 @@ $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 }*/
 
 // Facebook SDK
-$app->register(new Tobiassjosten\Silex\Provider\FacebookServiceProvider(), array(
+/*$app->register(new Tobiassjosten\Silex\Provider\FacebookServiceProvider(), array(
     'facebook.app_id'     => '480210532061315',
     'facebook.secret'     => 'f5bc907e9ac2bb6ea651fc9bfe89f7b8',
-));
+));*/
 
 $app->error(function (\Exception $e, $code) use ($app) {
 
     if ($code === 404)
     {
-
         return new Response(
             $app['twig']->render(
                 '404.twig', 

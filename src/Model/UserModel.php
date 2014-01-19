@@ -24,7 +24,7 @@ class UserModel extends BaseModel
 
 	public function find_by_username ($username)
 	{
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'users');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'users');
 		
 		if (!$username)
 		{
@@ -168,7 +168,7 @@ class UserModel extends BaseModel
 
 	public function find_comments (Request $request)
 	{
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
 
 		$user_id = (int) $request->get('user_id');
 		$page = (int) $request->get('page');
@@ -274,7 +274,7 @@ class UserModel extends BaseModel
 			'added' => $time
 		));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
 		$this->app['cache']->delete_group('profile-comments-' . $profile_id);
 
 		return json_encode(array(
@@ -329,7 +329,7 @@ class UserModel extends BaseModel
 			'deleted' => 1
 		), array('id' => $comment_id));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
 
 		$this->app['cache']->delete('profile-comment-' . $comment_id);
 		$this->app['cache']->delete_group('profile-comments-' . $comment['profile']);
@@ -370,7 +370,7 @@ class UserModel extends BaseModel
 			'added' => time()
 		));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
 		$cache_key = 'profile-comment-' . $comment_id . '-likes';
 		$this->app['cache']->delete($cache_key);
 

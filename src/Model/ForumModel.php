@@ -13,7 +13,7 @@ class ForumModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
-		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'forums');
+		$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'forums');
 	}
 
 	public function find_by_id ($id)

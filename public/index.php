@@ -14,8 +14,8 @@ $app->before(function (Request $request) use ($app) {
     $recent_topics = $app['topic']->find_recent(4);
 
     $config = array(
-        'default' => $app['config']->defaults,          
-        'board' => $app['config']->board            
+        'default' => $app['defaults'],          
+        'board' => $app['board']            
     );
 
     $app['twig']->addGlobal('user', $user);

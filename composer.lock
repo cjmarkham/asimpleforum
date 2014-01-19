@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "607d4741d184e4127ac31c32aff2d3b3",
+    "hash": "10660f6508884b72f1f5cd81137dabb6",
     "packages": [
         {
             "name": "cjmarkham/disk-cache",
@@ -47,12 +47,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cjmarkham/MongoCacheServiceProvider.git",
-                "reference": "1f22e8db27c7469eee799dab49f7adfde3c7ed18"
+                "reference": "a94c2aad606357f30cb5e91972029f4850e5283f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cjmarkham/MongoCacheServiceProvider/zipball/1f22e8db27c7469eee799dab49f7adfde3c7ed18",
-                "reference": "1f22e8db27c7469eee799dab49f7adfde3c7ed18",
+                "url": "https://api.github.com/repos/cjmarkham/MongoCacheServiceProvider/zipball/a94c2aad606357f30cb5e91972029f4850e5283f",
+                "reference": "a94c2aad606357f30cb5e91972029f4850e5283f",
                 "shasum": ""
             },
             "require": {
@@ -76,7 +76,7 @@
                 }
             ],
             "description": "A MongoDB Caching service for Silex",
-            "time": "2013-12-29 12:57:23"
+            "time": "2014-01-18 21:48:58"
         },
         {
             "name": "doctrine/common",
@@ -340,6 +340,63 @@
                 "zf2"
             ],
             "time": "2013-12-04 14:19:30"
+        },
+        {
+            "name": "igorw/config-service-provider",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/igorw/ConfigServiceProvider.git",
+                "reference": "8ccf0f6e9324629720c58fa071e74dbd2501f437"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/igorw/ConfigServiceProvider/zipball/8ccf0f6e9324629720c58fa071e74dbd2501f437",
+                "reference": "8ccf0f6e9324629720c58fa071e74dbd2501f437",
+                "shasum": ""
+            },
+            "require": {
+                "silex/silex": "~1.0"
+            },
+            "require-dev": {
+                "jamesmoss/toml": "~0.1",
+                "symfony/yaml": "~2.1"
+            },
+            "suggest": {
+                "jamesmoss/toml": "~0.1",
+                "symfony/yaml": "~2.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Igorw\\Silex": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch",
+                    "homepage": "http://wiedler.ch/igor/"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/igorw/ConfigServiceProvider/contributors"
+                }
+            ],
+            "description": "A config ServiceProvider for Silex with support for php, json and yaml.",
+            "keywords": [
+                "silex"
+            ],
+            "time": "2013-10-30 14:42:08"
         },
         {
             "name": "moriony/silex-mongo-provider",
@@ -1877,7 +1934,8 @@
         "cjmarkham/disk-cache": 20,
         "cjmarkham/mongo-cache": 20,
         "facebook/php-sdk": 20,
-        "tobiassjosten/facebook-service-provider": 20
+        "tobiassjosten/facebook-service-provider": 20,
+        "igorw/config-service-provider": 20
     },
     "platform": [
 

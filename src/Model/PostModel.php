@@ -52,7 +52,7 @@ class PostModel extends BaseModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
-		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'posts');
+		$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'posts');
 	}
 
 	public function find_by_user (Request $request)
@@ -224,7 +224,6 @@ class PostModel extends BaseModel
 
 		if (count($errors) > 0)
 		{
-			$response = new Response();
 	        $response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase(\Message::error($errors[0]->getMessage())));
 	        return $response;
@@ -239,7 +238,7 @@ class PostModel extends BaseModel
 
 		if ($last['poster'] == $user['id'])
 		{
-			if ($this->app['config']->board['double_post'] === 'merge')
+			if ($this->app['board']['doublePost'] === 'merge')
 			{
 				preg_match('/<div class="update">(.*)<\/div>/s', $last['content'], $matches);
 
@@ -272,7 +271,6 @@ class PostModel extends BaseModel
 					'lastPostId' => $last['id']
 				), array('id' => $last['forum']));
 
-				$response = new Response();
 				$response->setContent(json_encode(array(
 					'id' => $last['id'],
 					'content' => $content,
@@ -280,9 +278,8 @@ class PostModel extends BaseModel
 				)));
 				return $response;
 			}
-			else if ($this->app['config']->board['double_post'] === 'disallow')
+			else if ($this->app['board']['doublePost'] === 'disallow')
 			{
-				$response = new Response;
 				$response->setStatusCode(400);
 				$response->setContent($this->app['language']->phrase('NO_DOUBLE_POST'));
 				return $response;
@@ -320,15 +317,15 @@ class PostModel extends BaseModel
 			$topic_id
 		));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'posts');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'posts');
 		$this->app['cache']->delete_group('topic-post-count-' . $topic_id);
 		$this->app['cache']->delete_group('topic-posts-' . $topic_id);
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'forums');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'forums');
 		$this->app['cache']->delete_group('forum-' . $topic['forum']);
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'topics');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'topics');
 		$this->app['cache']->delete('topic-' . $topic_id);
 
-		$page = (int) ceil($post_count / $this->app['config']->board['posts_per_page']);
+		$page = (int) ceil($post_count / $this->app['board']['postsPerPage']);
 
 		$this->app['db']->executeQuery('UPDATE users SET posts=posts+1 WHERE id=? LIMIT 1', array(
 			$user['id']

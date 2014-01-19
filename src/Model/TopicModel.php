@@ -13,7 +13,7 @@ class TopicModel extends BaseModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
-		$this->collection = $this->app['mongo']['default']->selectCollection($app['config']->database['name'], 'topics');
+		$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'topics');
 	}
 
 	public function find_by_id ($id) 
@@ -168,7 +168,7 @@ class TopicModel extends BaseModel
 		$this->app['cache']->delete('topic-' . $topic['name']);
 		$this->app['cache']->delete('topic-' . $topic['id']);
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['config']->database['name'], 'views');
+		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'views');
 		
 		$views = $this->app['cache']->append('topic-views-54', time());
 		
