@@ -111,6 +111,11 @@ body {
 	bottom: 0;
 }
 
+.form-control {
+	border-radius: 0;
+	-webkit-box-shadow: none;
+}
+
 #main-nav {
 	background: #0d2c49;
 	border-top: 1px solid @lightBlue;
@@ -118,7 +123,6 @@ body {
 	height: 50px;
 	z-index: 900;
 	margin-left: 0 20px;
-	.topRadius5();
 
 	ul {
 		margin: 0;
@@ -127,8 +131,7 @@ body {
 			padding: 0;
 
 			&.active {
-				.greyGradient();
-				.topRadius5();
+				background: #fff;
 
 				a {
 					color: #2f588c;
@@ -171,7 +174,7 @@ body {
 #breadcrumbs {
 	margin: 10px 0 10px;
 	border-top: 1px solid #f0f0f0;
-	.inverseGreyGradient();
+	background: #fafafa;
 	padding: 10px;
 
 	ul {
