@@ -3,6 +3,7 @@
 namespace Model;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class ForumModel 
@@ -14,6 +15,96 @@ class ForumModel
 	{
 		$this->app = $app;
 		$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'forums');
+	}
+
+	public function add (Request $request)
+	{
+		$parent = (int) $request->get('parent');
+
+		$parent = $this->find_by_id($parent);
+
+		if (!$parent)
+		{
+			return new Response($this->app['language']->phrase('UNKNOWN_ERROR'), 500);
+		}
+
+		$name = $request->get('name');
+		$description = $request->get('description');
+
+		if (!$description)
+		{
+			$description = null;
+		}
+
+		$response = new Response;
+
+		if (!$name)
+		{
+			$response->setStatusCode(400);
+			$response->setContent($this->app['language']->phrase('FILL_ALL_FIELDS'));
+			return $response;
+		}
+
+		$left = $parent['left'];
+		$right = $parent['right'];
+
+		$this->app['db']->insert('forums', array(
+			'name' => $name,
+			'parent' => $parent['id'],
+			'`left`' => $parent['right'],
+			'`right`' => $parent['right'] + 1,
+			'added' => time(),
+			'updated' => time()
+		));
+
+		$id = $this->app['db']->lastInsertId();
+
+		if (!$id)
+		{
+			return new Response($this->app['language']->phrase('UNKNOWN_ERROR'), 500);
+		}
+
+		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`+2 WHERE `right`>=? LIMIT 1', array(
+			$left
+		));
+
+		$this->app['db']->executeQuery('UPDATE forums SET `left`=`left`+1 WHERE `left`>=? LIMIT 1', array(
+			$right
+		));
+
+		$this->app['cache']->collection = $this->collection;
+		$this->app['cache']->delete_group('forums');
+
+		return true;
+	}
+
+	public function delete (Request $request)
+	{
+		$forum_id = (int) $request->get('id');
+
+		if (!$forum_id)
+		{
+			return false;
+		}
+
+		$forum = $this->find_by_id($forum_id);
+
+
+
+		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`-2 WHERE `right`>? LIMIT 1', array(
+			$forum['left']
+		));
+
+		$this->app['db']->executeQuery('UPDATE forums SET `left`=`left`-2 WHERE `left`>? LIMIT 1', array(
+			$forum['right']
+		));
+
+		$this->app['db']->delete('forums', array('id' => $forum_id));
+
+		$this->app['cache']->collection = $this->collection;
+		$this->app['cache']->delete_group('forums');
+
+		return true;
 	}
 
 	public function find_by_id ($id)
@@ -41,6 +132,89 @@ class ForumModel
 		return $forum['data'];
 	}
 
+	public function findAll ($root_data = false)
+	{
+		$parent_id = 0;
+		$forums = array();
+		$subforums = array();
+		$sql_where = '';
+		$parents = array();
+
+		if (!$root_data)
+		{
+			$root_data = array('forum_id' => 0);
+		}
+		else
+		{
+			$sql_where = '`left` > ' . $root_data['left'] . ' AND `left` < ' . $root_data['right'];
+		}
+
+		$results = $this->app['db']->fetchAll('SELECT * FROM forums ' . $sql_where . ' ORDER BY `left` ASC');
+
+		$branch_root = $root_data['forum_id'];
+
+		// Get all the parent nodes
+		foreach ($results as $key => $value)
+		{
+			$forum_id = $value['id'];
+
+			if ($value['parent'] == $root_data['forum_id'] || $value['parent'] == $branch_root)
+			{
+				$parent_id = $forum_id;
+
+				$forums[$forum_id] = $value;
+
+				if ($value['parent'] == $root_data['forum_id'])
+				{
+					$branch_root = $forum_id;
+				}
+			}
+			else
+			{
+				$subforums[$parent_id][$forum_id] = $value;
+			}
+		}
+
+		foreach ($forums as $key => $value)
+		{
+			// Category
+			if ($value['parent'] == $root_data['forum_id'])
+			{
+				$parents[$value['id']] = $value;
+
+				continue;
+			}
+
+			$forum_id = $value['id'];
+
+			$subforums_list = array();
+
+			// Get list of all subforums
+			if (isset($subforums[$forum_id]))
+			{
+				foreach ($subforums[$forum_id] as $subforum_id => $subforum_row)
+				{
+					if (isset($subforum_row['name']))
+					{
+						$subforums_list[] = $subforum_row;
+					}
+					else
+					{
+						unset($subforums[$forum_id][$subforum_id]);
+					}
+				}
+			}
+
+			$parents[$value['parent']]['forums'][$value['id']] = $value;
+			if (isset($subforums[$value['id']]))
+			{
+				$parents[$value['parent']]['forums'][$value['id']]['forums'] = $subforums[$value['id']];
+			}
+		}
+
+		return $parents;
+	}
+
 	public function find_all ()
 	{
 		$cache_key = 'forums.all';
@@ -63,7 +237,8 @@ class ForumModel
 				'LEFT JOIN users u ' . 
 				'ON f.lastPosterId=u.id ' . 
 				'LEFT JOIN posts p ' . 
-				'ON f.lastPostId=p.id'
+				'ON f.lastPostId=p.id ' . 
+				'ORDER BY parent ASC, display ASC'
 			);
 
 			$data = array('data' => array());
@@ -120,11 +295,14 @@ class ForumModel
 
 					foreach ($data['data'] as $forum_id => $_forum)
 					{
-						foreach ($_forum['children'] as $id => $child)
+						if (isset($_forum['children']))
 						{
-							if ($id == $parent_id)
+							foreach ($_forum['children'] as $id => $child)
 							{
-								$data['data'][$forum_id]['children'][$parent_id]['children'][] = $forum;
+								if ($id == $parent_id)
+								{
+									$data['data'][$forum_id]['children'][$parent_id]['children'][] = $forum;
+								}
 							}
 						}
 					}
