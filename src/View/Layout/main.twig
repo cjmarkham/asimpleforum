@@ -126,7 +126,7 @@
 					{% for key, array in sidebars if key == section %}
 						{% if array|length %}
 							{% for sidebar in array %}
-								{{ include('Partials/' ~ sidebar ~ '.twig') }}
+								{{ include('Sidebars/' ~ sidebar ~ '.twig') }}
 							{% endfor %}
 						{% endif %}
 					{% endfor %}
