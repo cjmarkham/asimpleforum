@@ -13,10 +13,10 @@
 						</a>
 					</p>
 					<p title="Group" class="group">
-						<i class="fa fa-group"></i> {{ post.group }}
+						<em class="fa fa-group"></em > {{ post.group }}
 					</p>
 					<p title="Posts" class="post-count">
-						<i class="fa fa-pencil"></i> {{ post.userPosts }}
+						<em class="fa fa-pencil"></em > {{ post.userPosts }}
 					</p>
 				</div>
 				<div class="post-body">
@@ -28,21 +28,21 @@
 							<div class="pull-right post-tools">
 								{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}
 									<a data-postId="{{ post.id }}" href="javascript:void(0)" data-event="click" data-action="editPost">
-										<i class="fa fa-pencil"></i>
+										<em class="fa fa-pencil"></em >
 									</a>
 								{% endif %}
 								{% if user %}
 									<a href="javascript:void(0)" data-event="click" data-action="reportPostTrigger" data-postId="{{ post.id }}">
-										<i class="fa fa-exclamation-triangle"></i>
+										<em class="fa fa-exclamation-triangle"></em >
 									</a>
 									<a href="javascript:void(0)" data-event="click" data-action="likePost" data-postId="{{ post.id }}">
-										<i class="fa fa-thumbs-up"></i>
+										<em class="fa fa-thumbs-up"></em >
 									</a>
 								{% endif %}
 
 								{% if user %}
 									<a href="javascript:void(0)" data-event="click" data-action="quotePost" data-postId="{{ post.id }}" data-author="{{ post.username }}">
-										<i title="Quote" data-toggle="tooltip" class="fa fa-comment"></i>
+										<em title="Quote" data-toggle="tooltip" class="fa fa-comment"></em >
 									</a>
 								{% endif %}
 							</div>
