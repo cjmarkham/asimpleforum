@@ -8,7 +8,7 @@
 	<script>
 	$(function () {
 		{% if user and topic.poster != user.id or not user %}
-			$.post('/topic/update_views', {
+			$.post('/topic/update_views/', {
 				id: '{{ topic.id }}',
 			});
 		{% endif %}

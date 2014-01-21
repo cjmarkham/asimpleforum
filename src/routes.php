@@ -132,7 +132,7 @@ $app->get('/{forum_name}/{topic_name}-{topic_id}/{page}/', function (Application
 
 $app->get('/{forum_name}/{topic_name}-{topic_id}/', function (Application $app, $topic_name, $topic_id) {
     return Route::get('topic:index', $topic_name, $topic_id);
-})->assert('topic_name', '([a-zA-Z0-9<>_-\s]+)');
+});
 
 $app->post('/forum/{method}/', function (Request $request, $method) use ($app) {
     // TODO: Check for allowed post methods

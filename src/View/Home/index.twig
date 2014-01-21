@@ -18,7 +18,7 @@
 										<em class="fa fa-comment"></em >
 									</div>
 									<div class="col-sm-7">
-										<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}">
+										<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}/">
 											{{ child.name }}
 										</a>
 										<p class="forum-description">
@@ -28,7 +28,7 @@
 									<div class="col-sm-4 text-right">
 										<p>	
 											{% if child.lastTopic.name %}
-												<a href="/{{ child.name|url_encode }}/{{ child.lastTopic.name|url_encode }}-{{ child.lastTopic.id }}#{{ child.lastPost.id }}" class="topic-name">
+												<a href="/{{ child.name|url_encode }}/{{ child.lastTopic.name|url_encode }}-{{ child.lastTopic.id }}/#{{ child.lastPost.id }}" class="topic-name">
 													{{ child.lastTopic.name }}
 												</a>
 											{% else %}

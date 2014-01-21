@@ -34,7 +34,7 @@
 				{% if page < 1 %}
 					{% set page = 1 %}
 				{% endif %}
-				<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
+				<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}/#{{ topic.lastPostId }}" class="topic-name">
 					{{ topic.lastPostName }}
 				</a>
 			{% else %}
