@@ -20,6 +20,14 @@ $app->get('/signup', function (Application $app) {
     return Route::get('auth:signup');
 });
 
+$app->get('/members', function (Application $app) {
+    return Route::get('members:index');
+});
+
+$app->get('/faqs', function (Application $app) {
+    return Route::get('faq:index');
+});
+
 $app->post('/signup', function (Request $request) {
     return Route::get('auth:signup', $request);
 });
@@ -105,7 +113,19 @@ $app->get('/{forum_name}/{topic_name}-{topic_id}', function (Application $app, $
     return Route::get('topic:index', $topic_name, $topic_id);
 })->assert('topic_name', '([a-zA-Z0-9<>_-\s]+)');
 
+$app->post('/forum/{method}', function (Request $request, $method) use ($app) {
+    // TODO: Check for allowed post methods
+    if (!method_exists($app['forum'], $method))
+    {
+        $response = new Response();
+        $response->setStatusCode(403);
+        return $response;
+    }
+    return $app['forum']->$method($request);
+});
+
 $app->post('/topic/{method}', function (Request $request, $method) use ($app) {
+    // TODO: Check for allowed post methods
     if (!method_exists($app['topic'], $method))
     {
         $response = new Response();
@@ -116,6 +136,7 @@ $app->post('/topic/{method}', function (Request $request, $method) use ($app) {
 });
 
 $app->post('/post/{method}', function (Request $request, $method) use ($app) {
+    // TODO: Check for allowed post methods
     if (!method_exists($app['post'], $method))
     {
         $response = new Response();
@@ -126,6 +147,7 @@ $app->post('/post/{method}', function (Request $request, $method) use ($app) {
 });
 
 $app->post('/user/{method}', function (Request $request, $method) use ($app) {
+    // TODO: Check for allowed post methods
     if (!method_exists($app['user'], $method))
     {
         $response = new Response();
@@ -133,4 +155,14 @@ $app->post('/user/{method}', function (Request $request, $method) use ($app) {
         return $response;
     }
     return $app['user']->$method($request);
+});
+
+// ADMIN ROUTES
+
+$app->get('/admin', function (Application $app) {
+    return Route::get('admin/home:index');
+});
+
+$app->get('/admin/forums', function (Application $app) {
+    return Route::get('admin/forums:index');
 });

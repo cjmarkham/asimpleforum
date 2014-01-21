@@ -21,9 +21,9 @@
 							<a href="/user/{{ topic.lastPost.user.username }}" class="user-link">
 								{{ topic.lastPost.user.username }}
 							</a>
-							<date title="{{ topic.updated|date('c') }}" class="date">
+							<span title="{{ topic.updated|date('c') }}" class="date">
 								{{ topic.updated|date('jS M y, H:i') }}
-							</date>
+							</span>
 						</div>
 					</div>
 				</li>
