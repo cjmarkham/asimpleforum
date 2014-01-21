@@ -14,10 +14,10 @@
 						<div class="forums">
 							{% for child in forum.children %}
 								<div class="forum row">
-									<div class="forum-icon col-md-1">
+									<div class="forum-icon col-sm-1">
 										<i class="fa fa-comment"></i>
 									</div>
-									<div class="col-md-7">
+									<div class="col-sm-7">
 										<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}">
 											{{ child.name }}
 										</a>
@@ -25,7 +25,7 @@
 											{{ child.description }}
 										</p>
 									</div>
-									<div class="col-md-4 text-right">
+									<div class="col-sm-4 text-right">
 										<p>	
 											{% if child.lastTopic.name %}
 												<a href="/{{ child.name|url_encode }}/{{ child.lastTopic.name|url_encode }}-{{ child.lastTopic.id }}#{{ child.lastPost.id }}" class="topic-name">
@@ -55,8 +55,8 @@
 										{% endif %}
 									</div>
 									{% if child.children is defined %}
-										<div class="col-md-offset-1"></div>
-										<div class="col-md-11 subforum-list">
+										<div class="col-sm-offset-1"></div>
+										<div class="col-sm-11 subforum-list">
 											Subforums: 
 											{% for subchild in child.children %}
 												<a href="/{{ subchild.name|url_encode }}-{{ subchild.id }}">

@@ -219,21 +219,33 @@ section {
 
 .avatar {
 	border: 1px solid #fff;
-	width: 37px;
-	height: 37px;
+	width: 55px;
+	height: 55px;
 
 	img {
+		width: 55px;
+		height: 55px;
 		border: 1px solid @darkGrey;
 	}
 
 	&.big {
 		width: 72px;
 		height: 72px;
+
+		img {
+			width: 72px;
+			height: 72px;
+		}
 	}
 
 	&.huge {
 		width: 100px;
 		height: 100px;
+
+		img {
+			width: 100px;
+			height: 100px;
+		}
 	}
 }
 
@@ -259,6 +271,7 @@ p {
 
 	.date {
 		font-weight: bold;
+		display: block;
 	}
 }
 
@@ -885,7 +898,7 @@ section h4 {
 	border: 0;
 }
 
-#user-quick-access {
+#user-quick-access, #user-quick-access-fixed {
 	padding-top: 10px;
 	color: #fff;
 
@@ -896,6 +909,12 @@ section h4 {
 		font-weight: bold;
 		font-size: 14px;
 	}
+}
+
+#user-quick-access-fixed {
+	position: absolute;
+	top: 0;
+	right: 20px;
 }
 
 #no-topics, #no-posts {

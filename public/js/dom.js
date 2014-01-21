@@ -202,13 +202,20 @@ $(function () {
 		if (amount >= 105) {
 			if (!scrolled) {
 
-				logo.css({
+				logo.addClass('hidden-xs hidden-sm').css({
 					height: 30,
+					width: 200,
 					'float': 'left',
 					marginRight: 20
 				});
 
-				$('#main-nav ul').css('width', ($(window).width() / 2) + 'px').addClass('pull-left');
+				var width = $(window).width() / 2;
+
+				if (width < 700) {
+					width = 700;
+				}
+
+				$('#main-nav ul').css('width', width + 'px').addClass('pull-left');
 				$('#main-nav').prepend(logo)
 							.removeClass('container')
 							.addClass('clearfix');
@@ -228,8 +235,9 @@ $(function () {
 		} else {
 			if (scrolled) {
 
-				logo.css({
-					height: 50,
+				logo.removeClass('hidden-xs hidden-sm').css({
+					height: 52,
+					width: 318,
 					'float': 'none',
 					marginRight: 0,
 					marginTop: 0

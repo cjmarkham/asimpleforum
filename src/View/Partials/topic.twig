@@ -1,5 +1,5 @@
 <div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
-	<div class="col-md-5">
+	<div class="col-sm-5">
 		<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
 			{{ truncate(topic.name, 40) }}
 		</a>
@@ -23,11 +23,11 @@
 			{{ topic.added|date('jS M y, H:i') }}
 		</date>
 	</div>
-	<div class="col-md-3">
+	<div class="col-sm-3">
 		<p title="Views" data-toggle="tooltip" class="views"><i class="fa fa-eye"></i> {{ topic.views }}</p>
 		<p title="Replies" data-toggle="tooltip" class="replies"><i class="fa fa-pencil"></i> {{ topic.replies }}<p>
 	</div>
-	<div class="text-right col-md-4">
+	<div class="text-right col-sm-4">
 		<p>
 			{% if topic.lastPostName %}
 				{% set page = (topic.replies / config('board', 'postsPerPage'))|round %}

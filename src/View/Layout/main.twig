@@ -53,18 +53,30 @@
 			<img id="fork" src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png" alt="Fork me on GitHub" />
 		</a>
 	{% endif %}
+
+	<div id="user-quick-access-fixed" class="hidden-no-user hidden-md hidden-lg pull-right">
+		{% if user %}
+			<a href="/user/{{ user.username }}">
+				{{ user.username }}
+			</a>
+				&bull;
+			<a href="javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
+				Logout
+			</a>
+		{% endif %}
+	</div>
 	
 	<header id="header">
 
 		<div class="container">
 			<div class="row">
-				<div id="logo" class="col-md-9">
+				<div id="logo" class="col-sm-9">
 					<a href="/">
-						<img src="/images/{{ config('board', 'logo') }}" alt="" />
+						<img width="318" height="52" src="/images/{{ config('board', 'logo') }}" alt="{{ config('board', 'name') }}" />
 					</a>
 				</div>
-				<div id="quick-search" class="col-md-3">
-					<form name="search-form" method="post" action="" class="form-horizontal">
+				<div id="quick-search" class="col-sm-3">
+					<form name="search-form" method="post" action="javascript:void(0)" class="form-horizontal">
 						<div class="form-group">
 							<input type="text" name="query" class="typeahead form-control" autocomplete="off" placeholder="Quick search" />
 							<button class="fa fa-search">&nbsp;</button>
@@ -78,6 +90,8 @@
 			</div>
 		</div>
 
+
+
 		<div class="container clearfix" id="main-nav">
 			<ul class="list-unstyled list-inline pull-left">
 				{% for link in nav_links %}
@@ -88,7 +102,7 @@
 					</li>
 				{% endfor %}
 			</ul>
-			<div id="user-quick-access" class="hidden-no-user pull-right">
+			<div id="user-quick-access" class="hidden-no-user hidden-xs hidden-sm pull-right">
 				{% if user %}
 					<a href="/user/{{ user.username }}">
 						{{ user.username }}
@@ -121,7 +135,7 @@
 			{% set sidebars = config('sidebars') %}
 
 			{% if sidebars[section] is defined and sidebars[section]|length %}
-				<div class="col-md-3">
+				<div class="col-md-3 hidden-xs hidden-sm">
 					
 					{% for key, array in sidebars if key == section %}
 						{% if array|length %}
@@ -163,7 +177,6 @@
 					</section>
 				</div>
 			</div>
-
 		</div>
 
 	</div>

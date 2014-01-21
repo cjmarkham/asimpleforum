@@ -8,7 +8,7 @@
 				<li class="clearfix recent-topic">
 					<div class="pull-left">
 						<div class="avatar">
-							<img width="55" height="55" src="/avatars/{{ topic.lastPost.user.username }}/small.png" alt="" />
+							<img width="149" height="198" src="/avatars/{{ topic.lastPost.user.username }}/small.png" alt="" />
 						</div>
 					</div>
 					<div class="pull-left marginLeft30">
@@ -21,11 +21,9 @@
 							<a href="/user/{{ topic.lastPost.user.username }}" class="user-link">
 								{{ topic.lastPost.user.username }}
 							</a>
-							<p>
-								<date title="{{ topic.updated|date('c') }}" class="date">
-									{{ topic.updated|date('jS M y, H:i') }}
-								</date>
-							</p>
+							<date title="{{ topic.updated|date('c') }}" class="date">
+								{{ topic.updated|date('jS M y, H:i') }}
+							</date>
 						</p>
 					</div>
 				</li>
