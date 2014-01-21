@@ -17,14 +17,14 @@
 								{{ topic.name }}
 							</a>
 						</p>
-						<p class="topic-info">
+						<div class="topic-info">
 							<a href="/user/{{ topic.lastPost.user.username }}" class="user-link">
 								{{ topic.lastPost.user.username }}
 							</a>
 							<date title="{{ topic.updated|date('c') }}" class="date">
 								{{ topic.updated|date('jS M y, H:i') }}
 							</date>
-						</p>
+						</div>
 					</div>
 				</li>
 
