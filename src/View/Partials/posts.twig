@@ -23,7 +23,7 @@
 					<div class="post-info">
 						<div class="clearfix">
 							<div class="pull-left">
-								<date class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</date> - <a href="" class="topic-name">{{ post.name }}</a>
+								<span class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</date> - <a href="" class="topic-name">{{ post.name }}</a>
 							</div>
 							<div class="pull-right post-tools">
 								{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}

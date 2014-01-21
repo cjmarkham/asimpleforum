@@ -63,7 +63,7 @@
 									{% endif %}
 								</p>
 								{% if child.lastTopicName %}
-									<date title="{{ child.updated|date('c') }}" class="date">
+									<span title="{{ child.updated|date('c') }}" class="date">
 										{{ child.updated|date('jS M y, H:i') }}
 									</date>
 								{% endif %}
@@ -132,7 +132,7 @@
 										{{ topic.author }}
 									</a>
 								</p>
-								<date class="date" title="{{ topic.added|date('c') }}">
+								<span class="date" title="{{ topic.added|date('c') }}">
 									{{ topic.added|date('jS M y, H:i') }}
 								</date>
 							</div>
@@ -161,7 +161,7 @@
 										{{ topic.lastPosterUsername }}
 									</a>
 								</p>
-								<date class="date" title="{{ topic.updated|date('c') }}">
+								<span class="date" title="{{ topic.updated|date('c') }}">
 									{{ topic.updated|date('jS M y. H:i') }}
 								</date>
 							</div>

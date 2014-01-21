@@ -21,7 +21,7 @@
 						{{ topic.author.username }}
 					</a>
 				</p>
-				<date class="date" title="{{ topic.added|date('c') }}">
+				<span class="date" title="{{ topic.added|date('c') }}">
 					{{ topic.added|date('jS M y, H:i') }}
 				</date>
 			</div>
@@ -50,7 +50,7 @@
 						{{ topic.lastPost.user.username }}
 					</a>
 				</p>
-				<date class="date" title="{{ topic.updated|date('c') }}">
+				<span class="date" title="{{ topic.updated|date('c') }}">
 					{{ topic.updated|date('jS M y. H:i') }}
 				</date>
 			</div>
