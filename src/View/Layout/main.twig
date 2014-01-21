@@ -72,8 +72,10 @@
 			<div class="row">
 				<div id="logo" class="col-sm-9">
 
-					<a href="/">
-						<img width="318" height="52" src="/images/{{ config('board', 'logo') }}" alt="{{ config('board', 'name') }}" />
+					<h1>
+						<a href="/">
+							<img width="318" height="52" src="/images/{{ config('board', 'logo') }}" alt="{{ config('board', 'name') }}" />
+						</h1>
 					</a>
 					
 				</div>
@@ -92,15 +94,15 @@
 			</div>
 		</div>
 
-
-
 		<div class="container clearfix" id="main-nav" role="navigation">
 			<ul class="list-unstyled list-inline pull-left">
 				{% for link in nav_links %}
 					<li {% if section == link.section %}class="active"{% endif %}>
-						<a href="{{ link.link }}">
-							{{ link.title }}
-						</a>	
+						<h2>
+							<a href="{{ link.link }}">
+								{{ link.title }}
+							</a>
+						</h2>	
 					</li>
 				{% endfor %}
 			</ul>
