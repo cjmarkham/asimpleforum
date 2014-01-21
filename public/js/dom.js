@@ -17,7 +17,7 @@ $(function () {
 				selection = forum.id;
 			}
 
-			$.post('/search/typeahead', { 
+			$.post('/search/typeahead/', { 
 				query: query,
 				selection: selection
 			}, function(results) {
@@ -166,7 +166,7 @@ $(function () {
 				self.popover('show');
 			} else {
 
-				$.post('/post/get_first', {
+				$.post('/post/get_first/', {
 					topicId: topicId
 				}, function (response) {
 

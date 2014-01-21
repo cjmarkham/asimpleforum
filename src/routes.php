@@ -12,7 +12,7 @@ $app->get('/test/', function (Application $app) {
     return include 'test.php';
 });
 
-$app->get('/new-topics', function (Application $app) {
+$app->get('/new-topics/', function (Application $app) {
    return Route::get('topic:newest');
 });
 
@@ -28,7 +28,7 @@ $app->get('/faqs/', function (Application $app) {
     return Route::get('faq:index');
 });
 
-$app->post('/signup', function (Request $request) {
+$app->post('/signup/', function (Request $request) {
     return Route::get('auth:signup', $request);
 });
 
@@ -40,11 +40,11 @@ $app->get('/search/{query}/{selection}/', function (Application $app, $query, $s
     return Route::get('search:get', $query, $selection);
 });
 
-$app->post('/search/typeahead', function (Request $request) {
+$app->post('/search/typeahead/', function (Request $request) {
     return Route::get('search:typeahead', $request);
 });
 
-$app->post('/login', function (Request $request) use ($app) {
+$app->post('/login/', function (Request $request) use ($app) {
     return $app['auth']->login($request);
 });
 
@@ -68,7 +68,7 @@ $app->get('/user/confirmEmail/{code}/', function (Application $app, $code) {
     return Route::get('user:confirmEmail', $code);
 });
 
-$app->post('/partial/{name}', function (Request $request, $name) use ($app) {
+$app->post('/partial/{name}/', function (Request $request, $name) use ($app) {
 
     $params = $request->get('params');
     $array = array();
@@ -93,6 +93,31 @@ $app->get('/partial/{name}/', function (Application $app, $name) {
     ));
 });
 
+$app->post('/sidebar/{name}/', function (Request $request, $name) use ($app) {
+
+    $params = $request->get('params');
+    $array = array();
+
+    if (isset($params) && is_array($params))
+    {
+        foreach ($params as $key => $param)
+        {
+            $array[$key] = $param;
+        
+        }
+    }
+
+    $array['user'] = $app['session']->get('user');
+
+    return $app['twig']->render('Sidebars/' . $name . '.twig', $array);
+});
+
+$app->get('/sidebar/{name}/', function (Application $app, $name) {
+    return $app['twig']->render('Sidebars/' . $name . '.twig', array(
+        'user' => $app['session']->get('user')
+    ));
+});
+
 $app->get('/{name}-{id}/{page}/', function (Application $app, $name, $id, $page) {
     return Route::get('forum:index', $name, $id, $page);
 })->assert('page', '([0-9]+)');
@@ -109,7 +134,7 @@ $app->get('/{forum_name}/{topic_name}-{topic_id}/', function (Application $app, 
     return Route::get('topic:index', $topic_name, $topic_id);
 })->assert('topic_name', '([a-zA-Z0-9<>_-\s]+)');
 
-$app->post('/forum/{method}', function (Request $request, $method) use ($app) {
+$app->post('/forum/{method}/', function (Request $request, $method) use ($app) {
     // TODO: Check for allowed post methods
     if (!method_exists($app['forum'], $method))
     {
@@ -120,7 +145,7 @@ $app->post('/forum/{method}', function (Request $request, $method) use ($app) {
     return $app['forum']->$method($request);
 });
 
-$app->post('/topic/{method}', function (Request $request, $method) use ($app) {
+$app->post('/topic/{method}/', function (Request $request, $method) use ($app) {
     // TODO: Check for allowed post methods
     if (!method_exists($app['topic'], $method))
     {
@@ -131,7 +156,7 @@ $app->post('/topic/{method}', function (Request $request, $method) use ($app) {
     return $app['topic']->$method($request);
 });
 
-$app->post('/post/{method}', function (Request $request, $method) use ($app) {
+$app->post('/post/{method}/', function (Request $request, $method) use ($app) {
     // TODO: Check for allowed post methods
     if (!method_exists($app['post'], $method))
     {
@@ -142,7 +167,7 @@ $app->post('/post/{method}', function (Request $request, $method) use ($app) {
     return $app['post']->$method($request);
 });
 
-$app->post('/user/{method}', function (Request $request, $method) use ($app) {
+$app->post('/user/{method}/', function (Request $request, $method) use ($app) {
     // TODO: Check for allowed post methods
     if (!method_exists($app['user'], $method))
     {
