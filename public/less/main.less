@@ -152,6 +152,20 @@ body {
 	
 }
 
+.forum {
+	.col-sm-2 {
+		font-size: 18px;
+		color: @darkerGrey;
+		text-align: center;
+
+		p {
+			display: inline-block;
+			vertical-align: top;
+			margin: 10px 5px 0 0;
+		}
+	}
+}
+
 .forum-icon {
 	text-align: center;
 	font-size: 46px;
@@ -203,15 +217,24 @@ section {
 		text-shadow: 0 1px 1px #08192b;
 		font-weight: bold;
 
-		h5 {
+		h2, h3, h4, h5 {
 			margin: 3px 0 0;
 			font-weight: bold;
+			font-size: 14px;
 		}
 	}
 
 	.content {
 		background: @grey;
 		padding: 10px;
+	}
+}
+
+.forum {
+	h4 {
+		border: 0;
+		margin: 0;
+		font-size: 14px;
 	}
 }
 

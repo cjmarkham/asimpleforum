@@ -71,12 +71,14 @@
 		<div class="container">
 			<div class="row">
 				<div id="logo" class="col-sm-9">
+
 					<a href="/">
 						<img width="318" height="52" src="/images/{{ config('board', 'logo') }}" alt="{{ config('board', 'name') }}" />
 					</a>
+					
 				</div>
-				<div id="quick-search" class="col-sm-3">
-					<form name="search-form" method="post" action="javascript:void(0)" class="form-horizontal">
+				<div id="quick-search" role="search" class="col-sm-3">
+					<form role="form" name="search-form" method="post" action="javascript:void(0)" class="form-horizontal">
 						<div class="form-group">
 							<input type="text" name="query" class="typeahead form-control" autocomplete="off" placeholder="Quick search" />
 							<button class="fa fa-search">&nbsp;</button>
@@ -92,7 +94,7 @@
 
 
 
-		<div class="container clearfix" id="main-nav">
+		<div class="container clearfix" id="main-nav" role="navigation">
 			<ul class="list-unstyled list-inline pull-left">
 				{% for link in nav_links %}
 					<li {% if section == link.section %}class="active"{% endif %}>
@@ -187,8 +189,8 @@
 				<div class="col-md-4"></div>
 				<div class="col-md-4"></div>
 				<div class="text-right col-md-4">
-					<p>Powered by &copy; {{ 'now'|date('Y') }} asimpleforum</p>
-					<p>All content &copy; {{ config('board', 'name') }}</p>
+					<p><small>Powered by &copy; {{ 'now'|date('Y') }} asimpleforum</small></p>
+					<p><small>All content &copy; {{ config('board', 'name') }}</small></p>
 				</div>
 			</div>
 		</div>

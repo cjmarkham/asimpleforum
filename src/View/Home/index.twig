@@ -6,25 +6,26 @@
 		{% for forum in forums %}
 			<div class="parent-forum">
 				<header>
-					<h5>{{ forum.name }}</h5>
+					<h3>{{ forum.name }}</h3>
 				</header>
 
 				<div class="content">
 					{% if forum.children is defined %}
-						<div class="forums">
+						<div class="forums" aria-label="forums">
 							{% for child in forum.children %}
-								<div class="forum row">
-									<div class="forum-icon col-sm-1">
-										<em class="fa fa-comment"></em >
-									</div>
-									<div class="col-sm-7">
-										<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}/">
-											{{ child.name }}
-										</a>
+								<div class="forum row" aria-label="forum">
+										
+									<div class="col-sm-8">
+										<h4>
+											<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}/">
+												{{ child.name }}
+											</a>
+										</h4>
 										<p class="forum-description">
 											{{ child.description }}
 										</p>
 									</div>
+									
 									<div class="col-sm-4 text-right">
 										<p>	
 											{% if child.lastTopic.name %}
@@ -49,14 +50,13 @@
 											{% endif %}
 										</p>
 										{% if child.lastTopic.name %}
-											<span title="{{ child.updated|date('c') }}" class="date">
+											<time title="{{ child.updated|date('c') }}" class="date">
 												{{ child.updated|date('jS M y, H:i') }}
-											</span>
+											</time>
 										{% endif %}
 									</div>
 									{% if child.children is defined %}
-										<div class="col-sm-offset-1"></div>
-										<div class="col-sm-11 subforum-list">
+										<div class="col-sm-12 subforum-list">
 											Subforums: 
 											{% for subchild in child.children %}
 												<a href="/{{ subchild.name|url_encode }}-{{ subchild.id }}">
