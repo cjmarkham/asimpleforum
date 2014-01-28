@@ -15,14 +15,14 @@ var asf = {
 				return false;
 			}
 
-			$.post('/topic/findByForum/', {
+			$.post('/' + asf.config.board.base + 'topic/findByForum/', {
 				offset: offset,
 				forumId: forumId
 			}).done(function (response) {
 				response = JSON.parse(response);
 				var data = response.data;
 
-				$.post('/partial/topics/', {
+				$.post('/' + asf.config.board.base + 'partial/topics/', {
 					params: {
 						topics: data
 					}
@@ -47,9 +47,7 @@ var asf = {
 				return false;
 			}
 
-			console.log(page);
-
-			$.post('/post/findByTopic/', {
+			$.post('/' + asf.config.board.base + 'post/findByTopic/', {
 				offset: offset,
 				topicId: topicId,
 				page: page
@@ -57,7 +55,7 @@ var asf = {
 				response = JSON.parse(response);
 				var data = response.data;
 
-				$.post('/partial/posts/', {
+				$.post('/' + asf.config.board.base + 'partial/posts/', {
 					params: {
 						posts: data
 					}
@@ -91,7 +89,7 @@ var asf = {
 		var username = node.find('input[name="username"]').val();
 		var password = node.find('input[name="password"]').val();
 
-		$.post('/login/', {
+		$.post('/' + asf.config.board.base + 'login/', {
 			username: username,
 			password: password
 		}).done(function (response) {
@@ -99,7 +97,7 @@ var asf = {
 			$('#account-control').hide();
 			$('#login-modal').modal('hide');
 
-			$.get('/sidebar/userbox', function (html) {
+			$.get('/' + asf.config.board.base + 'sidebar/userbox', function (html) {
 				asf.elements.replace('/sidebar/userbox', {}, '#account-control', function () {
 					$('#account-control').fadeIn(asf.medSpeed);
 
@@ -112,7 +110,7 @@ var asf = {
 
 					$('#onlineList').fadeIn(asf.medSpeed);
 
-					var link = '<a data-user="' + username + '" href="/user/' + username + '">' + username + '</a>';
+					var link = '<a data-user="' + username + '" href="/' + asf.config.board.base + '/user/' + username + '">' + username + '</a>';
 
 					if ($('#users').length) {
 						if ($('#users a').length) {
@@ -121,7 +119,7 @@ var asf = {
 							$('#users').append(link);
 						}
 					} else {
-						$.post('/partial/onlineList/', {
+						$.post('/' + asf.config.board.base + 'partial/onlineList/', {
 							params: {
 								sessions: {
 									online: [link]
@@ -151,7 +149,7 @@ var asf = {
 
 		$('#account-control').hide();
 
-		$.get('/logout').done(function () {
+		$.get('/' + asf.config.board.base + 'logout').done(function () {
 			$('#users [data-user="' + username + '"]').remove();
 
 			if ($('#users a').length === 0) {
@@ -215,7 +213,7 @@ var asf = {
 		var name = node.find('input[name="name"]').val();
 		var topicId = node.find('input[name="topicId"]').val();
 
-		$.post('/post/add/', {
+		$.post('/' + asf.config.board.base + 'post/add/', {
 			topicId: topicId,
 			name: name,
 			content: content
@@ -228,7 +226,7 @@ var asf = {
 				asf.hideQuickReply();
 			} else {
 
-				$.post('/partial/post/', {
+				$.post('/' + asf.config.board.base + 'partial/post/', {
 					params: {
 						post: {
 							id: response.id,
@@ -294,7 +292,7 @@ var asf = {
 			return false;
 		}
 
-		$.post('/post/report/', {
+		$.post('/' + asf.config.board.base + 'post/report/', {
 			postId: postId,
 			reason: reason
 		}).done(function (response) {
@@ -325,7 +323,7 @@ var asf = {
 		var locked = node.find('input[name="locked"]:checked').val();
 		var sticky = node.find('input[name="sticky"]:checked').val();
 
-		$.post('/topic/add_topic/', {
+		$.post('/' + asf.config.board.base + 'topic/add_topic/', {
 			forumId: forumId,
 			title: title,
 			content: content,
@@ -335,7 +333,7 @@ var asf = {
 
 			response = JSON.parse(response);
 			
-			$.post('/partial/topic/', {
+			$.post('/' + asf.config.board.base + 'partial/topic/', {
 				params: {
 					topic: {
 						id: response.topic_id,
@@ -398,7 +396,7 @@ var asf = {
 
 		var postId = node.attr('data-postId');
 
-		$.post('/post/find_by_id/', {
+		$.post('/' + asf.config.board.base + 'post/find_by_id/', {
 			id: postId
 		}).done(function (response) {
 			response = JSON.parse(response);
@@ -416,7 +414,7 @@ var asf = {
 				var el = $(this);
 				var content = $(this).text();
 
-				$.post('/post/update/', {
+				$.post('/' + asf.config.board.base + 'post/update/', {
 					id: postId,
 					content: content
 				}).done(function (response) {
@@ -435,7 +433,7 @@ var asf = {
 		
 		var self = this;
 
-		$.post('/post/find_by_id/', {
+		$.post('/' + asf.config.board.base + 'post/find_by_id/', {
 			id: postId
 		}).done(function (response) {
 			response = JSON.parse(response);
@@ -466,7 +464,7 @@ var asf = {
 
 		var postId = node.attr('data-postId');
 
-		$.post('/post/like/', {
+		$.post('/' + asf.config.board.base + 'post/like/', {
 			postId: postId
 		}).done(function (response) {
 
@@ -523,7 +521,7 @@ var asf = {
 			node = $(node);
 			var userId = node.attr('data-userId');
 
-			$.post('/user/follow/', {
+			$.post('/' + asf.config.board.base + 'user/follow/', {
 				userId: userId
 			}).done(function () {
 				node.text('Unfollow');
@@ -538,7 +536,7 @@ var asf = {
 			node = $(node);
 			var userId = node.attr('data-userId');
 
-			$.post('/user/unfollow/', {
+			$.post('/' + asf.config.board.base + 'user/unfollow/', {
 				userId: userId
 			}).done(function () {
 				node.text('Follow');
@@ -550,7 +548,7 @@ var asf = {
 		},
 
 		updateViews: function (profileId) {
-			$.post('/user/update_views/', {
+			$.post('/' + asf.config.board.base + 'user/update_views/', {
 				userId: profileId
 			});
 		},
@@ -559,7 +557,7 @@ var asf = {
 			node = $(node);
 			var commentId = node.attr('data-commentId');
 
-			$.post('/user/deleteComment/', {
+			$.post('/' + asf.config.board.base + 'user/deleteComment/', {
 				commentId: commentId
 			}).done(function () {
 				var container = $('.profile-comment-' + commentId);
@@ -577,13 +575,13 @@ var asf = {
 			var userId = node.find('[name="profileId"]').val();
 			var comment = node.find('textarea').val().trim();
 
-			$.post('/user/addComment/', {
+			$.post('/' + asf.config.board.base + 'user/addComment/', {
 				profileId: userId,
 				comment: comment
 			}).done(function (response) {
 				response = JSON.parse(response);
 
-				$.post('/partial/profileComment/', {
+				$.post('/' + asf.config.board.base + 'partial/profileComment/', {
 					params: {
 						comment: {
 							id: response.id,
@@ -636,7 +634,7 @@ var asf = {
 			var commentId = node.attr('data-commentId');
 			var username = asf.user.username;
 
-			$.post('/user/likeComment/', {
+			$.post('/' + asf.config.board.base + 'user/likeComment/', {
 				commentId: commentId,
 				username: username
 			}).done(function (response) {
@@ -659,7 +657,7 @@ var asf = {
 
 			var container = $(params.container);
 
-			$.post('/post/find_by_user/', {
+			$.post('/' + asf.config.board.base + 'post/find_by_user/', {
 				user_id: params.user_id,
 				page: page
 			}).done(function (response) {
@@ -672,7 +670,7 @@ var asf = {
 					return false;
 				}
 
-				$.post('/partial/profilePostHistory/', {
+				$.post('/' + asf.config.board.base + 'partial/profilePostHistory/', {
 					params: {
 						posts: data
 					}
@@ -697,7 +695,7 @@ var asf = {
 
 			var container = $(params.container);
 
-			$.post('/user/find_comments/', {
+			$.post('/' + asf.config.board.base + 'user/find_comments/', {
 				user_id: params.user_id,
 				page: page
 			}).done(function (response) {
@@ -709,7 +707,7 @@ var asf = {
 					return false;
 				}
 
-				$.post('/partial/profileComments/', {
+				$.post('/' + asf.config.board.base + 'partial/profileComments/', {
 					params: {
 						comments: data,
 						profile: {

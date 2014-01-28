@@ -2,7 +2,7 @@
 	<ul class="list-unstyled list-inline">	
 		{% for page in pagination.pages.prev %}
 			<li class="page">
-				<a href="/{{ prefix }}{{ page }}">
+				<a href="/{{ config('board', 'base') }}{{ prefix }}{{ page }}">
 					{{ page }}
 				</a>
 			</li>
@@ -12,7 +12,7 @@
 		</li>
 		{% for page in pagination.pages.next %}
 			<li class="page">
-				<a href="/{{ prefix }}{{ page }}">
+				<a href="/{{ config('board', 'base') }}{{ prefix }}{{ page }}">
 					{{ page }}
 				</a>
 			</li>

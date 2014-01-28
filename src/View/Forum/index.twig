@@ -24,7 +24,7 @@
 	{{ parent() }}
 	<li class="next">&gt;</li>
 	<li>
-		<a href="">
+		<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}-{{ forum.id }}">
 			{{ forum.name }}
 		</a>
 	</li>

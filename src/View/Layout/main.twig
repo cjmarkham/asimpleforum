@@ -2,9 +2,9 @@
 <head>
 
 	{% block css %}
-		<link rel="stylesheet" href="/vendor/css/bootstrap.css" />
-		<link rel="stylesheet" href="/font-awesome/css/font-awesome.css" />
-		<link rel="stylesheet" href="/css/main.css" />
+		<link rel="stylesheet" href="/{{ config('board', 'base') }}vendor/css/bootstrap.css" />
+		<link rel="stylesheet" href="/{{ config('board', 'base') }}font-awesome/css/font-awesome.css" />
+		<link rel="stylesheet" href="/{{ config('board', 'base') }}css/main.css" />
 	{% endblock %}
 
 	<title>{{ title }} - {{ config('board', 'name') }}</title>
@@ -17,12 +17,12 @@
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
 		
-		<script src="/vendor/js/jquery.js"></script>
-		<script src="/vendor/js/bootstrap.js"></script>
-		<script src="/vendor/js/timeago.js"></script>
+		<script src="/{{ config('board', 'base') }}vendor/js/jquery.js"></script>
+		<script src="/{{ config('board', 'base') }}vendor/js/bootstrap.js"></script>
+		<script src="/{{ config('board', 'base') }}vendor/js/timeago.js"></script>
 		
-		<script src="/js/asf.js"></script>
-		<script src="/js/dom.js"></script>
+		<script src="/{{ config('board', 'base') }}js/asf.js"></script>
+		<script src="/{{ config('board', 'base') }}js/dom.js"></script>
 
 		{% if user %}
 		<script>
@@ -36,11 +36,24 @@
 				section: '{{ section }}'
 			};
 
-			{% if section == 'forums' %}
+			{% if section == 'forums' and forum is defined %} // home page also has section forums
 				asf.forum = '{{ forum|json_encode|raw }}'
 			{% endif %}
 
 			asf.config = JSON.parse('{{ config|json_encode|raw }}');
+
+			$(function () {
+
+				$('#alert-tabs p').on('click', function () {
+					$('#alert-tabs p').removeClass('active');
+					$(this).addClass('active');
+					var index = $(this).attr('data-index');
+					$('#alert-box .alert').fadeOut();
+					var target = $('#alert-box .alert').get(index);
+					$(target).fadeIn();
+				});	
+
+			});
 
 		</script>
 	{% endblock %}
@@ -56,7 +69,7 @@
 
 	<div id="user-quick-access-fixed" class="hidden-no-user hidden-md hidden-lg pull-right">
 		{% if user %}
-			<a href="/user/{{ user.username }}">
+			<a href="/{{ config('board', 'base') }}user/{{ user.username }}">
 				{{ user.username }}
 			</a>
 				&bull;
@@ -73,8 +86,8 @@
 				<div id="logo" class="col-sm-9">
 
 					<h1>
-						<a href="/">
-							<img width="318" height="52" src="/images/{{ config('board', 'logo') }}" alt="{{ config('board', 'name') }}" />
+						<a href="/{{ config('board', 'base') }}">
+							<img width="318" height="52" src="/{{ config('board', 'base') }}images/{{ config('board', 'logo') }}" alt="{{ config('board', 'name') }}" />
 						</a>
 					</h1>
 					
@@ -99,7 +112,12 @@
 				{% for link in nav_links %}
 					<li {% if section == link.section %}class="active"{% endif %}>
 						<h2>
-							<a href="{{ link.link }}">
+							{% if link.link == '/' %}
+								{% set url = config('board', 'url') %}
+							{% else %}
+								{% set url = '/' ~ config('board', 'base') ~ link.link %}
+							{% endif %}
+							<a href="{{ url }}">
 								{{ link.title }}
 							</a>
 						</h2>	
@@ -108,7 +126,7 @@
 			</ul>
 			<div id="user-quick-access" class="hidden-no-user hidden-xs hidden-sm pull-right">
 				{% if user %}
-					<a href="/user/{{ user.username }}">
+					<a href="/{{ config('board', 'base') }}user/{{ user.username }}">
 						{{ user.username }}
 					</a>
 						&bull;
@@ -126,7 +144,7 @@
 		<nav id="breadcrumbs">
 			<ul class="list-unstyled list-inline">
 				<li>
-					<a href="/">
+					<a href="/{{ config('board', 'base') }}">
 						Home
 					</a>
 				</li>
@@ -157,6 +175,33 @@
 			{% else %}
 				<div id="main-full">
 			{% endif %}
+
+				{% if alerts|length %}
+					<div id="alert-box" {% if alerts|length > 1 %}class="marginBottom30"{% endif %}>
+						{% for alert in alerts %}
+							<div class="alert {% if loop.index == 1 %}active{% endif %}">
+								{% if alert.title %}
+									<h3 class="alert-title">
+										{{ alert.title }}
+									</h3>
+								{% endif %}
+								<p>
+									{{ alert.text }}
+								</p>
+							</div>
+						{% endfor %}
+
+						{% if alerts|length > 1 %}
+							<div id="alert-tabs">
+								{% for alert in alerts %}
+									<p data-index="{{ loop.index - 1 }}" {% if loop.index == 1 %}class="active"{% endif %}>
+										{{ loop.index }}
+									</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
 
 				{% block flash %}
 					{% set alert = app.session.flashbag.get('alert') %}
@@ -222,7 +267,7 @@
 								<button class="btn btn-orange">
 									Login
 								</button>
-								<a href="/signup" class="btn btn-orange">
+								<a href="/{{ config('board', 'base') }}signup" class="btn btn-orange">
 									Signup
 								</a>
 							</form>

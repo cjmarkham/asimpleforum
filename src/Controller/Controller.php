@@ -10,6 +10,10 @@ class Controller
 
 	public function init()
 	{
+		$alerts = $this->app['alert']->findByDate(time());
+
+		$this->extras['alerts'] = $alerts;
+
 		$nav_links = $this->app['navLinks'];
 		$this->extras['nav_links'] = $nav_links;
 	}

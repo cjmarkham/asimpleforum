@@ -3,10 +3,10 @@
 	<div class="clearfix">
 		<div class="post-author">
 			<div class="avatar big">
-				<img width="70" height="70" src="/avatars/{{ post.username }}/big.png" alt="" />
+				<img width="70" height="70" src="/{{ config('board', 'base') }}avatars/{{ post.username }}/big.png" alt="" />
 			</div>
 			<p class="truncate w80">
-				<a href="user/{{ post.username }}" class="user-link resize">
+				<a href="/{{ config('board', 'base') }}user/{{ post.username }}" class="user-link resize">
 					{{ post.username }}
 				</a>
 			</p>
@@ -21,11 +21,11 @@
 			<div class="post-info">
 				<div class="clearfix">
 					<div class="pull-left">
-						<span class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</span> - <a href="" class="topic-name">{{ post.name }}</a>
+						<span class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</span> - <a href="/{{ config('board', 'base') }}" class="topic-name">{{ post.name }}</a>
 					</div>
 					<div class="pull-right post-tools">
 						{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}
-							<a data-postId="{{ post.id }}" href="javascript:void(0)" data-event="click" data-action="editPost">
+							<a data-postId="{{ post.id }}" javascript:void(0)" data-event="click" data-action="editPost">
 								<em class="fa fa-pencil"></em >
 							</a>
 						{% endif %}

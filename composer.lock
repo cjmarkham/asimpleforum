@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "10660f6508884b72f1f5cd81137dabb6",
+    "hash": "737806614683c1419b245b9e6f459a81",
     "packages": [
         {
             "name": "cjmarkham/disk-cache",
@@ -204,16 +204,16 @@
         },
         {
             "name": "entea/silex-twig-simple-asset-extension",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Entea/Silex-Twig-Simple-Asset-Extension.git",
-                "reference": "e639a35f50efc6791edf8b3be4f66d3d84896d37"
+                "reference": "19822ae0c18a5119ac387a19eaa16fcf36cef8fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Entea/Silex-Twig-Simple-Asset-Extension/zipball/e639a35f50efc6791edf8b3be4f66d3d84896d37",
-                "reference": "e639a35f50efc6791edf8b3be4f66d3d84896d37",
+                "url": "https://api.github.com/repos/Entea/Silex-Twig-Simple-Asset-Extension/zipball/19822ae0c18a5119ac387a19eaa16fcf36cef8fe",
+                "reference": "19822ae0c18a5119ac387a19eaa16fcf36cef8fe",
                 "shasum": ""
             },
             "require": {
@@ -242,7 +242,7 @@
                 "silex",
                 "twig"
             ],
-            "time": "2013-03-14 13:35:53"
+            "time": "2012-11-13 15:15:26"
         },
         {
             "name": "facebook/php-sdk",
@@ -538,12 +538,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Silex.git",
-                "reference": "6e4b26d732a19d3479d912da75d407e870546ca2"
+                "reference": "ddcec0796ed78750b5b3091b4a946913a88ba2f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/6e4b26d732a19d3479d912da75d407e870546ca2",
-                "reference": "6e4b26d732a19d3479d912da75d407e870546ca2",
+                "url": "https://api.github.com/repos/silexphp/Silex/zipball/ddcec0796ed78750b5b3091b4a946913a88ba2f4",
+                "reference": "ddcec0796ed78750b5b3091b4a946913a88ba2f4",
                 "shasum": ""
             },
             "require": {
@@ -612,7 +612,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2014-01-08 07:22:19"
+            "time": "2014-01-20 06:44:05"
         },
         {
             "name": "silex/web-profiler",
@@ -1929,7 +1929,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "silex/silex": 20,
-        "entea/silex-twig-simple-asset-extension": 20,
         "silex/web-profiler": 20,
         "cjmarkham/disk-cache": 20,
         "cjmarkham/mongo-cache": 20,

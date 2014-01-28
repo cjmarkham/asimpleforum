@@ -64,12 +64,14 @@ class ForumModel
 			return new Response($this->app['language']->phrase('UNKNOWN_ERROR'), 500);
 		}
 
-		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`+2 WHERE `right`>=? LIMIT 1', array(
-			$left
+		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`+2 WHERE `right`>=? AND id!=?', array(
+			$left,
+			$id
 		));
 
-		$this->app['db']->executeQuery('UPDATE forums SET `left`=`left`+1 WHERE `left`>=? LIMIT 1', array(
-			$right
+		$this->app['db']->executeQuery('UPDATE forums SET `left`=`left`+2 WHERE `left`>=? AND id!=?', array(
+			$right,
+			$id
 		));
 
 		$this->app['cache']->collection = $this->collection;
@@ -89,13 +91,11 @@ class ForumModel
 
 		$forum = $this->find_by_id($forum_id);
 
-
-
-		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`-2 WHERE `right`>? LIMIT 1', array(
+		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`-2 WHERE `right`>?', array(
 			$forum['left']
 		));
 
-		$this->app['db']->executeQuery('UPDATE forums SET `left`=`left`-2 WHERE `left`>? LIMIT 1', array(
+		$this->app['db']->executeQuery('UPDATE forums SET `left`=`left`-2 WHERE `left`>?', array(
 			$forum['right']
 		));
 
@@ -250,6 +250,8 @@ class ForumModel
 					'id' => $forum['id'],
 					'parent' => $forum['parent'],
 					'name' => $forum['name'],
+					'topics' => $forum['topics'],
+					'posts' => $forum['posts'],
 					'description' => $forum['description'],
 					'updated' => $forum['updated'],
 					'lastTopic' => array(

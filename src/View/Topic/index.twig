@@ -8,7 +8,7 @@
 	<script>
 	$(function () {
 		{% if user and topic.poster != user.id or not user %}
-			$.post('/topic/update_views/', {
+			$.post('/' + asf.config.board.base + 'topic/update_views/', {
 				id: '{{ topic.id }}',
 			});
 		{% endif %}
@@ -30,13 +30,13 @@
 	{{ parent() }}
 	<li class="next">&gt;</li>
 	<li>
-		<a href="/{{ forum.name|url_encode }}-{{ forum.id }}">
+		<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}-{{ forum.id }}">
 			{{ forum.name }}
 		</a>
 	</li>	
 	<li class="next">&gt;</li>
 	<li>
-		<a href="">
+		<a href="/{{ config('board', 'base') }}">
 			{{ topic.name }}
 		</a>
 	</li>	

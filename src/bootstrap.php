@@ -25,11 +25,11 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => dirname(__DIR__) . '/src/View'
 ));
 
-$app->register(new Silex\Provider\ValidatorServiceProvider());
+$app['twig']->addExtension(new \Entea\Twig\Extension\AssetExtension($app, array(
+    'asset.directory' => '/forum/public'
+)));
 
-$app['twig']->addExtension(new \Entea\Twig\Extension\AssetExtension(
-    $app
-));
+$app->register(new Silex\Provider\ValidatorServiceProvider());
 
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
 $config_function = new Twig_SimpleFunction('config', function ($section, $key = false) use ($app) {
@@ -47,9 +47,14 @@ $permissions_function = new Twig_SimpleFunction('hasPermission', function ($acti
     return Permissions::hasPermission($action);
 });
 
+$repeat_function = new Twig_SimpleFunction('repeat', function ($string, $length) {
+    return str_repeat($string, $length);
+});
+
 $app['twig']->addFunction($truncate);
 $app['twig']->addFunction($config_function);
 $app['twig']->addFunction($permissions_function);
+$app['twig']->addFunction($repeat_function);
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
@@ -145,6 +150,11 @@ $app['sessions'] = $app->share(function() use ($app) {
 
 $app['forum'] = $app->share(function() use ($app) {
     $model = new \Model\ForumModel($app);
+    return $model;
+});
+
+$app['alert'] = $app->share(function() use ($app) {
+    $model = new \Model\AlertModel($app);
     return $model;
 });
 

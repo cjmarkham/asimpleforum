@@ -87,7 +87,7 @@ class SessionModel
 			else
 			{
 				$visits['users']++;
-				$visits['online'][] = '<a data-user="'. $session['username'] . '" href="/user/' . $session['username'] . '">' . $session['username'] . '</a>';
+				$visits['online'][] = '<a data-user="'. $session['username'] . '" href="/' . $this->app['board']['base'] . 'user/' . $session['username'] . '">' . $session['username'] . '</a>';
 			}
 		}
 

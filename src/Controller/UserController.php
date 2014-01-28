@@ -37,6 +37,21 @@ class UserController extends Controller
 		) + $this->extras);
 	}
 
+	public function settings ()
+	{
+		$user = $this->app['session']->get('user');
+
+		if (!$user)
+		{
+			return $this->app->redirect('/');
+		}
+
+		return $this->app['twig']->render('User/settings.twig', array(
+			'title' 			=> 'Settings',
+			'section'			=> 'members'
+		) + $this->extras);
+	}
+
 	public function confirmEmail ($code)
 	{
 		list ($email, $user_id) = explode('-', base64_decode($code));

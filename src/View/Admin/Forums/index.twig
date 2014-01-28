@@ -1,0 +1,172 @@
+{% extends "Admin/Layout/main.twig" %}
+
+{% set index = 0 %}
+
+{% macro recursiveForums(forum, index) %}
+    <tr id="forum-{{ forum.id }}">
+		<td>
+			<strong>
+				<a href="/{{ config('board', 'base') }}admin/forums/{{ forum.name }}">
+					{{ index }} {{ repeat('<p class="spacer"></p>', index)|raw }}
+					{{ forum.name }}
+				</a>
+			</strong>
+		</td>
+		<td class="parent-options">
+			<a href="/{{ config('board', 'base') }}admin/forums/{{ forum.name }}/moderators" class="btn btn-orange btn-xs">
+				Moderators
+			</a>
+			<button data-toggle="modal" data-target="#add-child-modal-{{ forum.id }}" class="btn btn-primary btn-xs">
+				Add Child
+			</button>
+			<button data-event="click" data-action="forums.delete" data-forumId="{{ forum.id }}" class="btn btn-danger btn-xs">
+				Delete
+			</button>
+
+			<div class="modal fade" id="add-child-modal-{{ forum.id }}">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<form method="post" action="javascript:void(0)" class="form-horizontal" role="form" data-event="submit" data-action="forums.addChild">
+								<input type="hidden" name="parent" value="{{ forum.id }}" />
+								<div class="form-group">
+									<label class="control-label col-sm-2">
+										Name
+									</label>
+									<div class="col-sm-10">
+										<input type="text" name="name" class="form-control" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-sm-2">
+										Description
+									</label>
+									<div class="col-sm-10">
+										<textarea name="description" class="form-control"></textarea>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<button class="btn btn-orange">
+											Add child
+										</button>
+										<a href="javascript:void(0)" data-dismiss="modal" class="btn btn-orange">
+											Cancel
+										</a>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</td>
+	</tr>
+
+    {% if forum.forums is defined %}
+
+    	{% set index = index + 1 %}
+        
+        {% for child in forum.forums %}
+            {{ _self.recursiveForums(child, index) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% import _self as macros %}
+
+{% block content %}
+	<section>
+
+		<button data-toggle="modal" data-target="#add-parent-modal" class="btn btn-orange marginBottom10">
+			Add Parent
+		</button>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>
+						Name
+					</th>
+					<th>
+
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				{% if forums %}
+		            {% for forum in forums %}
+		            	{% if forum.parent == 0 %}
+		            		{% set index = 0 %}
+		            	{% else %}
+		            		{% set index = loop.index %}
+		            	{% endif %}
+		                {{ macros.recursiveForums(forum, index) }}
+		            {% endfor %}
+				{% endif %}
+				
+			</tbody>
+		</table>
+	</section>
+{% endblock %}
+
+{% block modals %}
+	<div class="modal fade" id="add-parent-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<form method="post" action="javascript:void(0)" class="form-horizontal" role="form" data-event="submit" data-action="forums.addParent">
+						<div class="form-group">
+							<label class="control-label col-sm-2">
+								Name
+							</label>
+							<div class="col-sm-10">
+								<input type="text" name="name" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-2">
+								Insert
+							</label>
+							<div class="col-sm-10">
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="placement" value="before" /> Before
+									</label>
+								</div>
+								<div class="radio-inline">
+									<label>
+										<input type="radio" name="placement" value="after" /> After
+									</label>
+								</div>
+								<select name="position" class="form-control" multiple>
+									{% for forum in forums %}
+										<option value="{{ forum.id }}">{{ forum.name }}</option>
+									{% endfor %}
+								</select>
+								<p class="help">
+									Select a parent to insert before or after
+								</p>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button class="btn btn-orange">
+									Add parent
+								</button>
+								<a href="javascript:void(0)" data-dismiss="modal" class="btn btn-orange">
+									Cancel
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+{% endblock %}

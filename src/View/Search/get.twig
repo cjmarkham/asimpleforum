@@ -32,7 +32,7 @@
 								<em class="fa fa-comment"></em >
 							</div>
 							<div class="col-md-7">
-								<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}">
+								<a class="forum-name" href="/{{ config('board', 'base') }}{{ child.name|url_encode }}-{{ child.id }}">
 									{{ child.name }}
 								</a>
 								<p class="forum-description">
@@ -42,7 +42,7 @@
 							<div class="col-md-4 text-right">
 								<p>	
 									{% if child.lastTopicName %}
-										<a href="/{{ child.name|url_encode }}/{{ child.lastTopicName|url_encode }}-{{ child.lastTopicId }}#{{ child.lastPostId }}" class="topic-name">
+										<a href="/{{ config('board', 'base') }}{{ child.name|url_encode }}/{{ child.lastTopicName|url_encode }}-{{ child.lastTopicId }}#{{ child.lastPostId }}" class="topic-name">
 											{{ child.lastTopicName }}
 										</a>
 									{% else %}
@@ -53,7 +53,7 @@
 								</p>
 								<p>
 									{% if child.lastTopicName %}
-										<a href="/user/{{ child.username }}" class="user-link">
+										<a href="/{{ config('board', 'base') }}user/{{ child.username }}" class="user-link">
 											{{ child.username }}
 										</a>
 									{% else %}
@@ -73,7 +73,7 @@
 								<div class="col-md-11 subforum-list">
 									Subforums: 
 									{% for subchild in child.children %}
-										<a href="/{{ subchild.name|url_encode }}-{{ subchild.id }}">
+										<a href="/{{ config('board', 'base') }}{{ subchild.name|url_encode }}-{{ subchild.id }}">
 											{{ subchild.name }}
 										</a>
 									{% endfor %}
@@ -109,11 +109,11 @@
 
 						<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
 							<div class="col-md-5">
-								<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
+								<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
 									{{ truncate(topic.name, 40) }}
 								</a>
 								 in 
-								<a href="/{{ forum.name|url_encode }}-{{ forum.id }}/1">
+								<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}-{{ forum.id }}/1">
 									{{ forum.name }}
 								</a>
 
@@ -128,7 +128,7 @@
 								</div>
 
 								<p class="topic-author">
-									<a href="" class="user-link">
+									<a href="/{{ config('board', 'base') }}" class="user-link">
 										{{ topic.author }}
 									</a>
 								</p>
@@ -147,17 +147,17 @@
 										{% if page < 1 %}
 											{% set page = 1 %}
 										{% endif %}
-										<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
+										<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
 											{{ topic.lastPostName }}
 										</a>
 									{% else %}
-										<a href="" class="topic-name">
+										<a href="/{{ config('board', 'base') }}" class="topic-name">
 											{{ topic.name }}
 										</a>
 									{% endif %}
 								</p>
 								<p>	
-									<a href="" class="user-link">
+									<a href="/{{ config('board', 'base') }}" class="user-link">
 										{{ topic.lastPosterUsername }}
 									</a>
 								</p>

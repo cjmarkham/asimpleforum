@@ -27,9 +27,14 @@ class Route
 
 		$admin = (isset($folder) && $folder == 'admin') ? true : false;
 
-		if ($admin && !self::$app['auth']->admin)
+		$user = self::$app['session']->get('user');
+
+		if ($admin)
 		{
-			return self::$app->redirect('/');
+			if (!$user || !\Permissions::hasPermission('ACCESS_ADMIN'))
+			{
+				return self::$app->redirect('/');
+			}
 		}
 
 		$path = (isset ($folder) ? 'Controller\\' . ucfirst($folder) . '\\' : 'Controller\\') . $controller;

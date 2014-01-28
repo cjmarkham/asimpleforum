@@ -22,6 +22,7 @@ class Permissions
 
 	const ADD_FORUMS = 64;
 
+	const ACCESS_ADMIN = 128;
 
 	public static function hasPermission ($action)
 	{
@@ -34,7 +35,7 @@ class Permissions
 
 		$constant = constant('self::' . $action);
 
-		return $user['group']['permission'] & $constant;
+		return (int) $user['group']['permission'] & $constant;
 	}
 
 	public static function setPermissions (array $permissions)

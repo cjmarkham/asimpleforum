@@ -61,11 +61,11 @@
 
 							<div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
 								<div class="col-md-5">
-									<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
+									<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
 										{{ truncate(topic.name, 40) }}
 									</a>
 									 in 
-									<a href="/{{ forum.name|url_encode }}-{{ forum.id }}/1">
+									<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}-{{ forum.id }}/1">
 										{{ forum.name }}
 									</a>
 
@@ -80,7 +80,7 @@
 									</div>
 
 									<p class="topic-author">
-										<a href="" class="user-link">
+										<a href="/{{ config('board', 'base') }}" class="user-link">
 											{{ topic.author }}
 										</a>
 									</p>
@@ -99,17 +99,17 @@
 											{% if page < 1 %}
 												{% set page = 1 %}
 											{% endif %}
-											<a href="/{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
+											<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}#{{ topic.lastPostId }}" class="topic-name">
 												{{ topic.lastPostName }}
 											</a>
 										{% else %}
-											<a href="" class="topic-name">
+											<a href="/{{ config('board', 'base') }}" class="topic-name">
 												{{ topic.name }}
 											</a>
 										{% endif %}
 									</p>
 									<p>	
-										<a href="" class="user-link">
+										<a href="/{{ config('board', 'base') }}" class="user-link">
 											{{ topic.lastPosterUsername }}
 										</a>
 									</p>
@@ -135,13 +135,13 @@
 
 							<div class="clearfix search-result-user">
 								<div class="pull-left">
-									<a href="/user/{{ user.username }}">
-										<img width="149" height="198" class="avatar big" alt="{{ user.username }}" title="{{ user.username }}" src="/avatars/{{ user.username }}/big.png" />
+									<a href="/{{ config('board', 'base') }}user/{{ user.username }}">
+										<img width="149" height="198" class="avatar big" alt="{{ user.username }}" title="{{ user.username }}" src="/{{ config('board', 'base') }}avatars/{{ user.username }}/big.png" />
 									</a>
 								</div>
 								<div class="marginLeft20 pull-left">
 									<h4>
-										<a href="/user/{{ user.username }}" class="user-link">
+										<a href="/{{ config('board', 'base') }}user/{{ user.username }}" class="user-link">
 											{{ user.username }} {% if user.first_name %}- <small>{{ user.first_name }} {{ user.last_name }}</small>{% endif %}
 										</a>
 									</h4>

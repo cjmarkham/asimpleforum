@@ -17,7 +17,7 @@
 										
 									<div class="col-sm-8">
 										<h4>
-											<a class="forum-name" href="/{{ child.name|url_encode }}-{{ child.id }}/">
+											<a class="forum-name" href="/{{ config('board', 'base') }}{{ child.name|url_encode }}-{{ child.id }}/">
 												{{ child.name }}
 											</a>
 										</h4>
@@ -29,7 +29,7 @@
 									<div class="col-sm-4 text-right">
 										<p>	
 											{% if child.lastTopic.name %}
-												<a href="/{{ child.name|url_encode }}/{{ child.lastTopic.name|url_encode }}-{{ child.lastTopic.id }}/#{{ child.lastPost.id }}" class="topic-name">
+												<a href="/{{ config('board', 'base') }}{{ child.name|url_encode }}/{{ child.lastTopic.name|url_encode }}-{{ child.lastTopic.id }}/#{{ child.lastPost.id }}" class="topic-name">
 													{{ child.lastTopic.name }}
 												</a>
 											{% else %}
@@ -40,7 +40,7 @@
 										</p>
 										<p>
 											{% if child.lastTopic.name %}
-												<a href="/user/{{ child.lastPost.user.username }}" class="user-link">
+												<a href="/{{ config('board', 'base') }}user/{{ child.lastPost.user.username }}" class="user-link">
 													{{ child.lastPost.user.username }}
 												</a>
 											{% else %}
@@ -55,17 +55,19 @@
 											</p>
 										{% endif %}
 									</div>
-									{% if child.children is defined %}
+								</div>
+								{% if child.children is defined %}
+									<div class="row">
 										<div class="col-sm-12 subforum-list">
 											Subforums: 
 											{% for subchild in child.children %}
-												<a href="/{{ subchild.name|url_encode }}-{{ subchild.id }}">
+												<a href="/{{ config('board', 'base') }}{{ subchild.name|url_encode }}-{{ subchild.id }}">
 													{{ subchild.name }}
 												</a>
 											{% endfor %}
 										</div>
-									{% endif %}
-								</div>
+									</div>
+								{% endif %}
 
 								{% if not loop.last %}
 									<div class="seperator"></div>

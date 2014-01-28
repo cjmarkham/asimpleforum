@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+	<link rel="stylesheet" href="/{{ config('board', 'base') }}vendor/css/bootstrap.css" />
+	<link rel="stylesheet" href="/{{ config('board', 'base') }}font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="/{{ config('board', 'base') }}css/admin.css" />
+
+	<script src="/vendor/js/jquery.js"></script>
+	<script src="/vendor/js/bootstrap.js"></script>
+	<script src="/vendor/js/timeago.js"></script>
+	<script src="/js/admin/admin.js"></script>
+	<script src="/js/admin/dom.js"></script>
+</head>
+
+<body>
+	<header>
+		<div class="container" id="logo">
+			<img src="/{{ config('board', 'base') }}images/logo.png" alt="" title="" />
+		</div>
+	</header>
+
+	<div id="message-block"></div>
+	
+	<div id="main">
+		<div class="container" id="main-nav">
+			<ul class="list-inline list-unstyled">
+				<li {% if section == "admin/index" %}class="active"{% endif %}>
+					<a href="/{{ config('board', 'base') }}admin">
+						Admin Home
+					</a>	
+				</li>
+				<li {% if section == "admin/forums" %}class="active"{% endif %}>
+					<a href="/{{ config('board', 'base') }}admin/forums">
+						Forums
+					</a>	
+				</li>
+				<li>
+					<a href="/{{ config('board', 'base') }}admin/users">
+						Users
+					</a>	
+				</li>
+			</ul>
+		</div>
+		<div id="content" class="container">
+			<div class="row">
+
+				{% set sidebars = config('sidebars') %}
+
+				{% if sidebars[section] is defined and sidebars[section]|length %}
+					<aside class="col-sm-3" id="sidebar">
+						
+						{% for key, array in sidebars if key == section %}
+							{% if array|length %}
+								{% for sidebar in array %}
+									{{ include('Sidebars/' ~ sidebar ~ '.twig') }}
+								{% endfor %}
+							{% endif %}
+						{% endfor %}
+
+					</aside>
+				{% endif %}
+
+				
+				{% if sidebars[section] is defined and sidebars[section]|length %}
+					<div id="main-full" class="col-md-9">
+				{% else %}
+					<div id="main-full">
+				{% endif %}
+
+					{% block flash %}
+						{% set alert = app.session.flashbag.get('alert') %}
+						{% if alert.message is defined %}
+							<p class="alert alert-{{ alert.type }}">
+								{{ alert.message }}
+							</p>
+						{% endif %}
+					{% endblock %}
+
+					{% block content %}{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% block modals %}{% endblock %}
+</body>
+</html>
