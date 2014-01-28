@@ -1,6 +1,4 @@
-config/deploy.rb
-config/development.json
-config/production.json
+config
 cache
 Capfile
 /vendor
