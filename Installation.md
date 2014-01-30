@@ -13,7 +13,7 @@ Create a local database and run the `sql` found in `install/sql`. This will crea
 # Add your config
 Create a `config` directory in the `root` of the project. Inside it you will need to create a `development.json` file with the [example config](https://github.com/cjmarkham/asimpleforum/wiki/Config-Example). Note: You must set `APP_ENV` in your vhosts to `development`. If you do not do this then A Simple Forum will assume a production environment and you will not have debugging enabled. For trouble shooting this see this [Stack Overflow](http://stackoverflow.com/questions/2378871/set-application-env-via-virtual-host-config-and-read-this-in-php) question.
 
-Thats it. The forum will now be installed. You will need to create a new user and manually assign them admin permissions in the database (`UPDATE user SET perm_group=1 WHERE id=1`). This will be done automatically with the full release version of the install software.
+Thats it. The forum will now be installed. You will need to create a new user (Using the signup form is easier as multiple tables are updated with a new user) and manually assign them admin permissions in the database (`UPDATE user SET perm_group=1 WHERE id=1`). This will be done automatically with the full release version of the install software.
 
 Please note that there are only basic moderation tools present and no admin section. Any database changes will have to be done manually.
 
