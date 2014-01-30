@@ -1,0 +1,74 @@
+{
+	"debug": false,
+
+	"cookie": {
+		"name": "",
+		"domain": ""
+	},
+
+	"board": {
+		"doublePost": "allow",
+		"logo": "logo.png",
+		"name": "A Simple Forum",
+		"url": "http://asimpleforum.com",
+		"postsPerPage": 10,
+		"topicsPerPage": 10,
+		"confirmEmail": true,
+		"base": "forum/" // Base directory for the forum
+	},
+
+	"database": {
+		"host": "",
+		"user": "",
+		"password": "",
+		"name": ""
+	},
+
+	"mongo": {
+		"host": "127.0.0.1",
+		"port": 27017
+	},
+
+	"defaults": {
+		"cache": "mongo",
+		"language": "english",
+		"salt": "uniquesalt"
+	},
+
+	"emails": {
+		"noReply": ""
+	},
+
+	"navLinks": [{
+		"link": "/",
+		"title": "Forums",
+		"section": "forums"
+	}, {
+		"link": "/members",
+		"title": "Members",
+		"section": "user"
+	}, {
+		"link": "/search",
+		"title": "Search",
+		"section": "search"
+	}, {
+		"link": "/new-topics",
+		"title": "New Topics",
+		"section": "new-topics"
+	}, {
+		"link": "/faqs",
+		"title": "FAQs",
+		"section": "faqs"
+	}, {
+		"link": "/download",
+		"title": "Download",
+		"section": "download"
+	}],
+
+	"sidebars": [{
+		"index": ["userbox", "recentTopics"],
+		"forums": ["userbox", "recentTopics"],
+		"search": ["userbox", "recentTopics"],
+		"new-topics": ["userbox"]
+	}]
+}
