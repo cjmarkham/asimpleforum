@@ -16,7 +16,7 @@ class UserController extends Controller
 
 		if (!$user)
 		{
-			return $this->app->redirect('/');
+			return $this->app->redirect('/' . $this->app['board']['base']);
 		}
 
 		$loggedInUser = $this->app['session']->get('user');
@@ -43,12 +43,18 @@ class UserController extends Controller
 
 		if (!$user)
 		{
-			return $this->app->redirect('/');
+			return $this->app->redirect('/' . $this->app['board']['base']);
 		}
+
+		// reset with profile information
+		$user = $this->app['user']->find_by_username($user['username']);
 
 		return $this->app['twig']->render('User/settings.twig', array(
 			'title' 			=> 'Settings',
-			'section'			=> 'members'
+			'section'			=> 'settings',
+			'user'				=> $user['data'],
+			'profile'			=> $user['data']['profile'],
+			'settings'			=> $user['data']['settings']
 		) + $this->extras);
 	}
 

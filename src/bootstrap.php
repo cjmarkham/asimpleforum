@@ -25,10 +25,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => dirname(__DIR__) . '/src/View'
 ));
 
-$app['twig']->addExtension(new \Entea\Twig\Extension\AssetExtension($app, array(
-    'asset.directory' => '/forum/public'
-)));
-
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 
 $truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
@@ -201,7 +197,10 @@ if ($app['debug'] === true)
     $app->register(new Whoops\Provider\Silex\WhoopsServiceProvider);
 }
 
-if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
+if (php_sapi_name() != 'cli')
 {
-    $app['cache']->flush($app, 'default', 'asf_forum');
+    if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
+    {
+        $app['cache']->flush($app, 'default', 'asf_forum');
+    }
 }

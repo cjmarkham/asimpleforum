@@ -1,0 +1,48 @@
+<form method="post" action="javascript:void(0)" class="form-horizontal">
+
+	<div class="form-group">
+		<div class="col-sm-3">
+			<label class="control-label">
+				Email address
+			</label>	
+		</div>
+		<div class="col-sm-9">
+			<input type="text" class="form-control" name="email" value="{{ user.email }}" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-3">
+			<label class="control-label">
+				Name
+			</label>	
+		</div>
+		<div class="row">
+			<div class="col-sm-3">
+				<input type="text" class="form-control" placeholder="First name" name="first-name" value="{{ profile.first_name }}" />
+			</div>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" placeholder="Last name" name="last-name" value="{{ profile.last_name }}" />
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-3">
+			<label class="control-label">
+				Birthday (dd-mm-yyyy)
+			</label>	
+		</div>
+		<div class="col-sm-9">
+			{% if profile.dob_day and profile.dob_month and profile.dob_year %}
+				{% set dob = profile.dob_day ~ '-' ~ profile.dob_month ~ '-' ~ profile.dob_year %}
+			{% else %}
+				{% set dob = "now"|date('d-m-Y') %}
+			{% endif %}
+			<input data-date-format="dd-mm-yyyy" type="text" name="dob" value="{{ dob }}" class="form-control calander" />
+		</div>
+	</div>
+
+
+
+</form>

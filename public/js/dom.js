@@ -41,7 +41,7 @@ $(function () {
 			item = item.toLowerCase().replace(/ in <span class=\"forum-name\">(.*)<\/span>/, '');
 			item = encodeURIComponent(item);
 			
-			var url = '/search/' + item;
+			var url = '/' + asf.config.board.base + 'search/' + item;
 			var append = $('#search-form-indicator option:selected').val() && asf.page.section == 'forum' ? asf.forum.id : 'all';
 
 			url += '/' + append;

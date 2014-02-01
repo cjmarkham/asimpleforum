@@ -14,7 +14,8 @@
         "tobiassjosten/facebook-service-provider": "dev-master",
         "filp/whoops": "1.*",
         "igorw/config-service-provider": "1.2.*@dev",
-        "entea/silex-twig-simple-asset-extension": "v1.0.0"
+        "entea/silex-twig-simple-asset-extension": "v1.0.0",
+        "symfony/console": "~2.3"
     },
 
     "autoload" : {

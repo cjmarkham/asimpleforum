@@ -59,7 +59,7 @@
 	{% endblock %}
 </head>
 
-<body>
+<body id="page-{{ section }}">
 
 	{% if not app.debug and not app.local %}
 		<a target="_blank" href="https://github.com/cjmarkham/asimpleforum">
@@ -143,9 +143,9 @@
 	<div class="container" id="main">
 		<nav id="breadcrumbs">
 			<ul class="list-unstyled list-inline">
-				<li>
-					<a href="/{{ config('board', 'base') }}">
-						Home
+				<li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+					<a href="/{{ config('board', 'base') }}" itemprop="url">
+						<span itemprop="title">Home</span>
 					</a>
 				</li>
 				{% block crumbs %}{% endblock %}

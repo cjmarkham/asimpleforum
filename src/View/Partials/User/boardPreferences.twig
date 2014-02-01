@@ -1,0 +1,15 @@
+<form method="post" action="javascript:void(0)" class="form-horizontal">
+
+	<div class="form-group">
+		<div class="col-sm-3">
+			<label class="control-label">
+				Date format
+			</label>	
+		</div>
+		<div class="col-sm-9">
+			<select class="form-control" name="date-format">
+				<option {% if settings.date_format == 'jS M y, H:i' %}selected{% endif %} value="jS M y, H:i">{{ "now"|date('jS M y, H:i') }}</option>
+				<option {% if settings.date_format == 'jS M y, g:i a' %}selected{% endif %} value="jS M y, g:i a">{{ "now"|date('jS M y, g:i a') }}</option>
+			</select>
+		</div>
+	</div>

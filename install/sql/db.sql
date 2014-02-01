@@ -69,6 +69,16 @@ CREATE TABLE IF NOT EXISTS `groups` (
   KEY `permission` (`permission`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
+--
+-- Dumping data for table `groups`
+--
+
+INSERT INTO `groups` (`id`, `default`, `name`, `permission`, `added`) VALUES
+(1, 0, 'Admin', 127, 1388489226),
+(2, 0, 'Moderator', 15, 1388489226),
+(3, 1, 'Guest', 3, 1388489226);
+
+
 -- --------------------------------------------------------
 
 --

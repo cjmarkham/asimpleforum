@@ -1,5 +1,46 @@
 {% extends "Layout/main.twig" %}
 
+{% block css %}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="/{{ app.board.base }}vendor/css/datepicker.css" />
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+
+	<script src="/{{ app.board.base }}vendor/js/datepicker.js"></script>
+
+	<script>
+	$(function () {
+		$('.calander').datepicker();
+	});
+	</script>
+{% endblock %}
+
 {% block content %}
+	
+	<div class="tab-content">
+		<div id="profile-information" class="tab-pane active">
+			<section>
+				<header>
+					<h5>Profile Information</h5>
+				</header>	
+				<div class="content">
+					{% include 'Partials/User/profileInformation.twig' %}
+				</div>
+			</section>
+		</div>
+		<div id="board-preferences" class="tab-pane">
+			<section>
+				<header>
+					<h5>Board Preferences</h5>
+				</header>	
+				<div class="content">
+					{% include 'Partials/User/boardPreferences.twig' %}
+				</div>
+			</section>
+		</div>
+	</div>
 
 {% endblock %}

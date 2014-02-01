@@ -34,7 +34,7 @@ class UserModel extends BaseModel
 		$cache_key = 'user-' . $username;
 		$user = $this->app['cache']->get($cache_key, function () use ($username) {
 			$data = array(
-				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate,topics,posts FROM users WHERE username=? LIMIT 1', array(
+				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate,topics,posts,email FROM users WHERE username=? LIMIT 1', array(
 					$username
 				))
 			);
@@ -46,7 +46,12 @@ class UserModel extends BaseModel
 			$user['data']['id']
 		));
 
+		$settings = $this->app['db']->fetchAssoc('SELECT * FROM settings WHERE id=? LIMIT 1', array(
+			$user['data']['id']
+		));
+
 		$user['data']['profile'] = $profile;
+		$user['data']['settings'] = $settings;
 
 		return $user;
 	}

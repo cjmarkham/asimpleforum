@@ -97,45 +97,43 @@ var asf = {
 			$('#account-control').hide();
 			$('#login-modal').modal('hide');
 
-			$.get('/' + asf.config.board.base + 'sidebar/userbox', function (html) {
-				asf.elements.replace('/sidebar/userbox', {}, '#account-control', function () {
-					$('#account-control').fadeIn(asf.medSpeed);
+			asf.elements.replace('/' + asf.config.board.base + 'sidebar/userbox', {}, '#account-control', function () {
+				$('#account-control').fadeIn(asf.medSpeed);
 
-					var onlineCount = parseInt($('#sessions p:first span').text().trim(), 10);
-					var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
-					onlineCount += 1;
-					guestCount -= 1;
-					$('#sessions p:first span').text(onlineCount);
-					$('#sessions p:last span').text(guestCount);
+				var onlineCount = parseInt($('#sessions p:first span').text().trim(), 10);
+				var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
+				onlineCount += 1;
+				guestCount -= 1;
+				$('#sessions p:first span').text(onlineCount);
+				$('#sessions p:last span').text(guestCount);
 
-					$('#onlineList').fadeIn(asf.medSpeed);
+				$('#onlineList').fadeIn(asf.medSpeed);
 
-					var link = '<a data-user="' + username + '" href="/' + asf.config.board.base + '/user/' + username + '">' + username + '</a>';
+				var link = '<a data-user="' + username + '" href="/' + asf.config.board.base + '/user/' + username + '">' + username + '</a>';
 
-					if ($('#users').length) {
-						if ($('#users a').length) {
-							$('#users').append(', ' + link);
-						} else {
-							$('#users').append(link);
-						}
+				if ($('#users').length) {
+					if ($('#users a').length) {
+						$('#users').append(', ' + link);
 					} else {
-						$.post('/' + asf.config.board.base + 'partial/onlineList/', {
-							params: {
-								sessions: {
-									online: [link]
-								}
-							}
-						}).done(function (html) {
-							$('#onlineList').hide().html(html).fadeIn(asf.medSpeed);
-						});
+						$('#users').append(link);
 					}
+				} else {
+					$.post('/' + asf.config.board.base + 'partial/onlineList/', {
+						params: {
+							sessions: {
+								online: [link]
+							}
+						}
+					}).done(function (html) {
+						$('#onlineList').hide().html(html).fadeIn(asf.medSpeed);
+					});
+				}
 
-					asf.user = {
-						username: username
-					};
-					asf.elements.toggleUserVisibility();
-					
-				});
+				asf.user = {
+					username: username
+				};
+				asf.elements.toggleUserVisibility();
+				
 			});
 
 		}).fail(function (response) {
@@ -165,7 +163,7 @@ var asf = {
 
 			$('.visible-user').fadeOut(asf.medSpeed);
 
-			asf.elements.replace('/sidebar/userbox', {}, '#account-control', function () {
+			asf.elements.replace('/' + asf.config.board.base + 'sidebar/userbox', {}, '#account-control', function () {
 				$('#account-control').fadeIn(asf.medSpeed);
 			});
 

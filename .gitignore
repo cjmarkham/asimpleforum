@@ -3,3 +3,4 @@ cache
 Capfile
 /vendor
 node_modules
+composer.lock

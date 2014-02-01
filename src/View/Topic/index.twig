@@ -29,15 +29,15 @@
 {% block crumbs %}
 	{{ parent() }}
 	<li class="next">&gt;</li>
-	<li>
-		<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}-{{ forum.id }}">
-			{{ forum.name }}
+	<li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+		<a itemprop="url" href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}-{{ forum.id }}">
+			<span itemprop="title">{{ forum.name }}</span>
 		</a>
 	</li>	
 	<li class="next">&gt;</li>
-	<li>
-		<a href="/{{ config('board', 'base') }}">
-			{{ topic.name }}
+	<li itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+		<a itemprop="url" href="/{{ config('board', 'base') }}">
+			<span itemprop="title">{{ topic.name }}</span>
 		</a>
 	</li>	
 {% endblock %}
