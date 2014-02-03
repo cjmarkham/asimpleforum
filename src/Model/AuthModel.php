@@ -46,6 +46,7 @@ class AuthModel
 			'approved' => 1
 		), array('id' => $user_id));
 
+
 		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'users');
 		$this->app['cache']->delete('user-' . $check['username']);
 

@@ -1,0 +1,79 @@
+<html>
+<head>
+	<title>A Simple Forum Installation</title>
+	<link rel="stylesheet" href="../vendor/css/bootstrap.css" />
+	<link rel="stylesheet" href="../font-awesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="../css/main.css" />
+
+	<style>
+	header {color: #fff;}
+	header small {color: #dadada;}
+	#main {padding-top: 10px; width: 1120px; overflow-x:hidden;}
+
+	#sections {
+		width: 8000px;
+		overflow: hidden;
+	}
+
+	.section {
+		vertical-align: top;
+		display: inline-block;
+		width: 1090px;
+		margin-right: 40px;
+	}
+
+	.passed {
+		color: #3c763d;
+	}
+
+	.failed {
+		color: #a94442;
+	}
+	</style>
+
+	{% block scripts %}
+		<script src="../vendor/js/jquery.js"></script>
+		<script src="../vendor/js/bootstrap.js"></script>
+		<script src="../vendor/js/timeago.js"></script>
+		<script src="../js/asf.js"></script>
+		<script src="../js/dom.js"></script>
+		<script>
+		$(function () {
+			$(document.body).fadeIn(300);
+
+			$('.next').on('click', function () {
+				var margin = parseInt($('#sections').css('margin-left'), 10) - 1135
+				$('#sections').animate({
+					marginLeft: margin
+				});
+			});
+
+			$('.prev').on('click', function () {
+				var margin = parseInt($('#sections').css('margin-left'), 10) + 1135
+				$('#sections').animate({
+					marginLeft: margin
+				});
+			});
+
+		});
+		</script>
+	{% endblock %}
+</head>
+<body>
+	<header id="header">
+		<div class="container">
+			<h1>A Simple Forum <small>Installation</small></h1>
+		</div>
+	</header>
+
+	<div id="message-block"></div>
+
+	<div id="main" class="container">
+		{% block content %}{% endblock %}
+	</div>
+
+	<footer id="footer">
+
+	</footer>
+</body>
+</html>

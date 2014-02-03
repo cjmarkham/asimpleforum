@@ -13,7 +13,8 @@ class TopicModel extends BaseModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
-		$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'topics');
+
+		$this->collection = $this->app['cache']->setCollection($app['database']['name'], 'topics');
 	}
 
 	public function find_by_id ($id) 

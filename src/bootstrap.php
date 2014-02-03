@@ -7,10 +7,15 @@ use Symfony\Component\HttpFoundation\Response;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
+$app['env'] = getenv('APP_ENV') ?: 'production';
 
-$env = getenv('APP_ENV') ?: 'production';
-$app['env'] = $env;
-$app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__ . '/../config/' . $env . '.json'));
+if (!file_exists(__DIR__ . '/../config/' . $app['env'] . '.json'))
+{
+    header('Location: /forum/install/');
+    exit;
+}
+
+$app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__ . '/../config/' . $app['env'] . '.json'));
 
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new \Silex\Provider\SessionServiceProvider(), array(
@@ -33,7 +38,12 @@ $config_function = new Twig_SimpleFunction('config', function ($section, $key = 
     {
         if (is_array($app[$section]))
         {
-            return $app[$section][$key];
+            if (isset($app[$section][$key]))
+            {
+                return $app[$section][$key];
+            }
+
+            return false;
         }
         return $app[$section];
     }
@@ -58,8 +68,8 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'dbname'   => $app['database']['name'],
         'host'      => $app['database']['host'],
         'user'      => $app['database']['user'],
-        'password'  => $app['database']['password'],
-    ),
+        'password'  => $app['database']['password']
+    )
 ));
 
 if ($app['defaults']['cache'] === 'disk')
@@ -74,7 +84,7 @@ else
 {
     $app->register(new Mongo\Silex\Provider\MongoServiceProvider, array(
         'mongo.connections' => array(
-            'default' => array(
+            $app['database']['name'] => array(
                 'server' => 'mongodb://' . $app['mongo']['host'] . ':' . $app['mongo']['port'],
                 'options' => array("connect" => true)
             )
@@ -84,6 +94,8 @@ else
     $app->register(new MongoCache\MongoCacheServiceProvider());
     $app['cache'] = $app['mongocache'];
 }
+
+$app['cache']->app = $app;
 
 $logger = new Doctrine\DBAL\Logging\DebugStack();
 $app['db']->getConfiguration()->setSQLLogger($logger);
@@ -106,31 +118,6 @@ $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
     'facebook.app_id'     => '480210532061315',
     'facebook.secret'     => 'f5bc907e9ac2bb6ea651fc9bfe89f7b8',
 ));*/
-
-$app->error(function (\Exception $e, $code) use ($app) {
-
-    if ($code === 404)
-    {
-        return new Response(
-            $app['twig']->render(
-                '404.twig', 
-                array(
-                    'title'          => 'You lost or something?', 
-                    'debug'          => $app['debug'],
-                    'message'        => $e->getMessage()
-                )
-            ), 
-        404);
-    }
-    else
-    {
-        if ($app['debug'])
-        {
-            die(var_dump($e->getMessage()));
-        }
-    }
-
-});
 
 Route::$app = $app;
 Message::$app = $app;
@@ -197,10 +184,7 @@ if ($app['debug'] === true)
     $app->register(new Whoops\Provider\Silex\WhoopsServiceProvider);
 }
 
-if (php_sapi_name() != 'cli')
+if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
 {
-    if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
-    {
-        $app['cache']->flush($app, 'default', 'asf_forum');
-    }
+    $app['cache']->flush($app, 'default', 'asf_forum');
 }

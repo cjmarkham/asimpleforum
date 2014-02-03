@@ -8,22 +8,9 @@ $app->get('/' . $app['board']['base'], function (Application $app) {
     return Route::get('home:index');
 });
 
-$app->get('/' . $app['board']['base'] . 'install/', function (Application $app) {
-    include __DIR__ . '/../install/index.php';
-
-    exit;
-});
-
-$app->post('/' . $app['board']['base'] . 'install/', function (Request $request) {
-    include __DIR__ . '/../install/index.php';
-
-    exit;
-});
-
 $app->get('/' . $app['board']['base'] . 'test/', function (Application $app) {
     return include 'test.php';
 });
-
 
 $app->get('/' . $app['board']['base'] . 'new-topics/', function (Application $app) {
    return Route::get('topic:newest');

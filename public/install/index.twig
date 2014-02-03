@@ -1,0 +1,498 @@
+{% extends 'install.twig' %}
+
+{% block scripts %}
+	{{ parent() }}
+
+	<script>
+	$(function () {
+		
+	});
+
+	var saveSettings = function () {
+		$.post('saveSettings/', {
+			board_name: $('input[name="board-name"]').val(),
+			board_url: $('input[name="board-url"]').val(),
+			board_logo: $('input[name="board-logo"]').val(),
+			posts_per_page: $('input[name="posts-per-page"]').val(),
+			topics_per_page: $('input[name="topics-per-page"]').val(),
+			confirm_email: $('input[name="confirm-email"]').val(),
+			cookie_name: $('input[name="cookie-name"]').val(),
+			cookie_path: $('input[name="cookie-path"]').val(),
+			cookie_domain: $('input[name="cookie-domain"]').val()
+		}).done(function () {
+			asf.message('Your settings have been saved.');
+		});
+	}
+
+	var checkDBConnection = function () {
+		$.post('checkDBConnection/', {
+			dbhost: $('input[name="database-host"]').val(),
+			dbuser: $('input[name="database-user"]').val(),
+			dbpass: $('input[name="database-pass"]').val(),
+			dbname: $('input[name="database-name"]').val(),
+			mongohost: $('input[name="mongo-host"]').val(),
+			mongoport: $('input[name="mongo-port"]').val()
+		}).done(function (response) {
+			asf.message(response);
+			$('.next').trigger('click');
+		}).fail(function (response) {
+			asf.error(response.responseText);
+			return false;
+		});
+	}
+
+	var addAdminUser = function () {
+		$.post('addAdminUser/', {
+			username: $('input[name="admin-username"]').val(),
+			password: $('input[name="admin-password"]').val(),
+			confirm: $('input[name="admin-confirm"]').val(),
+			email: $('input[name="admin-email"]').val(),
+			salt: $('input[name="salt"]').val()
+		}).done(function () {
+			$('.next').trigger('click');
+		}).fail(function (response) {
+			asf.error(response.responseText);
+			return false;
+		});
+	}
+
+	var createDatabase = function () {
+		$('.next').trigger('click');
+		$.post('createDatabase/', {}).done(function () {
+			asf.message('Database has been created.');
+			$.post('populateDatabase/', {}).done(function () {
+				asf.message('Database has been populated with default data.');
+				$.post('createConfigFile/', {}).done(function () {
+					$('.next').trigger('click');
+				});
+			});
+		});
+	}
+	</script>
+{% endblock %}
+{% block content %}
+
+<style>
+	#prerequisites td:last-of-type {
+		width: 200px;
+		text-align: center;
+	}
+</style>
+<form method="post" action="javascript:void(0)" class="form-horizontal">
+	<div id="sections">
+
+		<div class="section">
+			<section>
+				<header>
+					Prerequisites
+				</header>
+				<div class="content" id="prerequisites">
+					<h4 class="orange">PHP Version <small>You must be running a PHP version greater than or equal to 5.3.0</small></h4>
+					<table class="table table-striped table-bordered">
+						<tr>
+							<td class="blue">
+								PHP Version
+							</td>	
+							<td>
+								{% if php_version >= '5.3.0' %}
+									<em class="fa fa-check passed"></em>
+								{% else %}
+									<em class="fa fa-times failed"></em>
+								{% endif %}
+
+								{{ php_version }}
+							</td>
+						</tr>
+					</table>
+
+					<h4 class="orange">Available Databases <small>You must be have support for at least one of the following databases</small></h4>
+					<table class="table table-striped table-bordered">
+						<tr>
+							<td class="blue">
+								MySQL
+							</td>
+							<td>
+								{% if mysql_support %}
+									<em class="fa fa-check passed"></em>
+								{% else %}
+									<em class="fa fa-times failed"></em>
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							<td class="blue">
+								MySQLi
+							</td>
+							<td>
+								{% if mysqli_support %}
+									<em class="fa fa-check passed"></em>
+								{% else %}
+									<em class="fa fa-times failed"></em>
+								{% endif %}
+							</td>
+						</tr>
+					</table>
+
+					<h4 class="orange">PDO Support <small>A Simple Forum uses PHP Data Objects (PDO)</small></h4>
+					<table class="table table-striped table-bordered">
+						<tr>
+							<td class="blue">
+								PDO Supported
+							</td>
+							<td>
+								{% if pdo_support %}
+									<em class="fa fa-check passed"></em>
+								{% else %}
+									<em class="fa fa-times failed"></em>
+								{% endif %}
+							</td>
+						</tr>
+					</table>
+
+					<h4 class="orange">MongoDB Support <small>A Simple Forum uses MongoDB as a caching method. If not supported it will fall back to disk caching</small></h4>
+					<table class="table table-striped table-bordered">
+						<tr>
+							<td class="blue">
+								MongoDB Supported
+							</td>
+							<td>
+								{% if mongo_support %}
+									<em class="fa fa-check passed"></em>
+								{% else %}
+									<em class="fa fa-times failed"></em>
+								{% endif %}
+							</td>
+						</tr>
+					</table>
+					<button class="next btn btn-success" data-parent="prerequisites">Begin Install</button>
+				</div>
+			</section>
+		</div>
+		<div class="section">
+			<section>
+				<header>
+					Database
+				</header>
+				<div class="content" id="database">
+					<p>
+						This section will install the database tables and populate them with starting data.
+					</p>
+					<p>
+						To get started you will need to provide some information in order to install the database.
+					</p>
+					<br />
+					
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Database host
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="database-host" placeholder="127.0.0.1" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Database user
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="database-user" placeholder="root" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Database password
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="password" name="database-pass" placeholder="" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Database name
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="database-name" placeholder="" class="form-control" />
+						</div>
+					</div>
+
+					<h4>If you have MongoDB installed enter your details here or leave blank to default to disk caching (slower)</h4>
+					
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Mongo host
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="mongo-host" placeholder="127.0.0.1" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Mongo port
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="mongo-port" placeholder="27017" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button class="prev btn btn-success">Prev</button>
+							<button class="btn btn-success" onclick="checkDBConnection()">Check Connection</button>
+						</div>
+					</div>
+				</div>
+			</section>
+
+		</div>
+		<div class="section">
+			<section>
+				<header>
+					Admin user
+				</header>
+				<div class="content">
+					<p>
+						This will be the main user on the forum. It is used to access the administration section and change all aspects of the forum.
+					</p>
+					<br />
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Username
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="admin-username" placeholder="" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Email
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="email" name="admin-email" placeholder="" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Password
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="password" name="admin-password" placeholder="" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Confirm password
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="password" name="admin-confirm" placeholder="" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Password salt
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="password" name="salt" placeholder="" class="form-control" />
+							<p class="help">
+								This is used in order to help keep passwords more secure. It must be a unique string and must be known only to you. You cannot change this value later.
+							</p>	
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button class="prev btn btn-success">Prev</button>
+							<button class="finish btn btn-success" onclick="addAdminUser()">Next</button>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div class="section">
+			<section>
+				<header>
+					Nearly there
+				</header>
+				<div class="content">
+					<p>
+						A Simple Forum will now complete the install process.
+					</p>
+
+					<button class="btn btn-success" onclick="createDatabase()">Proceed with installation</button>
+				</div>
+			</section>
+		</div>
+		<div class="section">
+			<section>
+				<header>
+					Saving data
+				</header>
+				<div class="content">
+					<p>
+						A Simple Forum is writing your data to the database. Please wait.
+					</p>
+				</div>
+			</section>
+		</div>
+		<div class="section">
+			<section>
+				<header>
+					Successfully Installed
+				</header>
+				<div class="content">
+					<p>
+						Congratulations. A Simple Forum has been installed on your server and you can now begin customizing it.
+					</p>
+					<p>
+						Click next to set up some board defaults.
+					</p>
+
+					<button class="next btn btn-success">Next</button>
+				</div>
+			</section>
+		</div>
+
+		<div class="section">
+			<section>
+				<header>
+					Successfully Installed
+				</header>
+				<div class="content">
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Board name
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="board-name" placeholder="A Simple Forum" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Board URL
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="board-url" placeholder="http://" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Board logo
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="board-logo" placeholder="" class="form-control" />
+							<p class="help">
+								This will eventually be an upload. For now it is the name of the logo as it appears in <code>/public/images/</code>
+							</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Confirm email
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<div class="radio inline">
+								<label><input type="radio" name="confirm-email" value="1" placeholder="" class="form-control" /> Yes</label>
+								<label><input type="radio" name="confirm-email" value="0" placeholder="" class="form-control" /> No</label>
+							</div>
+							<p class="help">
+								When a new user signs up should they have to confirm their email before logging in?
+							</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Topics per page
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="number" name="topics-per-page" placeholder="" class="form-control" value="10" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Posts per page
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="number" name="posts-per-page" placeholder="" class="form-control" value="10" />
+						</div>
+					</div>
+
+					<h4>Cookies</h4>
+
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Cookie name
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="cookie-name" placeholder="" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Cookie path
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="cookie-name" placeholder="/" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-3">
+							<label class="control-label">
+								Cookie domain
+							</label>
+						</div>
+						<div class="col-sm-9">
+							<input type="text" name="cookie-domain" placeholder="" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-3 col-sm-9">
+							<button class="btn btn-success" onclick="saveSettings()">Save Settings</button>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+</form>
+
+{% endblock %}

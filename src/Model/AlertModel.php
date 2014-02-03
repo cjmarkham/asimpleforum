@@ -10,7 +10,7 @@ class AlertModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
-		//$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'alerts');
+		//$this->collection = $this->app['cache']->setCollection($app['database']['name'], 'alerts');
 	}
 
 	public function findByDate ($timestamp = false)

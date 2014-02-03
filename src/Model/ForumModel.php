@@ -14,7 +14,8 @@ class ForumModel
 	public function __construct (\Silex\Application $app)
 	{
 		$this->app = $app;
-		$this->collection = $this->app['mongo']['default']->selectCollection($app['database']['name'], 'forums');
+
+		$this->collection = $this->app['cache']->setCollection($app['database']['name'], 'forums');
 	}
 
 	public function add (Request $request)

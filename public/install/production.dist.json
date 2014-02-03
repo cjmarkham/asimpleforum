@@ -1,0 +1,45 @@
+{
+	"debug": false,
+
+	"cookie": {
+		"name": "",
+		"domain": ""
+	},
+
+	"board": {
+		"doublePost": "allow",
+		"logo": "",
+		"name": "",
+		"url": "",
+		"postsPerPage": 10,
+		"topicsPerPage": 10,
+		"confirmEmail": true,
+		"base": ""
+	},
+
+	"database": {
+		"host": "",
+		"user": "",
+		"password": "",
+		"name": ""
+	},
+
+	"mongo": {
+		"host": "",
+		"port": ""
+	},
+
+	"defaults": {
+		"cache": "mongo",
+		"language": "english",
+		"salt": ""
+	},
+
+	"emails": {
+		"noReply": ""
+	},
+
+	"navLinks": [],
+
+	"sidebars": []
+}
