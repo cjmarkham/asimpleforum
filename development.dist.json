@@ -14,7 +14,7 @@
 		"postsPerPage": 10,
 		"topicsPerPage": 10,
 		"confirmEmail": true,
-		"base": "forum/" // Base directory for the forum
+		"base": "forum/"
 	},
 
 	"database": {
