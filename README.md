@@ -2,6 +2,7 @@ asimpleforum
 =
 [![Build Status](https://travis-ci.org/cjmarkham/asimpleforum.png?branch=master)](https://travis-ci.org/cjmarkham/asimpleforum)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cjmarkham/asimpleforum/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 Coding Guidelines
 =
