@@ -6,36 +6,7 @@ asimpleforum
 Coding Guidelines
 =
 
-These guidelines must be followed or your pull request may not be merged.
-
-* Braces on new line except for closure functions
-
-Good
-
-    public function foo ()
-    {
-
-    }
-
-    (function () {
-    
-    });
-
-Bad
-
-    public function foo {
-    
-    }
-
-* Space before parameter parenthesis
-
-Good
-
-    function foo ()
-  
-Bad
-
-    function foo()
+[PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 
 Contribution
 =
