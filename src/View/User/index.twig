@@ -8,7 +8,7 @@
 		asf.profile.loadPostHistory(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-post-history ul'});
 		asf.profile.loadComments(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-comments ul'});
 		
-		{% if user.id != profile.id %}
+		{% if user and user.id != profile.id %}
 			asf.profile.updateViews({{ profile.id }});
 		{% endif %}
 	});
