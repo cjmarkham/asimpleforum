@@ -191,5 +191,5 @@ if ($app['debug'] === true)
 
 if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
 {
-    $app['cache']->flush($app, 'default', 'asf_forum');
+    $app['cache']->flush($app, $app['database']['name'], $app['database']['name']);
 }
