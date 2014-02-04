@@ -21,7 +21,7 @@ class UserModel extends BaseModel
 	{
 		$this->app = $app;
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'users');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($app['database']['name'], 'posts');
 	}
 
 	public function find_by_username ($username)
