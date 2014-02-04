@@ -9,6 +9,9 @@ if (!file_exists($autoload))
 	exit('Please run "composer install" before attempting to install.');
 }
 
+$root = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'));
+$root = $root[0];
+
 require $autoload;
 
 use Silex\Application;
@@ -20,6 +23,7 @@ $app['env'] = getenv('APP_ENV') ?: 'production';
 
 $controller = new InstallController;
 $controller->app = $app;
+$controller->root = $root;
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__
@@ -56,6 +60,7 @@ $app->run();
 class InstallController
 {
 	public $app;
+	public $root;
 
 	private $settings = array();
 
@@ -318,14 +323,20 @@ class InstallController
 
 		$json['emails']['noReply'] = $this->app['session']->get('admin-email');
 
-		$json = json_encode($json);
-
 		if (!is_dir($config_dir))
 		{
 			mkdir($config_dir, 0777);
 			// For windows
 			chmod(0777, $config_dir);
 		}
+
+		$json['cookie']['name'] = 'asimpleforum';
+		$json['cookie']['path'] = '/';
+		$json['cookie']['domain'] = $_SERVER['HTTP_HOST'];
+
+		$json['board']['base'] = $this->root . '/';
+
+		$json = json_encode($json);
 
 		file_put_contents($config_dir . '/' . $this->app['env'] . '.json', $json);
 		return true;
@@ -365,9 +376,6 @@ class InstallController
 		$json['board']['postsPerPage'] = $posts_per_page;
 		$json['board']['topicsPerPage'] = $topics_per_page;
 		$json['board']['confirmEmail'] = $confirm_email == 1 ? true : false;
-		$json['cookie']['name'] = $cookie_name;
-		$json['cookie']['path'] = $cookie_path;
-		$json['cookie']['domain'] = $cookie_domain;
 
 		$json = json_encode($json);
 

@@ -9,15 +9,20 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $app = new Application();
 $app['env'] = getenv('APP_ENV') ?: 'production';
 
+$app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
+
+$root = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'));
+$root = $root[0];
+
 if (!file_exists(__DIR__ . '/../config/' . $app['env'] . '.json'))
 {
-    header('Location: /forum/install/');
+    header('Location: /' . $root . '/install/');
     exit;
 }
 
 $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__ . '/../config/' . $app['env'] . '.json'));
 
-$app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
+
 $app->register(new \Silex\Provider\SessionServiceProvider(), array(
     'session.storage.options' => array(
         'name' => $app['cookie']['name'],
