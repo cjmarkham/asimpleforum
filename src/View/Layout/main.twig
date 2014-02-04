@@ -113,7 +113,7 @@
 					<li {% if section == link.section %}class="active"{% endif %}>
 						<h2>
 							{% if link.link == '/' %}
-								{% set url = config('board', 'url') %}
+								{% set url = '/' ~ config('board', 'base') %}
 							{% else %}
 								{% set url = '/' ~ config('board', 'base') ~ link.link %}
 							{% endif %}
