@@ -1,30 +1,31 @@
 <?php
 
-use Silex\Application;
+use ASF\Route;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-$app->get('/' . $app['board']['base'], function (Application $app) {
+$app->get('/' . $app['board']['base'], function (ASFApplication $app) {
     return Route::get('home:index');
 });
 
-$app->get('/' . $app['board']['base'] . 'test/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'test/', function (ASFApplication $app) {
     return include 'test.php';
 });
 
-$app->get('/' . $app['board']['base'] . 'new-topics/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'new-topics/', function (ASFApplication $app) {
    return Route::get('topic:newest');
 });
 
-$app->get('/' . $app['board']['base'] . 'signup/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'signup/', function (ASFApplication $app) {
     return Route::get('auth:signup');
 });
 
-$app->get('/' . $app['board']['base'] . 'members/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'members/', function (ASFApplication $app) {
     return Route::get('members:index');
 });
 
-$app->get('/' . $app['board']['base'] . 'faqs/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'faqs/', function (ASFApplication $app) {
     return Route::get('faq:index');
 });
 
@@ -32,11 +33,11 @@ $app->post('/' . $app['board']['base'] . 'signup/', function (Request $request) 
     return Route::get('auth:signup', $request);
 });
 
-$app->get('/' . $app['board']['base'] . 'search/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'search/', function (ASFApplication $app) {
     return Route::get('search:index');
 });
 
-$app->get('/' . $app['board']['base'] . 'search/{query}/{selection}/', function (Application $app, $query, $selection) {
+$app->get('/' . $app['board']['base'] . 'search/{query}/{selection}/', function (ASFApplication $app, $query, $selection) {
     return Route::get('search:get', $query, $selection);
 });
 
@@ -48,27 +49,27 @@ $app->post('/' . $app['board']['base'] . 'login/', function (Request $request) u
     return $app['auth']->login($request);
 });
 
-$app->get('/' . $app['board']['base'] . 'logout/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'logout/', function (ASFApplication $app) {
     return Route::get('auth:logout');
 });
 
-$app->get('/' . $app['board']['base'] . 'download/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'download/', function (ASFApplication $app) {
     return Route::get('download:index');
 });
 
-$app->get('/' . $app['board']['base'] . 'user/{username}/{page}/', function (Application $app, $username, $page) {
+$app->get('/' . $app['board']['base'] . 'user/{username}/{page}/', function (ASFApplication $app, $username, $page) {
     return Route::get('user:index', $username, $page);
 })->assert('page', '([0-9]+)');
 
-$app->get('/' . $app['board']['base'] . 'user/settings/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'user/settings/', function (ASFApplication $app) {
     return Route::get('user:settings');
 });
 
-$app->get('/' . $app['board']['base'] . 'user/{username}/', function (Application $app, $username) {
+$app->get('/' . $app['board']['base'] . 'user/{username}/', function (ASFApplication $app, $username) {
     return Route::get('user:index', $username);
 });
 
-$app->get('/' . $app['board']['base'] . 'user/confirmEmail/{code}/', function (Application $app, $code) {
+$app->get('/' . $app['board']['base'] . 'user/confirmEmail/{code}/', function (ASFApplication $app, $code) {
     return Route::get('user:confirmEmail', $code);
 });
 
@@ -91,7 +92,7 @@ $app->post('/' . $app['board']['base'] . 'partial/{name}/', function (Request $r
     return $app['twig']->render('Partials/' . $name . '.twig', $array);
 });
 
-$app->get('/' . $app['board']['base'] . 'partial/{name}/', function (Application $app, $name) {
+$app->get('/' . $app['board']['base'] . 'partial/{name}/', function (ASFApplication $app, $name) {
     return $app['twig']->render('Partials/' . $name . '.twig', array(
         'user' => $app['session']->get('user')
     ));
@@ -116,25 +117,25 @@ $app->post('/' . $app['board']['base'] . 'sidebar/{name}/', function (Request $r
     return $app['twig']->render('Sidebars/' . $name . '.twig', $array);
 });
 
-$app->get('/' . $app['board']['base'] . 'sidebar/{name}/', function (Application $app, $name) {
+$app->get('/' . $app['board']['base'] . 'sidebar/{name}/', function (ASFApplication $app, $name) {
     return $app['twig']->render('Sidebars/' . $name . '.twig', array(
         'user' => $app['session']->get('user')
     ));
 });
 
-$app->get('/' . $app['board']['base'] . '{name}-{id}/{page}/', function (Application $app, $name, $id, $page) {
+$app->get('/' . $app['board']['base'] . '{name}-{id}/{page}/', function (ASFApplication $app, $name, $id, $page) {
     return Route::get('forum:index', $name, $id, $page);
 })->assert('page', '([0-9]+)');
 
-$app->get('/' . $app['board']['base'] . '{name}-{id}/', function (Application $app, $name, $id) {
+$app->get('/' . $app['board']['base'] . '{name}-{id}/', function (ASFApplication $app, $name, $id) {
     return Route::get('forum:index', $name, $id);
 });
 
-$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_name}-{topic_id}/{page}/', function (Application $app, $topic_name, $topic_id, $page) {
+$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_name}-{topic_id}/{page}/', function (ASFApplication $app, $topic_name, $topic_id, $page) {
     return Route::get('topic:index', $topic_name, $topic_id, $page);
 })->assert('page', '([0-9]+)');
 
-$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_name}-{topic_id}/', function (Application $app, $topic_name, $topic_id) {
+$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_name}-{topic_id}/', function (ASFApplication $app, $topic_name, $topic_id) {
     return Route::get('topic:index', $topic_name, $topic_id);
 });
 
@@ -184,10 +185,10 @@ $app->post('/' . $app['board']['base'] . 'user/{method}/', function (Request $re
 
 // ADMIN ROUTES
 
-$app->get('/' . $app['board']['base'] . 'admin/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'admin/', function (ASFApplication $app) {
     return Route::get('admin/home:index');
 });
 
-$app->get('/' . $app['board']['base'] . 'admin/forums/', function (Application $app) {
+$app->get('/' . $app['board']['base'] . 'admin/forums/', function (ASFApplication $app) {
     return Route::get('admin/forums:index');
 });

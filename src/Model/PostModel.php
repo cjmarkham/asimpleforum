@@ -197,7 +197,7 @@ class PostModel extends BaseModel
 	        return $response;
 		}
 
-		if ($topic['locked'] && !\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
+		if ($topic['locked'] && !\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
 			$response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('TOPIC_LOCKED'));
@@ -213,7 +213,7 @@ class PostModel extends BaseModel
 	        return $response;
 		}
 
-		if (!\Permissions::hasPermission('CREATE_POST')) 
+		if (!\ASF\Permissions::hasPermission('CREATE_POST')) 
 		{
 			$response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('NO_PERMISSION'));

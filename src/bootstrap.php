@@ -1,12 +1,19 @@
 <?php
 
-use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$app = new Application();
+
+class ASFApplication extends Silex\Application
+{
+    use \ASF\LanguageTrait;
+}
+
+$app = new ASFApplication();
+
+
 // Set the environment
 $app['env'] = getenv('APP_ENV') ?: 'production';
 
@@ -38,7 +45,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 
-$truncate = new Twig_SimpleFunction('truncate', array('Utils', 'truncate'));
+$truncate = new Twig_SimpleFunction('truncate', array('ASF\Utils', 'truncate'));
 $config_function = new Twig_SimpleFunction('config', function ($section, $key = false) use ($app) {
     if (isset($app[$section]))
     {
@@ -56,7 +63,7 @@ $config_function = new Twig_SimpleFunction('config', function ($section, $key = 
 });
 
 $permissions_function = new Twig_SimpleFunction('hasPermission', function ($action) use ($app) {
-    return Permissions::hasPermission($action);
+    return ASF\Permissions::hasPermission($action);
 });
 
 $repeat_function = new Twig_SimpleFunction('repeat', function ($string, $length) {
@@ -125,9 +132,9 @@ $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
     'facebook.secret'     => 'f5bc907e9ac2bb6ea651fc9bfe89f7b8',
 ));*/
 
-Route::$app = $app;
-Message::$app = $app;
-Permissions::$app = $app;
+ASF\Route::$app = $app;
+ASF\Message::$app = $app;
+ASF\Permissions::$app = $app;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
@@ -178,7 +185,7 @@ $app['auth'] = $app->share(function() use ($app) {
 });
 
 $app['language'] = $app->share(function() use ($app) {
-    $model = new Language($app);
+    $model = new ASF\Language($app);
     return $model;
 });
 

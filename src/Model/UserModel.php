@@ -173,7 +173,7 @@ class UserModel extends BaseModel
 
 	public function find_comments (Request $request)
 	{
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
 
 		$user_id = (int) $request->get('user_id');
 		$page = (int) $request->get('page');
@@ -251,7 +251,7 @@ class UserModel extends BaseModel
 
 		$time = time();
 
-		if (!\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
+		if (!\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
 			$lastAdded = $this->app['db']->fetchColumn('SELECT added FROM profile_comments WHERE profile=? AND author=? ORDER BY added DESC LIMIT 1', array(
 				$profile_id,
@@ -279,7 +279,7 @@ class UserModel extends BaseModel
 			'added' => $time
 		));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
 		
 		$this->app['cache']->delete_group('profile-comments-' . $profile_id);
 
@@ -324,7 +324,7 @@ class UserModel extends BaseModel
 			return $response;
 		}
 
-		if ($user['id'] != $comment['author'] && !\Permissions::hasPermission('EDIT_POSTS'))
+		if ($user['id'] != $comment['author'] && !\ASF\Permissions::hasPermission('EDIT_POSTS'))
 		{
 			$response->setStatusCode(500);
 			$response->setContent($this->app['language']->phrase('NO_PERMISSION'));
@@ -335,7 +335,7 @@ class UserModel extends BaseModel
 			'deleted' => 1
 		), array('id' => $comment_id));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
 
 		$this->app['cache']->delete('profile-comment-' . $comment_id);
 		$this->app['cache']->delete_group('profile-comments-' . $comment['profile']);
@@ -376,7 +376,7 @@ class UserModel extends BaseModel
 			'added' => time()
 		));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
 		
 		$cache_key = 'profile-comment-' . $comment_id . '-likes';
 		$this->app['cache']->delete($cache_key);
