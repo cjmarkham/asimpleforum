@@ -7,9 +7,3 @@ php:
 
 install:
   - composer install
-  - pip install coveralls
-
-script:
-    - nosetests --with-coverage --cover-package=asimpleforum
-after_success:
-    - coveralls
