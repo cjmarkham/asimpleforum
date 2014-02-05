@@ -16,6 +16,10 @@ A Simple Forum uses GruntJS to detect errors within Javascript files. Simply ins
 
     npm install -g grunt-cli
     
+Or you can cd into the root directory of the forum and run
+
+        npm install
+    
 Now you can run the watch task from the command line to automatically watch JS files for changes.
 
     grunt watch
