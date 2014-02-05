@@ -124,6 +124,7 @@ class PostModel extends BaseModel
 
 		foreach ($posts['data'] as $key => $post)
 		{
+			$posts['data'][$key]['attachments'] = array();
 			$posts['data'][$key]['likes'] = array();
 
 			$cache_key = 'post-' . $post['id'] . '-likes';
@@ -141,6 +142,29 @@ class PostModel extends BaseModel
 			foreach ($likes['data'] as $like)
 			{
 				$posts['data'][$key]['likes'][] = $like['username'];
+			}
+
+			// Get all of this posts attachments
+			$cache_key = 'post-' . $post['id'] . '-attachments';
+
+			$attachments = $this->app['cache']->get($cache_key, function () use ($key, $post) {
+				$data = array(
+					'data' => $this->app['db']->fetchAll('SELECT name, file_name, size, mime, added FROM attachments WHERE post_id=? ORDER BY added ASC', array(
+						$post['id']
+					))
+				);
+
+				return $data;
+			});
+
+			foreach ($attachments['data'] as $k => $attachment)
+			{
+				$attachments['data'][$k]['extension'] = pathinfo($attachment['name'], PATHINFO_EXTENSION);
+			}
+
+			if ($attachments['data'])
+			{
+				$posts['data'][$key]['attachments'] = $attachments['data'];
 			}
 			
 		}
@@ -197,7 +221,42 @@ class PostModel extends BaseModel
 		}
 
 		$name = $request->get('name');
-		$content = $request->get('content');
+		$content = $request->get('reply');
+
+		$attachments = $request->files->get('attachments');
+
+		if ($attachments[0] != null)
+		{
+			if (count($attachments) > 5)
+			{
+				$response->setStatusCode(400);
+				$response->setContent($this->app['language']->phrase('TOO_MANY_ATTACHMENTS'));
+				return $response;
+			}
+
+			foreach ($attachments as $attachment)
+			{
+				$attachment_name = $attachment->getClientOriginalName();
+				$size = $attachment->getClientSize();
+				$mime = $attachment->getClientMimeType();
+
+				if ($size >= $this->app['files']['maxSize'])
+				{
+					$response->setStatusCode(400);
+					$response->setContent($this->app['language']->phrase('FILE_TOO_BIG', array($attachment_name, ($this->app['files']['maxSize'] / 1024))));
+					return $response;
+				}
+
+				$ext = pathinfo($attachment_name, PATHINFO_EXTENSION);
+
+				if (!in_array($ext, $this->app['files']['types']))
+				{
+					$response->setStatusCode(400);
+					$response->setContent($this->app['language']->phrase('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))));
+					return $response;
+				}
+			}
+		}
 
 		$constraints = new Assert\Collection(array(
 			'name' => array(
@@ -225,7 +284,7 @@ class PostModel extends BaseModel
 		if (count($errors) > 0)
 		{
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase(\Message::error($errors[0]->getMessage())));
+	        $response->setContent($this->app['language']->phrase($errors[0]->getMessage()));
 	        return $response;
 		}
 		
@@ -271,10 +330,47 @@ class PostModel extends BaseModel
 					'lastPostId' => $last['id']
 				), array('id' => $last['forum']));
 
+				// Upload attachments
+				if ($attachments)
+				{
+					foreach ($attachments as $attachment)
+					{
+						$attachment_name = $attachment->getClientOriginalName();
+						$file_name = time() . '-' . $attachment_name;
+
+						try
+						{
+							$attachment->move($upload_dir, $file_name);
+						}
+						catch (\Exception $e)
+						{
+							$response->setStatusCode(500);
+							$response->setContent($this->app['language']->phrase('COULDNT_UPLOAD_FILE', array($attachment_name)));
+							return $response;
+						}
+
+						$this->app['db']->insert('attachments', array(
+							'post_id' => $last['id'],
+							'name' => $attachment_name,
+							'file_name' => $file_name,
+							'size' => $attachment->getClientSize(),
+							'mime' => $attachment->getClientMimeType(),
+							'added' => time()
+						));
+
+						$files[] = array(
+							'name' => $attachment_name,
+							'size' => $attachment->getClientSize(),
+							'mime' => $attachment->getClientMimeType()
+						);
+					}
+				}
+
 				$response->setContent(json_encode(array(
 					'id' => $last['id'],
 					'content' => $content,
-					'updated' => true
+					'updated' => true,
+					'attachments' => json_encode($files)
 				)));
 				return $response;
 			}
@@ -298,6 +394,39 @@ class PostModel extends BaseModel
 
 		$post_id = $this->app['db']->lastInsertId();
 
+		// Upload attachments
+		if ($attachments[0] != null)
+		{
+			$upload_dir = dirname(dirname(__DIR__)) . '/public/uploads/attachments';
+
+			foreach ($attachments as $attachment)
+			{
+				$attachment_name = $attachment->getClientOriginalName();
+				$file_name = time() . '-' . $attachment_name;
+
+				$attachment->move($upload_dir, $file_name);
+
+				if ($attachment->getError())
+				{
+					// Couldnt upload attachment, delete post
+					$this->app['db']->delete('posts', array('id' => $post_id));
+					
+					$response->setStatusCode(500);
+					$response->setContent($this->app['language']->phrase('COULDNT_UPLOAD_FILE', array($attachment_name)));
+					return $response;
+				}
+
+				$this->app['db']->insert('attachments', array(
+					'post_id' => $post_id,
+					'name' => $attachment_name,
+					'file_name' => $file_name,
+					'size' => $attachment->getClientSize(),
+					'mime' => $attachment->getClientMimeType(),
+					'added' => time()
+				));
+			}
+		}
+
 		$this->app['db']->update('topics', array(
 			'replies' => $topic['replies'] + 1,
 			'updated' => $time,
@@ -317,12 +446,12 @@ class PostModel extends BaseModel
 			$topic_id
 		));
 
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'posts');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'posts');
 		$this->app['cache']->delete_group('topic-post-count-' . $topic_id);
 		$this->app['cache']->delete_group('topic-posts-' . $topic_id);
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'forums');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'forums');
 		$this->app['cache']->delete_group('forum-' . $topic['forum']);
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'topics');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'topics');
 		$this->app['cache']->delete('topic-' . $topic_id);
 
 		$page = (int) ceil($post_count / $this->app['board']['postsPerPage']);

@@ -25,7 +25,7 @@
 					</div>
 					<div class="pull-right post-tools">
 						{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}
-							<a data-postId="{{ post.id }}" javascript:void(0)" data-event="click" data-action="editPost">
+							<a data-postId="{{ post.id }}" href="javascript:void(0)" data-event="click" data-action="editPost">
 								<em class="fa fa-pencil"></em >
 							</a>
 						{% endif %}
@@ -57,6 +57,30 @@
 				{% endif %}
 				{{ include ('Partials/postLikes.twig') }}
 			</div>
+			{% if post.attachments is defined %}
+				<div class="post-attachments">
+					<h5>Attachments</h5>
+					{% for attachment in post.attachments %}
+						
+						{% set isImage = false %}
+						{% if attachment.extension in ["png","jpg","jpeg","bmp","gif"] %}
+							{% set isImage = true %}
+						{% endif %}
+
+						<div class="post-attachment {% if isImage %}inline{% endif %}">
+
+							{% if isImage %}
+								<img data-title="{{ attachment.name }} - Uploaded on {{ attachment.added|date('jS M y, H:i') }}" src="/{{ config('board', 'base') }}uploads/attachments/{{ attachment.file_name }}" alt="{{ attachment.name }}" title="{{ attachment.name }}" />
+							{% else %}
+								<a href="/{{ config('board', 'base') }}uploads/attachments/{{ attachment.file_name }}" target="_blank">
+									{{ attachment.name }}
+								</a>
+							{% endif %}
+
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
 		</div>
 	</div>
 </div>

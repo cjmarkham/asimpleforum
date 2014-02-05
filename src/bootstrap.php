@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
+// Set the environment
 $app['env'] = getenv('APP_ENV') ?: 'production';
 
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());

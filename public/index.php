@@ -6,18 +6,25 @@ use Symfony\Component\HttpFoundation\Request;
 require '../src/bootstrap.php';
 
 $app->before(function (Request $request) use ($app) {
+
+    // Get the logged in user
     $user = $app['session']->get('user');
 
+    // Update the sessions
     $app['sessions']->update();
     $sessions = $app['sessions']->get();
 
+    // Get the recent topics
     $recent_topics = $app['topic']->find_recent(4);
 
+    // Used for twig globals
     $config = array(
         'default' => $app['defaults'],          
-        'board' => $app['board']            
+        'board' => $app['board'],
+        'files' => $app['files']            
     );
 
+    // Assign some global template variables
     $app['twig']->addGlobal('user', $user);
     $app['twig']->addGlobal('config', $config);
     $app['twig']->addGlobal('recent_topics', $recent_topics);
@@ -27,14 +34,18 @@ $app->before(function (Request $request) use ($app) {
 
 $app->finish(function (Request $request) use ($app, $logger) {
     
+    // Only run if not ajax request
     if (!$request->isXMLHttpRequest())
     {
         $time = 0;
+
+        // Counts all of the queries for debugging
         if (count($logger->queries))
         {
             foreach ($logger->queries as $query)
             {
                $time += $query['executionMS'];
+
                $sql = preg_replace('/([A-Z]{2,})/', '<strong>$1</strong>', $query['sql']);
                $queries[] = preg_replace('/\?/', '<strong style="color:red">?</strong>', $sql);
             }

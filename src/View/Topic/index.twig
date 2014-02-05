@@ -3,7 +3,7 @@
 {% block scripts %}
 	{{ parent() }}
 
-	<script src="/ckeditor/ckeditor.js"></script>
+	<script src="/{{ config.board.base }}ckeditor/ckeditor.js"></script>
 
 	<script>
 	$(function () {
@@ -117,21 +117,47 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<form method="post" action="javascript:void(0)" data-event="submit" data-action="addQuickReply">
+					<form enctype="mulltipart/form-data" id="quick-reply-form" method="post" class="form-horizontal" action="javascript:void(0)" data-event="submit" data-action="addQuickReply">
 						<input type="hidden" name="topicId" value="{{ topic.id }}" />
-						<input type="text" name="name" class="form-control" value="RE: {{ topic.name }}" />
-						<br />
-						<textarea class="form-control" name="reply" id="reply" placeholder="Add your reply"></textarea>
-						<br />
-						<button class="btn btn-orange">
-							Submit Quick Reply
-						</button>
-						<a href="javascript:void(0)" data-event="click" data-action="hideQuickReply" class="btn btn-orange">
-							Cancel
-						</a>
+						
+						<div class="form-group">
+							<div class="col-md-3">
+								Title
+							</div>
+							<div class="col-sm-9">
+								<input type="text" name="name" class="form-control" value="RE: {{ topic.name }}" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3">
+								Body
+							</div>
+							<div class="col-sm-9">
+								<textarea class="form-control" name="reply" id="reply" placeholder="Add your reply"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3">
+								Attachments
+							</div>
+							<div class="col-sm-9" id="attachments">
+								<input type="file" multiple name="attachments[]" />
+
+								<div id="attachment-list"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-3 col-sm-9">
+								<button class="btn btn-orange">
+									Submit Quick Reply
+								</button>
+								<a href="javascript:void(0)" data-event="click" data-action="hideQuickReply" class="btn btn-orange">
+									Cancel
+								</a>
+							</div>
+						</div>
 
 						<script>
-
 							CKEDITOR.replace('reply');
 						</script>
 					</form>

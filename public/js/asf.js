@@ -5,6 +5,10 @@ var asf = {
 
 	user: null,
 
+	forms: {
+		data: null
+	},
+
 	forums: {
 
 		loadMoreTopics: function (forumId) {
@@ -211,10 +215,15 @@ var asf = {
 		var name = node.find('input[name="name"]').val();
 		var topicId = node.find('input[name="topicId"]').val();
 
-		$.post('/' + asf.config.board.base + 'post/add/', {
-			topicId: topicId,
-			name: name,
-			content: content
+		var form = document.getElementById('quick-reply-form');
+		var formData = new FormData(form);
+
+		$.ajax({
+			url: '/' + asf.config.board.base + 'post/add/',
+			data: formData,
+			processData: false,
+			contentType: false,
+			type: 'POST'
 		}).done(function (response) {
 
 			response = JSON.parse(response);
@@ -250,9 +259,9 @@ var asf = {
 						noPosts.remove();
 					}
 
-					$(document.body).animate({
+					/*$(document.body).animate({
 						scrollTop: $(window).height()
-					});
+					});*/
 				});
 			}
 			

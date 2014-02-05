@@ -18,5 +18,8 @@
 	"COMMENT_MIN_LENGTH": "Comments must be at least %d characters long.",
 	"TOPIC_LOCKED": "This topic is locked and you do not have permission to post in it.",
 	
-	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later."
+	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later.",
+
+	"FILE_TOO_BIG": "The file %s is too big.\n\nThe max file size is %s kb",
+	"INVALID_FILE_EXT": "The file %s has an invalid extension.\n\nAllowed extensions are %s."
 }

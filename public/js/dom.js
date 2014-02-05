@@ -4,6 +4,55 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	var formDataCheck = window.FormData;
+
+	// Attachment selection for quick reply
+	/*$('#attachments input').on('change', function () {
+		var files = $(this)[0].files;
+
+		$('#attachment-list').empty();
+
+		for (var i = 0; i < files.length; i++) {
+			var fileReader = new FileReader();
+			var file = files[i];
+			fileReader.readAsDataURL(file);
+			
+			var container = $('<div />');
+			var p = $('<p />').text(file.name).addClass('inline');
+			var a = $('<a />').text('Place inline').addClass('inline btn btn-orange btn-xs');
+
+			container.append(p, a);
+
+			a.on('click', function () {
+				var editor = CKEDITOR.instances.reply;
+
+				editor.insertElement(CKEDITOR.dom.element.createFromHtml('<img src="' + fileReader.result + '" alt="" title="" />'));
+
+			});	
+
+			$('#attachment-list').append(container);
+		}
+
+	});*/
+
+	// Modal for attachment images
+	$(document.body).on('click', '.post-attachment img', function () {
+		var modal = $('#image-modal');
+
+		// Set a new width for the modal
+		// based on image dimensions
+		modal.find('.modal-dialog').css({
+			width: $(this).width() + 120
+		});
+
+		modal.find('img').attr('src', $(this).attr('src'));
+
+		modal.find('#image-attachment-title').text($(this).attr('data-title'));
+		modal.modal({
+			show: true
+		});
+	});
+
 	// Quick search typeahead
 	$('.typeahead').typeahead({
 		minLength : 3,
@@ -229,6 +278,7 @@ $(function () {
 				}).animate({
 					width: '100%',
 					left: 0,
+					zIndex: 10,
 					marginLeft: 0
 				}, 100);
 			}
@@ -249,6 +299,7 @@ $(function () {
 					position: 'relative',
 					left: 0,
 					margin: '0 auto',
+					zIndex: 1,
 					'border-radius': '5px 5px 0 0'
 				}).animate({
 					width: '1170px'
