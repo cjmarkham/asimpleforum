@@ -9,6 +9,17 @@ Coding Guidelines
 
 [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 
+Testing
+=
+
+A Simple Forum uses GruntJS to detect errors within Javascript files. Simply install Grunt through NPM using:
+
+    npm install -g grunt-cli
+    
+Now you can run the watch task from the command line to automatically watch JS files for changes.
+
+    grunt watch
+
 Contribution
 =
 
