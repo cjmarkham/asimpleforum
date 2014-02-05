@@ -9,8 +9,17 @@ class Mailer
 
 	public static function setTemplate ($template, $params = array())
 	{
-		self::$template = file_get_contents(dirname(__DIR__) . '/public/emails/' . $template . '.html');
+		$file = dirname(__DIR__) . '/public/emails/' . $template . '.html';
+
+		if (!file_exists($file))
+		{
+			return false;
+		}
+
+		self::$template = file_get_contents($file);
 		self::$params = $params;
+
+		return true;
 	}
 
 	public static function send ($to, $from, $subject)

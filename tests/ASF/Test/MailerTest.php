@@ -6,17 +6,16 @@ class MailerTest extends \PHPUnit_Framework_TestCase
 {
 	public function testSend()
 	{	
-		\Mailer::setTemplate('test');
-		$send = \Mailer::send('doddsey65@hotmail.com', 'test@asimpleforum.com', 'Test Email');
-
-		$this->assertTrue($send);
+		$set_template = \ASF\Mailer::setTemplate('foo');
+		
+		$this->assertFalse($set_template);
 	}
 
 	public function testCompile()
 	{
-		\Mailer::setTemplate('test', array('name' => 'Carl'));
-		\Mailer::compile();
+		\ASF\Mailer::setTemplate('test', array('name' => 'Carl'));
+		\ASF\Mailer::compile();
 
-		$this->assertEquals(\Mailer::$template, 'Carl');
+		$this->assertEquals(\ASF\Mailer::$template, 'Carl');
 	}
 }
