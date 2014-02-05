@@ -9,7 +9,7 @@ class Mailer
 
 	public static function setTemplate ($template, $params = array())
 	{
-		$file = dirname(__DIR__) . '/public/emails/' . $template . '.html';
+		$file = __DIR__ . '/../View/Emails/' . $template . '.html';
 
 		if (!file_exists($file))
 		{
@@ -24,6 +24,11 @@ class Mailer
 
 	public static function send ($to, $from, $subject)
 	{
+		if (self::$template === null) 
+		{
+			return false;
+		}
+
 		self::compile();
 
 		$headers = "From: " . $from . "\r\n";
