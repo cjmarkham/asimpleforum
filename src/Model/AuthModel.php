@@ -157,14 +157,14 @@ class AuthModel
 
 		if ($this->app['board']['confirmEmail'])
 		{
-			\Mailer::setTemplate('emailConfirmation', array(
+			\ASF\Mailer::setTemplate('emailConfirmation', array(
 				'username' => $data['username'],
 				'boardTitle' => $this->app['board']['name'],
 				'boardUrl'   => $this->app['board']['url'],
 				'confirmCode' => base64_encode($data['email'] . '-' . $user_id)
 			));
 
-			\Mailer::send($data['email'], $this->app['email']['noReply'], 'Email confirmation');
+			\ASF\Mailer::send($data['email'], $this->app['email']['noReply'], 'Email confirmation');
 		
 			\ASF\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
 		}
