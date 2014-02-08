@@ -20,11 +20,11 @@ $app['env'] = getenv('APP_ENV') ?: 'production';
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
 $root = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'));
-$root = $root[0];
+$root = $root[0] . '/';
 
 if (!file_exists(__DIR__ . '/../config/' . $app['env'] . '.json'))
 {
-    header('Location: /' . $root . '/install/');
+    header('Location: /' . $root . 'install/');
     exit;
 }
 
