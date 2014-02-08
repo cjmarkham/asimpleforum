@@ -70,5 +70,10 @@
 		"forums": ["userbox", "recentTopics"],
 		"search": ["userbox", "recentTopics"],
 		"new-topics": ["userbox"]
-	}]
+	}],
+
+	"files": {
+		"types": ["png","jpg","jpeg","bmp","gif","rar","zip","tar","tar.gz"],
+		"maxSize": "1048576"
+	}
 }
