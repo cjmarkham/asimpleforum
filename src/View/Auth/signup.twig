@@ -8,7 +8,7 @@
 		</header>
 
 		<div class="content">
-			<form method="post" action="/signup">
+			<form method="post" action="/signup/">
 				<div class="form-group">
 					<label>Username</label>
 					<input type="text" name="username" class="form-control" placeholder="Username" {% if data.username is defined %}value="{{ data.username }}"{% endif %} />
