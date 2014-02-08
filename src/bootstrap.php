@@ -1,10 +1,11 @@
 <?php
 
+date_default_timezone_set("Europe/London");
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
 
 class ASFApplication extends Silex\Application
 {
@@ -12,7 +13,6 @@ class ASFApplication extends Silex\Application
 }
 
 $app = new ASFApplication();
-
 
 // Set the environment
 $app['env'] = getenv('APP_ENV') ?: 'production';
