@@ -21,7 +21,7 @@ class AuthModel
 
 		if (!$user_id || !$email)
 		{
-			\Message::error('UNKNOWN_ERROR');
+			\ASF\Message::error('UNKNOWN_ERROR');
 			return false;
 		}
 
@@ -32,13 +32,13 @@ class AuthModel
 
 		if (!$check)
 		{
-			\Message::error('NO_USER');
+			\ASF\Message::error('NO_USER');
 			return false;
 		}
 
 		if ($check['approved'] == 1)
 		{
-			\Message::error('ALREADY_CONFIRMED_EMAIL');
+			\ASF\Message::error('ALREADY_CONFIRMED_EMAIL');
 			return false;
 		}
 
@@ -50,7 +50,7 @@ class AuthModel
 		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'users');
 		$this->app['cache']->delete('user-' . $check['username']);
 
-		\Message::alert('EMAIL_CONFIRMED');
+		\ASF\Message::alert('EMAIL_CONFIRMED');
 		return true;
 	}
 
@@ -58,7 +58,7 @@ class AuthModel
 	{
 		if (empty($data))
 		{
-			\Message::error('UNKNOWN_ERROR');
+			\ASF\Message::error('UNKNOWN_ERROR');
 			return false;
 		}
 
@@ -99,13 +99,13 @@ class AuthModel
 
 		if (count($errors) > 0)
 		{
-			\Message::error($errors[0]->getMessage());
+			\ASF\Message::error($errors[0]->getMessage());
 			return false;
 		}
 
 		if ($data['password'] !== $data['confirm'])
 		{
-			\Message::error('PASSWORDS_DONT_MATCH');
+			\ASF\Message::error('PASSWORDS_DONT_MATCH');
 			return false;
 		}
 
@@ -115,7 +115,7 @@ class AuthModel
 
 		if ($check_username)
 		{
-			\Message::error('USERNAME_TAKEN');
+			\ASF\Message::error('USERNAME_TAKEN');
 			return false;
 		}
 
@@ -125,7 +125,7 @@ class AuthModel
 
 		if ($check_email)
 		{
-			\Message::error('EMAIL_REGISTERED');
+			\ASF\Message::error('EMAIL_REGISTERED');
 			return false;
 		}
 
@@ -145,7 +145,7 @@ class AuthModel
 
 		if (!$insert)
 		{
-			\Message::error('UNKNOWN_ERROR');
+			\ASF\Message::error('UNKNOWN_ERROR');
 			return false;
 		}
 
@@ -166,11 +166,11 @@ class AuthModel
 
 			\Mailer::send($data['email'], $this->app['email']['noReply'], 'Email confirmation');
 		
-			\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
+			\ASF\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
 		}
 		else
 		{
-			\Message::alert('Your account has been created and you can now log in.');
+			\ASF\Message::alert('Your account has been created and you can now log in.');
 		}
 
 		return true;
