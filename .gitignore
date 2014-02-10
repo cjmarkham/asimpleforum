@@ -5,3 +5,4 @@ Capfile
 node_modules
 composer.lock
 public/uploads/*
+phpdoc
