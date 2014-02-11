@@ -133,7 +133,13 @@ class ForumModel
 		return $forum['data'];
 	}
 
-	public function findAll ($root_data = false)
+	/**
+	 * New method for finding forums and siblings
+	 * @todo  Remove old method and fully intergrate this on
+	 * @param  boolean $root_data [description]
+	 * @return [type]             [description]
+	 */
+	public function newFindAll ($root_data = false)
 	{
 		$parent_id = 0;
 		$forums = array();

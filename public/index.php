@@ -15,7 +15,7 @@ $app->before(function (Request $request) use ($app) {
     $sessions = $app['sessions']->get();
 
     // Get the recent topics
-    $recent_topics = $app['topic']->find_recent(4);
+    $recent_topics = $app['topic']->findRecent(4);
 
     // Used for twig globals
     $config = array(

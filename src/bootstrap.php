@@ -137,7 +137,6 @@ $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 ));*/
 
 ASF\Route::$app = $app;
-ASF\Message::$app = $app;
 ASF\Permissions::$app = $app;
 
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
