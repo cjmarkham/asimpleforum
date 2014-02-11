@@ -55,7 +55,7 @@ class SearchController extends Controller
 	public function get ($query, $selection)
 	{
 		// Check if topic and redirect
-		$topic = $this->app['topic']->find_by_name($query);
+		$topic = $this->app['topic']->findByName($query);
 
 		if ($topic)
 		{

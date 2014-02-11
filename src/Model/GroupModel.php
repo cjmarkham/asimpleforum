@@ -22,7 +22,7 @@ class GroupModel extends BaseModel
 		$this->app = $app;
 	}
 
-	public function find_by_id ($id)
+	public function findById ($id)
 	{
 		$id = (int) $id;
 

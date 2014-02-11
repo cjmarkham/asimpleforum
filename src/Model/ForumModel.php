@@ -22,7 +22,7 @@ class ForumModel
 	{
 		$parent = (int) $request->get('parent');
 
-		$parent = $this->find_by_id($parent);
+		$parent = $this->findById($parent);
 
 		if (!$parent)
 		{
@@ -90,7 +90,7 @@ class ForumModel
 			return false;
 		}
 
-		$forum = $this->find_by_id($forum_id);
+		$forum = $this->findById($forum_id);
 
 		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`-2 WHERE `right`>?', array(
 			$forum['left']
@@ -108,7 +108,7 @@ class ForumModel
 		return true;
 	}
 
-	public function find_by_id ($id)
+	public function findById ($id)
 	{
 		$id = (int) $id;
 
@@ -216,7 +216,7 @@ class ForumModel
 		return $parents;
 	}
 
-	public function find_all ()
+	public function findAll ()
 	{
 		$cache_key = 'forums.all';
 

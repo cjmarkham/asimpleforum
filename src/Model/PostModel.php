@@ -55,7 +55,7 @@ class PostModel extends BaseModel
 		$this->collection = $this->app['cache']->setCollection($app['database']['name'], 'posts');
 	}
 
-	public function find_by_user (Request $request)
+	public function findByUser (Request $request)
 	{
 		$user_id = (int) $request->get('user_id');
 		$page = (int) $request->get('page');
@@ -188,7 +188,7 @@ class PostModel extends BaseModel
 	        return $response;
 		}
 
-		$topic = $this->app['topic']->find_by_id($topic_id);
+		$topic = $this->app['topic']->findById($topic_id);
 
 		if (!$topic)
 		{
@@ -473,7 +473,7 @@ class PostModel extends BaseModel
 	 * @param  Request $request The request object
 	 * @return string           The post content
 	 */
-	public function get_first (Request $request)
+	public function getFirst (Request $request)
 	{
 		$topic_id = (int) $request->get('topicId');
 
@@ -529,7 +529,7 @@ class PostModel extends BaseModel
 	 * @param  Request $request The request object
 	 * @return string           json encoded post data
 	 */
-	public function find_by_id (Request $request)
+	public function findById (Request $request)
 	{
 		$id = (int) $request->get('id');
 

@@ -19,7 +19,7 @@ class ForumController extends Controller
 			$this->app->redirect('/');
 		}
 
-		$forum = $this->app['forum']->find_by_id($forum_id);
+		$forum = $this->app['forum']->findById($forum_id);
 
 		if (!$forum)
 		{

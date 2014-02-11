@@ -24,7 +24,7 @@ class UserModel extends BaseModel
 		$this->app['cache']->collection = $this->app['cache']->setCollection($app['database']['name'], 'posts');
 	}
 
-	public function find_by_username ($username)
+	public function findByUsername ($username)
 	{
 		if (!$username)
 		{
@@ -56,7 +56,7 @@ class UserModel extends BaseModel
 		return $user;
 	}
 
-	public function check_following($user_id, $following_id)
+	public function checkFollowing($user_id, $following_id)
 	{
 		$user_id = (int) $user_id;
 		$following_id = (int) $following_id;
@@ -155,7 +155,7 @@ class UserModel extends BaseModel
 		return true;
 	}
 
-	public function update_views (Request $request) 
+	public function updateViews (Request $request) 
 	{
 		$user_id = (int) $request->get('userId');
 
@@ -171,7 +171,7 @@ class UserModel extends BaseModel
 		return true;
 	}
 
-	public function find_comments (Request $request)
+	public function findComments (Request $request)
 	{
 		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
 

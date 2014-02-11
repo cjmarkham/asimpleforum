@@ -50,7 +50,7 @@ class TopicModel extends BaseModel
 		$this->collection = $this->app['cache']->setCollection($app['database']['name'], 'topics');
 	}
 
-	public function find_by_id ($id) 
+	public function findById ($id) 
 	{
 		$id = (int) $id;
 
@@ -74,7 +74,7 @@ class TopicModel extends BaseModel
 		return $topic['data'];
 	}
 
-	public function find_by_name ($name)
+	public function findByName ($name)
 	{
 		if (!$name)
 		{
@@ -177,7 +177,7 @@ class TopicModel extends BaseModel
 		return json_encode($topics);
 	}
 
-	public function update_views (Request $request)
+	public function updateViews (Request $request)
 	{
 		$id = (int) $request->get('id');
 
@@ -186,7 +186,7 @@ class TopicModel extends BaseModel
 			return false;
 		}
 
-		$topic = $this->find_by_id($id);
+		$topic = $this->findById($id);
 
 		if (!$topic)
 		{
@@ -209,7 +209,7 @@ class TopicModel extends BaseModel
 		return true;
 	}
 
-	public function find_recent($amount = 4)
+	public function findRecent($amount = 4)
 	{
 		$amount = (int) $amount;
 
@@ -285,7 +285,7 @@ class TopicModel extends BaseModel
 		return $topics['data'];
 	}
 
-	public function add_topic (Request $request)
+	public function addTopic (Request $request)
 	{
 		$user = $this->app['session']->get('user');
 		$response = new Response;
@@ -313,7 +313,7 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
-		$forum = $this->app['forum']->find_by_id($forum_id);
+		$forum = $this->app['forum']->findById($forum_id);
 
 		if (!$forum)
 		{

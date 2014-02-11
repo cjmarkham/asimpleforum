@@ -213,7 +213,7 @@ class AuthModel
 			return $response;
 		}
 
-		$user['group'] = $this->app['group']->find_by_id($user['perm_group']);
+		$user['group'] = $this->app['group']->findById($user['perm_group']);
 
 		$this->app['session']->set('user', $user);
 

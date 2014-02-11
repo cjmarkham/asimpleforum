@@ -12,7 +12,7 @@ class UserController extends Controller
 
 	public function index($username)
 	{
-		$user = $this->app['user']->find_by_username($username);
+		$user = $this->app['user']->findByUsername($username);
 
 		if (!$user)
 		{
@@ -24,7 +24,7 @@ class UserController extends Controller
 
 		if ($loggedInUser)
 		{
-			$following = $this->app['user']->check_following($loggedInUser['id'], $user['data']['id']);
+			$following = $this->app['user']->checkFollowing($loggedInUser['id'], $user['data']['id']);
 		}
 
 		return $this->app['twig']->render('User/index.twig', array(
@@ -47,7 +47,7 @@ class UserController extends Controller
 		}
 
 		// reset with profile information
-		$user = $this->app['user']->find_by_username($user['username']);
+		$user = $this->app['user']->findByUsername($user['username']);
 
 		return $this->app['twig']->render('User/settings.twig', array(
 			'title' 			=> 'Settings',

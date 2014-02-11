@@ -19,14 +19,14 @@ class TopicController extends Controller
 			$this->app->redirect('/');
 		}
 
-		$topic = $this->app['topic']->find_by_id($topic_id);
+		$topic = $this->app['topic']->findById($topic_id);
 
 		if (!$topic)
 		{
 			$this->app->redirect('/');
 		}
 
-		$forum = $this->app['forum']->find_by_id($topic['forum']);
+		$forum = $this->app['forum']->findById($topic['forum']);
 
 		return $this->app['twig']->render('Topic/index.twig', array(
 			'title' 			=> $topic['name'],
@@ -39,7 +39,7 @@ class TopicController extends Controller
 
 	public function newest ()
 	{
-		$topics = $this->app['topic']->find_recent(10);
+		$topics = $this->app['topic']->findRecent(10);
 
 		return $this->app['twig']->render('Topic/newest.twig', array(
 			'title' 			=> 'Newest Topics',

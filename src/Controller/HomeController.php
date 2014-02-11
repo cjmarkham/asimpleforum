@@ -12,7 +12,7 @@ class HomeController extends Controller
 
 	public function index()
 	{
-		$forums = $this->app['forum']->find_all();
+		$forums = $this->app['forum']->findAll();
 
 		return $this->app['twig']->render('Home/index.twig', array(
 			'title' 			=> 'Home',

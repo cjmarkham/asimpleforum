@@ -334,7 +334,7 @@ var asf = {
 		var formData = new FormData(form);
 
 		$.ajax({
-			url: '/' + asf.config.board.base + 'topic/add_topic/',
+			url: '/' + asf.config.board.base + 'topic/addTopic/',
 			data: formData,
 			processData: false,
 			contentType: false,
@@ -406,7 +406,7 @@ var asf = {
 
 		var postId = node.attr('data-postId');
 
-		$.post('/' + asf.config.board.base + 'post/find_by_id/', {
+		$.post('/' + asf.config.board.base + 'post/findById/', {
 			id: postId
 		}).done(function (response) {
 			response = JSON.parse(response);
@@ -443,7 +443,7 @@ var asf = {
 		
 		var self = this;
 
-		$.post('/' + asf.config.board.base + 'post/find_by_id/', {
+		$.post('/' + asf.config.board.base + 'post/findById/', {
 			id: postId
 		}).done(function (response) {
 			response = JSON.parse(response);
@@ -558,7 +558,7 @@ var asf = {
 		},
 
 		updateViews: function (profileId) {
-			$.post('/' + asf.config.board.base + 'user/update_views/', {
+			$.post('/' + asf.config.board.base + 'user/updateViews/', {
 				userId: profileId
 			});
 		},
@@ -667,7 +667,7 @@ var asf = {
 
 			var container = $(params.container);
 
-			$.post('/' + asf.config.board.base + 'post/find_by_user/', {
+			$.post('/' + asf.config.board.base + 'post/findByUser/', {
 				user_id: params.user_id,
 				page: page
 			}).done(function (response) {
@@ -705,7 +705,7 @@ var asf = {
 
 			var container = $(params.container);
 
-			$.post('/' + asf.config.board.base + 'user/find_comments/', {
+			$.post('/' + asf.config.board.base + 'user/findComments/', {
 				user_id: params.user_id,
 				page: page
 			}).done(function (response) {

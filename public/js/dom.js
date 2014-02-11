@@ -215,7 +215,7 @@ $(function () {
 				self.popover('show');
 			} else {
 
-				$.post('/' + asf.config.board.base + 'post/get_first/', {
+				$.post('/' + asf.config.board.base + 'post/getFirst/', {
 					topicId: topicId
 				}, function (response) {
 

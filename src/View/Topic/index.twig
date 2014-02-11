@@ -8,7 +8,7 @@
 	<script>
 	$(function () {
 		{% if user and topic.poster != user.id or not user %}
-			$.post('/' + asf.config.board.base + 'topic/update_views/', {
+			$.post('/' + asf.config.board.base + 'topic/updateViews/', {
 				id: '{{ topic.id }}',
 			});
 		{% endif %}
