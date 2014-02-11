@@ -9,7 +9,8 @@ $app->before(function (Request $request) use ($app) {
 
     // Get the logged in user
     $user = $app['session']->get('user');
-
+    unset ($user['password']);
+    
     // Update the sessions
     $app['sessions']->update();
     $sessions = $app['sessions']->get();
