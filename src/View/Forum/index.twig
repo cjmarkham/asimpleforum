@@ -63,13 +63,33 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<form role="form" method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
+					<form id="new-topic-form" role="form" method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
 						<input type="hidden" name="forumId" value="{{ forum.id }}" />
 						<div class="form-group">
-							<input type="text" name="name" class="form-control" placeholder="Topic title" />
+							<div class="col-md-3">
+								Title
+							</div>
+							<div class="col-sm-9">
+								<input type="text" name="title" class="form-control" placeholder="Topic title" />
+							</div>
 						</div>
 						<div class="form-group">
-							<textarea class="form-control" name="post-content" id="post-content" placeholder="Add your post"></textarea>
+							<div class="col-md-3">
+								Body
+							</div>
+							<div class="col-sm-9">
+								<textarea class="form-control" name="content" id="post-content" placeholder="Add your post"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3">
+								Attachments
+							</div>
+							<div class="col-sm-9" id="attachments">
+								<input type="file" multiple name="attachments[]" />
+
+								<div id="attachment-list"></div>
+							</div>
 						</div>
 						
 						{% if hasPermission('LOCK_TOPIC') %}

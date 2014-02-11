@@ -8,7 +8,40 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TopicModel extends BaseModel
 {
+	/**
+	 * Silex App
+	 * @var object
+	 */
 	public $app;
+
+	/**
+	 * HTML allowed for post content
+	 * @var array
+	 */
+	public $allowed_html = array(
+		'<p>',
+		'<br />',
+		'<em>',
+		'<i>',
+		'<strong>',
+		'<b>',
+		'<abbr>',
+		'<a>',
+		'<hr />',
+		'<img />',
+		'<s>',
+		'<ul>',
+		'<ol>',
+		'<li>',
+		'<h1>',
+		'<h2>',
+		'<h3>',
+		'<h4>',
+		'<h5>',
+		'<blockquote>',
+		'<span>',
+		'<div>'
+	);
 
 	public function __construct (\Silex\Application $app)
 	{
@@ -312,6 +345,41 @@ class TopicModel extends BaseModel
 		}
 
 		$name = strip_tags($name);
+		$content = strip_tags($content, implode(',', $this->allowed_html));
+		$attachments = $request->files->get('attachments');
+
+		if ($attachments[0] != null)
+		{
+			if (count($attachments) > 5)
+			{
+				$response->setStatusCode(400);
+				$response->setContent($this->app['language']->phrase('TOO_MANY_ATTACHMENTS'));
+				return $response;
+			}
+
+			foreach ($attachments as $attachment)
+			{
+				$attachment_name = $attachment->getClientOriginalName();
+				$size = $attachment->getClientSize();
+				$mime = $attachment->getClientMimeType();
+
+				if ($size >= $this->app['files']['maxSize'])
+				{
+					$response->setStatusCode(400);
+					$response->setContent($this->app['language']->phrase('FILE_TOO_BIG', array($attachment_name, ($this->app['files']['maxSize'] / 1024))));
+					return $response;
+				}
+
+				$ext = pathinfo($attachment_name, PATHINFO_EXTENSION);
+
+				if (!in_array($ext, $this->app['files']['types']))
+				{
+					$response->setStatusCode(400);
+					$response->setContent($this->app['language']->phrase('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))));
+					return $response;
+				}
+			}
+		}
 
 		if (!\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
@@ -360,6 +428,39 @@ class TopicModel extends BaseModel
 		));
 
 		$post_id = $this->app['db']->lastInsertId();
+
+		// Upload attachments
+		if ($attachments[0] != null)
+		{
+			$upload_dir = dirname(dirname(__DIR__)) . '/public/uploads/attachments';
+
+			foreach ($attachments as $attachment)
+			{
+				$attachment_name = $attachment->getClientOriginalName();
+				$file_name = time() . '-' . $attachment_name;
+
+				$attachment->move($upload_dir, $file_name);
+
+				if ($attachment->getError())
+				{
+					// Couldnt upload attachment, delete post
+					$this->app['db']->delete('posts', array('id' => $post_id));
+					
+					$response->setStatusCode(500);
+					$response->setContent($this->app['language']->phrase('COULDNT_UPLOAD_FILE', array($attachment_name)));
+					return $response;
+				}
+
+				$this->app['db']->insert('attachments', array(
+					'post_id' => $post_id,
+					'name' => $attachment_name,
+					'file_name' => $file_name,
+					'size' => $attachment->getClientSize(),
+					'mime' => $attachment->getClientMimeType(),
+					'added' => time()
+				));
+			}
+		}
 
 		$this->app['db']->update('topics', array(
 			'lastPostId' => $post_id

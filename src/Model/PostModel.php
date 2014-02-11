@@ -176,7 +176,7 @@ class PostModel extends BaseModel
 	 * Adds a post to the database
 	 * @param Request $request The request object
 	 */
-	public function add (Request $request)
+	public function add ($request)
 	{
 		$topic_id = (int) $request->get('topicId');
 		$response = new Response();

@@ -325,17 +325,20 @@ var asf = {
 		var self = this;
 
 		var forumId = node.find('input[name="forumId"]').val();
-		var title = node.find('input[name="name"]').val();
+		var title = node.find('input[name="title"]').val();
 		var content = node.find('textarea').val();
 		var locked = node.find('input[name="locked"]:checked').val();
 		var sticky = node.find('input[name="sticky"]:checked').val();
 
-		$.post('/' + asf.config.board.base + 'topic/add_topic/', {
-			forumId: forumId,
-			title: title,
-			content: content,
-			locked: locked,
-			sticky: sticky
+		var form = document.getElementById('new-topic-form');
+		var formData = new FormData(form);
+
+		$.ajax({
+			url: '/' + asf.config.board.base + 'topic/add_topic/',
+			data: formData,
+			processData: false,
+			contentType: false,
+			type: 'POST'
 		}).done(function (response) {
 
 			response = JSON.parse(response);
