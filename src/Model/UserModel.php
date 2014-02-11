@@ -4,6 +4,7 @@ namespace Model;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserModel extends BaseModel
 {
@@ -22,6 +23,57 @@ class UserModel extends BaseModel
 		$this->app = $app;
 
 		$this->app['cache']->collection = $this->app['cache']->setCollection($app['database']['name'], 'posts');
+	}
+
+	public function save (Request $request)
+	{
+		$user = $this->app['session']->get('user');
+
+		if (!$user)
+		{
+			$response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+	        return $response;
+		}
+
+		$response = new Response;
+		$params = $request->request;
+
+		$params = iterator_to_array($params);
+
+		$constraints = array();
+
+		foreach ($params as $key => $value)
+		{
+			$constraints[$key] = array(
+				new Assert\NotBlank(array(
+					'message' => 'CANNOT_BE_BLANK'
+				))
+			);
+		}
+
+		$constraints = new Assert\Collection($constraints);
+
+		$errors = $this->app['validator']->validateValue($params, $constraints);
+
+		if (count($errors) > 0)
+		{
+	        $response->setStatusCode(400);
+	        $response->setContent($this->app['language']->phrase($errors[0]->getMessage()));
+	        return $response;
+		}
+
+		$columns = array();
+		$update = array();
+
+		foreach ($params as $key => $value)
+		{
+			$update[$key] = $value;
+		}
+
+		$this->app['db']->update('profiles', $update, array('id' => $user['id']));
+
+		return true;
 	}
 
 	public function findByUsername ($username)

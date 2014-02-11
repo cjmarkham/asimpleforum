@@ -4,6 +4,51 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	// User profile editing
+	$('.editable').each(function () {
+		$(this).on({
+			click: function () {
+				$(this).attr('contenteditable', true);
+				$(this).focus();
+			}, 
+			blur: function () {
+				var self = $(this);
+
+				$(this).removeAttr('contenteditable');
+				asf.elements.loader.append($(this));
+
+				var action = $(this).data('action');
+
+				var parts = action.split('.');
+				var method = asf;
+
+				if (parts.length === 1) {
+					method = method[action];
+				} else {
+					$(parts).each(function () {
+						method = method[this];
+					});
+				}
+
+				if (typeof method == 'function') {
+					method(this, function () {
+						asf.elements.loader.remove(self);
+
+						self.animate({
+							backgroundColor: $.Color('#dff0d8')
+						}, 300, function () {
+							self.animate({
+								backgroundColor: $.Color('transparent')
+							}, 300);
+						});
+					});
+				} else {
+					console.error('No function ASF.' + action);
+				}
+			}
+		});
+	});
+
 	var formDataCheck = window.FormData;
 
 	// Attachment selection for quick reply

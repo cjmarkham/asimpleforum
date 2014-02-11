@@ -3,6 +3,7 @@
 {% block scripts %}
 	{{ parent() }}
 
+	<script src="/{{ config('board', 'base') }}vendor/js/color.js"></script>
 	<script>
 	$(function () {
 		asf.profile.loadPostHistory(null, {user_id: {{ profile.id }}, page: 1, container: '#profile-post-history ul'});
@@ -16,6 +17,9 @@
 {% endblock %}
 
 {% block content %}
+	<p class="did-you-know alert alert-info">
+		<em class="fa fa-exclamation"></em> You can change several profile settings right here! Just click on something (like your name) to change it.
+	</p>
 	<section class="marginTop80 relative">
 		<ul class="list-unstyled list-inline" id="profile-stats">
 			<li title="Topics" data-toggle="tooltip">
@@ -42,9 +46,11 @@
 			<div class="col-md-6" id="profile-left">
 				<div id="profile-info" class="clearfix">
 					<div class="pull-left">
-						<h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
+						<h3 {% if user.id == profile.id %}class="editable" data-action="profile.saveName"{% endif %}>
+							{{ profile.name }}
+						</h3>
 						<em>
-							<em class="fa fa-{{ profile.gender|lower }}"></em> {{ profile.gender|lower|capitalize }} from {{ profile.location }}
+							<em class="fa fa-{{ profile.gender|lower }}"></em> {{ profile.gender|lower|capitalize }} from <span class="editable" data-action="profile.saveLocation">{{ profile.location }}</span>
 						</em>
 					</div>
 					<div class="pull-right">

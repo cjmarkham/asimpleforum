@@ -5,10 +5,6 @@ var asf = {
 
 	user: null,
 
-	forms: {
-		data: null
-	},
-
 	forums: {
 
 		loadMoreTopics: function (forumId) {
@@ -521,11 +517,63 @@ var asf = {
 				$('.hidden-no-user').show();
 				$('.hidden-user').hide();
 			}
+		},
+
+		loader: {
+			append: function (element) {
+				var icon = $('<em />').addClass('fa fa-spinner fa-spin');
+
+				$(element).append(icon);
+			},
+
+			remove: function (element) {
+				$(element).find('.fa-spinner').remove();
+			}
 		}
 
 	},
 
 	profile: {
+
+		saveName: function (node, callback) {
+			var value = $(node).text().trim();
+
+			$.post('/' + asf.config.board.base + 'user/save/', {
+				name: value
+			}).done(function (response) {
+				if (typeof callback == 'function') {
+					callback();
+				}
+			}).fail(function (response) {
+				asf.error(response.responseText);
+
+				if (typeof callback == 'function') {
+					callback();
+				}
+
+				return false;
+			});
+		},
+
+		saveLocation: function (node, callback) {
+			var value = $(node).text().trim();
+
+			$.post('/' + asf.config.board.base + 'user/save/', {
+				location: value
+			}).done(function (response) {
+				if (typeof callback == 'function') {
+					callback();
+				}
+			}).fail(function (response) {
+				asf.error(response.responseText);
+
+				if (typeof callback == 'function') {
+					callback();
+				}
+
+				return false;
+			});
+		},
 
 		follow: function (node) {
 			node = $(node);
