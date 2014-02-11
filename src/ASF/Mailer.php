@@ -2,11 +2,28 @@
 
 namespace ASF;
 
+/**
+ * A wrapper class for sending emails
+ */
 class Mailer
 {
+	/**
+	 * The template html
+	 * @var string
+	 */
 	public static $template = null;
+
+	/**
+	 * Key value replacements for template html
+	 * @var array
+	 */
 	private static $params = array();
 
+	/**
+	 * Sets the template
+	 * @param string $template
+	 * @param array  $params An array of parameters to replace in template html
+	 */
 	public static function setTemplate ($template, $params = array())
 	{
 		$file = __DIR__ . '/../View/Emails/' . $template . '.html';
@@ -22,6 +39,13 @@ class Mailer
 		return true;
 	}
 
+	/**
+	 * Sends the compiled email
+	 * @param  string $to      
+	 * @param  string $from    
+	 * @param  string $subject 
+	 * @return boolean          
+	 */
 	public static function send ($to, $from, $subject)
 	{
 		if (self::$template === null) 
@@ -48,6 +72,10 @@ class Mailer
 		return true;
 	}
 
+	/**
+	 * Compiles the template
+	 * @return void
+	 */
 	public static function compile ()
 	{
 		$params = self::$params;
