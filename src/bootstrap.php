@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+/**
+ * An extension to Silex\Application
+ */
 class ASFApplication extends Silex\Application
 {
     use \ASF\LanguageTrait;
@@ -19,9 +22,11 @@ $app['env'] = getenv('APP_ENV') ?: 'production';
 
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
+// Get the base directory for the forum
 $root = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'));
 $root = $root[0] . '/';
 
+// If there isnt a config file then the forum needs to be installed
 if (!file_exists(__DIR__ . '/../config/' . $app['env'] . '.json'))
 {
     header('Location: /' . $root . 'install/');
@@ -29,7 +34,6 @@ if (!file_exists(__DIR__ . '/../config/' . $app['env'] . '.json'))
 }
 
 $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__ . '/../config/' . $app['env'] . '.json'));
-
 
 $app->register(new \Silex\Provider\SessionServiceProvider(), array(
     'session.storage.options' => array(
@@ -78,7 +82,7 @@ $app['twig']->addFunction($repeat_function);
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
         'driver'    => 'pdo_mysql',
-        'dbname'   => $app['database']['name'],
+        'dbname'    => $app['database']['name'],
         'host'      => $app['database']['host'],
         'user'      => $app['database']['user'],
         'password'  => $app['database']['password']
