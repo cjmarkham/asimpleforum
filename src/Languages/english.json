@@ -21,5 +21,6 @@
 	"UNKNOWN_ERROR": "Something unexpected happened. Please try again later.",
 
 	"FILE_TOO_BIG": "The file %s is too big.\n\nThe max file size is %s kb",
-	"INVALID_FILE_EXT": "The file %s has an invalid extension.\n\nAllowed extensions are %s."
+	"INVALID_FILE_EXT": "The file %s has an invalid extension.\n\nAllowed extensions are %s.",
+	"CANNOT_BE_BLANK": "This field cannot be left blank."
 }
