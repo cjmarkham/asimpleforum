@@ -4,7 +4,6 @@ Capfile
 /vendor
 node_modules
 composer.lock
-public/uploads/*
 phpdoc
 output
 package.xml
