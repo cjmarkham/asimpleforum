@@ -264,7 +264,7 @@ class TopicModel extends BaseModel
 			return $response;
 		}
 
-		if (!\Permissions::hasPermission('CREATE_TOPIC')) 
+		if (!\ASF\Permissions::hasPermission('CREATE_TOPIC')) 
 		{
 			$response->setStatusCode(400);
 	        $response->setContent($this->app['language']->phrase('NO_PERMISSION'));
@@ -313,7 +313,7 @@ class TopicModel extends BaseModel
 
 		$name = strip_tags($name);
 
-		if (!\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
+		if (!\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
 			$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? AND forum=? ORDER BY added DESC LIMIT 1', array(
 				$user['id'],
