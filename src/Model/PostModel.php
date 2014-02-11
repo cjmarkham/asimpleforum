@@ -184,7 +184,7 @@ class PostModel extends BaseModel
 		if (!$topic_id)
 		{
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+	        $response->setContent($this->app->trans('UNKNOWN_ERROR'));
 	        return $response;
 		}
 
@@ -193,14 +193,14 @@ class PostModel extends BaseModel
 		if (!$topic)
 		{
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+	        $response->setContent($this->app->trans('UNKNOWN_ERROR'));
 	        return $response;
 		}
 
 		if ($topic['locked'] && !\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
 			$response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('TOPIC_LOCKED'));
+	        $response->setContent($this->app->trans('TOPIC_LOCKED'));
 	        return $response;
 		}
 
@@ -209,14 +209,14 @@ class PostModel extends BaseModel
 		if (!$user)
 		{
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 	        return $response;
 		}
 
 		if (!\ASF\Permissions::hasPermission('CREATE_POST')) 
 		{
 			$response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('NO_PERMISSION'));
+	        $response->setContent($this->app->trans('NO_PERMISSION'));
 	        return $response;
 		}
 
@@ -230,7 +230,7 @@ class PostModel extends BaseModel
 			if (count($attachments) > 5)
 			{
 				$response->setStatusCode(400);
-				$response->setContent($this->app['language']->phrase('TOO_MANY_ATTACHMENTS'));
+				$response->setContent($this->app->trans('TOO_MANY_ATTACHMENTS'));
 				return $response;
 			}
 
@@ -243,7 +243,7 @@ class PostModel extends BaseModel
 				if ($size >= $this->app['files']['maxSize'])
 				{
 					$response->setStatusCode(400);
-					$response->setContent($this->app['language']->phrase('FILE_TOO_BIG', array($attachment_name, ($this->app['files']['maxSize'] / 1024))));
+					$response->setContent($this->app->trans('FILE_TOO_BIG', array($attachment_name, ($this->app['files']['maxSize'] / 1024))));
 					return $response;
 				}
 
@@ -252,7 +252,7 @@ class PostModel extends BaseModel
 				if (!in_array($ext, $this->app['files']['types']))
 				{
 					$response->setStatusCode(400);
-					$response->setContent($this->app['language']->phrase('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))));
+					$response->setContent($this->app->trans('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))));
 					return $response;
 				}
 			}
@@ -263,20 +263,30 @@ class PostModel extends BaseModel
 				new Assert\NotBlank(array(
 					'message' => 'FILL_ALL_FIELDS'
 				)),
-				new Assert\Length(array('min' => 4)),
-				new Assert\Length(array('max' => 25))
+				new Assert\Length(array(
+					'min' => 6,
+					'max' => 25,
+					'minMessage' => $this->app->trans('MIN_LENGTH', array('%field%' => 'body', '%min%' => 6)),
+					'maxMessage' => $this->app->trans('MAX_LENGTH', array('%field%' => 'title', '%max%' => 25))
+				))
 			),
 			'content' => array(
 				new Assert\NotBlank(array(
 					'message' => 'FILL_ALL_FIELDS'
 				)),
-				new Assert\Length(array('min' => 6))
+				new Assert\Length(array(
+					'min' => 6,
+					'minMessage' => $this->app->trans('MIN_LENGTH', array('%field%' => 'body', '%min%' => 6))
+				))
 			)
 		));
 
+		// Temp variable which removes html to check actual length
+		$content_string_test = strip_tags($content);
+
 		$data = array(
 			'name' => $name,
-			'content' => $content
+			'content' => $content_string_test
 		);
 
 		$errors = $this->app['validator']->validateValue($data, $constraints);
@@ -284,7 +294,7 @@ class PostModel extends BaseModel
 		if (count($errors) > 0)
 		{
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase($errors[0]->getMessage()));
+	        $response->setContent($this->app->trans($errors[0]->getMessage()));
 	        return $response;
 		}
 		
@@ -345,7 +355,7 @@ class PostModel extends BaseModel
 						catch (\Exception $e)
 						{
 							$response->setStatusCode(500);
-							$response->setContent($this->app['language']->phrase('COULDNT_UPLOAD_FILE', array($attachment_name)));
+							$response->setContent($this->app->trans('COULDNT_UPLOAD_FILE', array($attachment_name)));
 							return $response;
 						}
 
@@ -377,7 +387,7 @@ class PostModel extends BaseModel
 			else if ($this->app['board']['doublePost'] === 'disallow')
 			{
 				$response->setStatusCode(400);
-				$response->setContent($this->app['language']->phrase('NO_DOUBLE_POST'));
+				$response->setContent($this->app->trans('NO_DOUBLE_POST'));
 				return $response;
 			}
 		}
@@ -412,7 +422,7 @@ class PostModel extends BaseModel
 					$this->app['db']->delete('posts', array('id' => $post_id));
 					
 					$response->setStatusCode(500);
-					$response->setContent($this->app['language']->phrase('COULDNT_UPLOAD_FILE', array($attachment_name)));
+					$response->setContent($this->app->trans('COULDNT_UPLOAD_FILE', array($attachment_name)));
 					return $response;
 				}
 
@@ -561,7 +571,7 @@ class PostModel extends BaseModel
 		{
 			$response = new Response();
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('FILL_ALL_FIELDS'));
+	        $response->setContent($this->app->trans('FILL_ALL_FIELDS'));
 	        return $response;
 		}
 
@@ -593,14 +603,14 @@ class PostModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(500);
-	        $response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 	        return $response;
 		}
 
 		if (!$post_id)
 		{
 			$response->setStatusCode(500);
-	        $response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+	        $response->setContent($this->app->trans('UNKNOWN_ERROR'));
 	        return $response;
 		}
 
@@ -618,7 +628,7 @@ class PostModel extends BaseModel
 		if (in_array($user['username'], $_likes))
 		{
 			$response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('ALREADY_LIKED'));
+	        $response->setContent($this->app->trans('ALREADY_LIKED'));
 	        return $response;
 		}
 

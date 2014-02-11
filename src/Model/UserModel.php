@@ -32,7 +32,7 @@ class UserModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 	        return $response;
 		}
 
@@ -59,7 +59,7 @@ class UserModel extends BaseModel
 		if (count($errors) > 0)
 		{
 	        $response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase($errors[0]->getMessage()));
+	        $response->setContent($this->app->trans($errors[0]->getMessage()));
 	        return $response;
 		}
 
@@ -132,7 +132,7 @@ class UserModel extends BaseModel
 		if (!$user_id)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -141,7 +141,7 @@ class UserModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			$response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 			return $response;
 		}
 
@@ -153,7 +153,7 @@ class UserModel extends BaseModel
 		if ($check)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('ALREADY_FOLLOWING'));
+			$response->setContent($this->app->trans('ALREADY_FOLLOWING'));
 			return $response;
 		}
 
@@ -174,7 +174,7 @@ class UserModel extends BaseModel
 		if (!$user_id)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -183,7 +183,7 @@ class UserModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			$response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 			return $response;
 		}
 
@@ -195,7 +195,7 @@ class UserModel extends BaseModel
 		if (!$check)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('NOT_FOLLOWING'));
+			$response->setContent($this->app->trans('NOT_FOLLOWING'));
 			return $response;
 		}
 
@@ -290,14 +290,14 @@ class UserModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(403);
-			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			$response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 			return $response;
 		}
 
 		if (!$comment || strlen($comment) < 6)
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('COMMENT_MIN_LENGTH', array(6)));
+			$response->setContent($this->app->trans('COMMENT_MIN_LENGTH', array(6)));
 			return $response;
 		}
 
@@ -319,7 +319,7 @@ class UserModel extends BaseModel
 				$seconds = $seconds % 60;
 
 				$response->setStatusCode(403);
-				$response->setContent($this->app['language']->phrase('COMMENT_POST_LIMIT', array($minutes, $seconds)));
+				$response->setContent($this->app->trans('COMMENT_POST_LIMIT', array($minutes, $seconds)));
 				return $response;
 			}
 		}
@@ -352,7 +352,7 @@ class UserModel extends BaseModel
 		if (!$comment_id)
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -363,7 +363,7 @@ class UserModel extends BaseModel
 		if (!$comment)
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			$response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 			return $response;
 		}
 
@@ -372,14 +372,14 @@ class UserModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			$response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 			return $response;
 		}
 
 		if ($user['id'] != $comment['author'] && !\ASF\Permissions::hasPermission('EDIT_POSTS'))
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('NO_PERMISSION'));
+			$response->setContent($this->app->trans('NO_PERMISSION'));
 			return $response;
 		}
 
@@ -405,7 +405,7 @@ class UserModel extends BaseModel
 		if (!$comment_id)
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -418,7 +418,7 @@ class UserModel extends BaseModel
 		if ($check)
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('ALREADY_LIKED'));
+			$response->setContent($this->app->trans('ALREADY_LIKED'));
 			return $response;
 		}
 

@@ -5,6 +5,9 @@ date_default_timezone_set("Europe/London");
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Translation\Loader\PhpFileLoader;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
@@ -13,6 +16,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class ASFApplication extends Silex\Application
 {
     use \ASF\LanguageTrait;
+    use Silex\Application\TranslationTrait;
 }
 
 $app = new ASFApplication();
@@ -21,6 +25,19 @@ $app = new ASFApplication();
 $app['env'] = getenv('APP_ENV') ?: 'production';
 
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
+
+$app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    'locale_fallbacks' => array('en')
+));
+
+$app['translator'] = $app->share($app->extend('translator', function($translator, $app) {
+    $translator->addLoader('php', new PhpFileLoader());
+
+    $translator->addResource('php', __DIR__ . '/Locales/en.php', 'en');
+    $translator->addResource('php', __DIR__ . '/Locales/fr.php', 'fr');
+
+    return $translator;
+}));
 
 // Get the base directory for the forum
 $root = explode('/', ltrim($_SERVER['REQUEST_URI'], '/'));
@@ -198,9 +215,9 @@ include 'routes.php';
 if ($app['debug'] === true) 
 {
     $app->register(new Whoops\Provider\Silex\WhoopsServiceProvider);
-}
 
-if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
-{
-    $app['cache']->flush($app, $app['database']['name'], $app['database']['name']);
+    if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
+    {
+        $app['cache']->flush($app, $app['database']['name'], $app['database']['name']);
+    }
 }

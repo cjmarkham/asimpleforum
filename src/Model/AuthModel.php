@@ -21,8 +21,9 @@ class AuthModel
 
 		if (!$user_id || !$email)
 		{
-			\ASF\Message::error('UNKNOWN_ERROR');
-			return false;
+			$response->setStatusCode(500);
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
+			return $response;
 		}
 
 		$check = $this->app['db']->fetchAssoc('SELECT id, username, email, approved FROM users WHERE id=? AND email=? LIMIT 1', array(
@@ -32,14 +33,16 @@ class AuthModel
 
 		if (!$check)
 		{
-			\ASF\Message::error('NO_USER');
-			return false;
+			$response->setStatusCode(400);
+			$response->setContent($this->app->trans('NO_USER'));
+			return $response;
 		}
 
 		if ($check['approved'] == 1)
 		{
-			\ASF\Message::error('ALREADY_CONFIRMED_EMAIL');
-			return false;
+			$response->setStatusCode(400);
+			$response->setContent($this->app->trans('ALREADY_CONFIRMED_EMAIL'));
+			return $response;
 		}
 
 		$this->app['db']->update('users', array(
@@ -50,15 +53,18 @@ class AuthModel
 		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'users');
 		$this->app['cache']->delete('user-' . $check['username']);
 
-		\ASF\Message::alert('EMAIL_CONFIRMED');
-		return true;
+		$response->setStatusCode(200);
+		$response->setContent($this->app->trans('EMAIL_CONFIRMED'));
+		return $response;
 	}
 
 	public function signup (array $data)
 	{
+		$response = new Response;
+
 		if (empty($data))
 		{
-			\ASF\Message::error('UNKNOWN_ERROR');
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return false;
 		}
 
@@ -99,14 +105,16 @@ class AuthModel
 
 		if (count($errors) > 0)
 		{
-			\ASF\Message::error($errors[0]->getMessage());
-			return false;
+			$response->setStatusCode(400);
+			$response->setContent($this->app->trans($errors[0]->getMessage()));
+			return $response;
 		}
 
 		if ($data['password'] !== $data['confirm'])
 		{
-			\ASF\Message::error('PASSWORDS_DONT_MATCH');
-			return false;
+			$response->setStatusCode(400);
+			$response->setContent($this->app->trans('PASSWORDS_DONT_MATCH'));
+			return $response;
 		}
 
 		$check_username = $this->app['db']->fetchColumn('SELECT username FROM users WHERE username=? LIMIT 1', array(
@@ -115,8 +123,9 @@ class AuthModel
 
 		if ($check_username)
 		{
-			\ASF\Message::error('USERNAME_TAKEN');
-			return false;
+			$response->setStatusCode(400);
+			$response->setContent($this->app->trans('USERNAME_TAKEN'));
+			return $response;
 		}
 
 		$check_email = $this->app['db']->fetchColumn('SELECT email FROM users WHERE email=? LIMIT 1', array(
@@ -125,8 +134,9 @@ class AuthModel
 
 		if ($check_email)
 		{
-			\ASF\Message::error('EMAIL_REGISTERED');
-			return false;
+			$response->setStatusCode(400);
+			$response->setContent($this->app->trans('EMAIL_REGISTERED'));
+			return $response;
 		}
 
 		$hashed = $this->hash($this->app['defaults']['salt'] . $data['password']);
@@ -145,8 +155,9 @@ class AuthModel
 
 		if (!$insert)
 		{
-			\ASF\Message::error('UNKNOWN_ERROR');
-			return false;
+			$response->setStatusCode(500);
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
+			return $response;
 		}
 
 		$user_id = $this->app['db']->lastInsertId();
@@ -165,15 +176,17 @@ class AuthModel
 			));
 
 			\ASF\Mailer::send($data['email'], $this->app['email']['noReply'], 'Email confirmation');
-		
-			\ASF\Message::alert('Your account has been created but you will need to confirm your email address before logging in. Check your emails for details on how to do so.');
+			
+			$response->setStatusCode(200);
+			$response->setContent('ACCOUNT_CREATED_CONFIRM_EMAIL'));
 		}
 		else
 		{
-			\ASF\Message::alert('Your account has been created and you can now log in.');
+			$response->setStatusCode(200);
+			$resopnse->setContent($this->app->trans($this->app->trans('ACCOUNT_CREATED'));
 		}
 
-		return true;
+		return $response;
 	}
 
 	public function hash ($password)
@@ -195,21 +208,21 @@ class AuthModel
 		if (!$user)
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('NO_USER'));
+			$response->setContent($this->app->trans('NO_USER'));
 			return $response;
 		}
 
 		if ($user['password'] !== $this->hash($this->app['defaults']['salt'] . $password))
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('INVALID_CREDENTIALS'));
+			$response->setContent($this->app->trans('INVALID_CREDENTIALS'));
 			return $response;
 		}
 
 		if (!$user['approved'] && $this->app['board']['confirmEmail'])
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('NOT_APPROVED'));
+			$response->setContent($this->app->trans('NOT_APPROVED'));
 			return $response;
 		}
 

@@ -105,7 +105,7 @@ class TopicModel extends BaseModel
 		{
 			$response = new Response();
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -293,14 +293,14 @@ class TopicModel extends BaseModel
 		if (!$user)
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('MUST_BE_LOGGED_IN'));
+			$response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 			return $response;
 		}
 
 		if (!\ASF\Permissions::hasPermission('CREATE_TOPIC')) 
 		{
 			$response->setStatusCode(400);
-	        $response->setContent($this->app['language']->phrase('NO_PERMISSION'));
+	        $response->setContent($this->app->trans('NO_PERMISSION'));
 	        return $response;
 		}
 
@@ -309,7 +309,7 @@ class TopicModel extends BaseModel
 		if (!$forum_id)
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -318,7 +318,7 @@ class TopicModel extends BaseModel
 		if (!$forum)
 		{
 			$response->setStatusCode(500);
-			$response->setContent($this->app['language']->phrase('UNKNOWN_ERROR'));
+			$response->setContent($this->app->trans('UNKNOWN_ERROR'));
 			return $response;
 		}
 
@@ -340,7 +340,7 @@ class TopicModel extends BaseModel
 		if (!$name || !$content)
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('FILL_ALL_FIELDS'));
+			$response->setContent($this->app->trans('FILL_ALL_FIELDS'));
 			return $response;
 		}
 
@@ -353,7 +353,7 @@ class TopicModel extends BaseModel
 			if (count($attachments) > 5)
 			{
 				$response->setStatusCode(400);
-				$response->setContent($this->app['language']->phrase('TOO_MANY_ATTACHMENTS'));
+				$response->setContent($this->app->trans('TOO_MANY_ATTACHMENTS'));
 				return $response;
 			}
 
@@ -366,7 +366,7 @@ class TopicModel extends BaseModel
 				if ($size >= $this->app['files']['maxSize'])
 				{
 					$response->setStatusCode(400);
-					$response->setContent($this->app['language']->phrase('FILE_TOO_BIG', array($attachment_name, ($this->app['files']['maxSize'] / 1024))));
+					$response->setContent($this->app->trans('FILE_TOO_BIG', array($attachment_name, ($this->app['files']['maxSize'] / 1024))));
 					return $response;
 				}
 
@@ -375,7 +375,7 @@ class TopicModel extends BaseModel
 				if (!in_array($ext, $this->app['files']['types']))
 				{
 					$response->setStatusCode(400);
-					$response->setContent($this->app['language']->phrase('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))));
+					$response->setContent($this->app->trans('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))));
 					return $response;
 				}
 			}
@@ -396,7 +396,7 @@ class TopicModel extends BaseModel
 				$minutes = round($seconds / 60);
 				$seconds = $seconds % 60;
 				$response->setStatusCode(403);
-				$response->setContent($this->app['language']->phrase('TOPIC_POST_LIMIT', array($minutes, $seconds)));
+				$response->setContent($this->app->trans('TOPIC_POST_LIMIT', array($minutes, $seconds)));
 				return $response;
 			}
 		}
@@ -447,7 +447,7 @@ class TopicModel extends BaseModel
 					$this->app['db']->delete('posts', array('id' => $post_id));
 					
 					$response->setStatusCode(500);
-					$response->setContent($this->app['language']->phrase('COULDNT_UPLOAD_FILE', array($attachment_name)));
+					$response->setContent($this->app->trans('COULDNT_UPLOAD_FILE', array($attachment_name)));
 					return $response;
 				}
 

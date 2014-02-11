@@ -9,8 +9,13 @@ $app->before(function (Request $request) use ($app) {
 
     // Get the logged in user
     $user = $app['session']->get('user');
-    unset ($user['password']);
-    
+
+    if ($user)
+    {
+        unset ($user['password']);
+        $app['translator']->setLocale($user['locale']);
+    }
+
     // Update the sessions
     $app['sessions']->update();
     $sessions = $app['sessions']->get();

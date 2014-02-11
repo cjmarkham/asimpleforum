@@ -26,7 +26,7 @@ class ForumModel
 
 		if (!$parent)
 		{
-			return new Response($this->app['language']->phrase('UNKNOWN_ERROR'), 500);
+			return new Response($this->app->trans('UNKNOWN_ERROR'), 500);
 		}
 
 		$name = $request->get('name');
@@ -42,7 +42,7 @@ class ForumModel
 		if (!$name)
 		{
 			$response->setStatusCode(400);
-			$response->setContent($this->app['language']->phrase('FILL_ALL_FIELDS'));
+			$response->setContent($this->app->trans('FILL_ALL_FIELDS'));
 			return $response;
 		}
 
@@ -62,7 +62,7 @@ class ForumModel
 
 		if (!$id)
 		{
-			return new Response($this->app['language']->phrase('UNKNOWN_ERROR'), 500);
+			return new Response($this->app->trans('UNKNOWN_ERROR'), 500);
 		}
 
 		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`+2 WHERE `right`>=? AND id!=?', array(
