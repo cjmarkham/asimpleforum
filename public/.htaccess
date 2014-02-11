@@ -5,6 +5,8 @@ RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 RewriteRule ^install/$ install/index.php [L]
 RewriteRule ^install/(.*)$ install/index.php [L]
 
+RewriteRule ^docs/$ phpdoc/output/index.html [L]
+RewriteRule ^docs/(.*)$ phpdoc/output/$1 [L]
 
 <IfModule mod_rewrite.c>
     Options -MultiViews
