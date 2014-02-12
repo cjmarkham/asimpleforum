@@ -11,52 +11,6 @@
 
 	{{ include('Layout/meta.twig') }}
 
-	{% block scripts %}
-
-		{% if not app.debug %}
-			{{ include('Partials/analytics.twig') }}
-		{% endif %}
-		
-		<script src="/{{ config('board', 'base') }}vendor/js/jquery.js"></script>
-		<script src="/{{ config('board', 'base') }}vendor/js/bootstrap.js"></script>
-		<script src="/{{ config('board', 'base') }}vendor/js/timeago.js"></script>
-		
-		<script src="/{{ config('board', 'base') }}js/asf.js"></script>
-		<script src="/{{ config('board', 'base') }}js/dom.js"></script>
-
-		{% if user %}
-		<script>
-			asf.user = JSON.parse('{{ user|json_encode|raw }}');
-		</script>
-		{% endif %}
-
-		<script>
-			asf.page = {
-				url: location.href,
-				section: '{{ section }}'
-			};
-
-			{% if section == 'forums' and forum is defined %} // home page also has section forums
-				asf.forum = '{{ forum|json_encode|raw }}'
-			{% endif %}
-
-			asf.config = JSON.parse('{{ config|json_encode|raw }}');
-
-			$(function () {
-
-				$('#alert-tabs p').on('click', function () {
-					$('#alert-tabs p').removeClass('active');
-					$(this).addClass('active');
-					var index = $(this).attr('data-index');
-					$('#alert-box .alert').fadeOut();
-					var target = $('#alert-box .alert').get(index);
-					$(target).fadeIn();
-				});	
-
-			});
-
-		</script>
-	{% endblock %}
 </head>
 
 <body id="page-{{ section }}">
@@ -280,4 +234,50 @@
 
 	{% endblock %}
 
+	{% block scripts %}
+
+		{% if not app.debug %}
+			{{ include('Partials/analytics.twig') }}
+		{% endif %}
+		
+		<script src="/{{ config('board', 'base') }}vendor/js/jquery.js"></script>
+		<script src="/{{ config('board', 'base') }}vendor/js/bootstrap.js"></script>
+		<script src="/{{ config('board', 'base') }}vendor/js/timeago.js"></script>
+		
+		<script src="/{{ config('board', 'base') }}js/asf.js"></script>
+		<script src="/{{ config('board', 'base') }}js/dom.js"></script>
+
+		{% if user %}
+		<script>
+			asf.user = JSON.parse('{{ user|json_encode|raw }}');
+		</script>
+		{% endif %}
+
+		<script>
+			asf.page = {
+				url: location.href,
+				section: '{{ section }}'
+			};
+
+			{% if section == 'forums' and forum is defined %} // home page also has section forums
+				asf.forum = '{{ forum|json_encode|raw }}'
+			{% endif %}
+
+			asf.config = JSON.parse('{{ config|json_encode|raw }}');
+
+			$(function () {
+
+				$('#alert-tabs p').on('click', function () {
+					$('#alert-tabs p').removeClass('active');
+					$(this).addClass('active');
+					var index = $(this).attr('data-index');
+					$('#alert-box .alert').fadeOut();
+					var target = $('#alert-box .alert').get(index);
+					$(target).fadeIn();
+				});	
+
+			});
+
+		</script>
+	{% endblock %}
 </body>
