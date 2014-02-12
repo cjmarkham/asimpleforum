@@ -3,7 +3,7 @@
 {% block scripts %}
 	{{ parent() }}
 
-	<script src="/ckeditor/ckeditor.js"></script>
+	<script src="/{{ config('board', 'base') }}ckeditor/ckeditor.js"></script>
 
 	<script>
 	$(function () {
@@ -14,6 +14,12 @@
 			if ($(window).scrollTop() == $(this).height() - $(window).height()) {
 				asf.forums.loadMoreTopics({{ forum.id }});
 			}
+
+		});
+
+		CKEDITOR.replace('post-content', {
+			allowedContent: 'blockquote(post-preview); a[!href]; a(post-preview)',
+			height: 370
 		});
 	})
 	</script>
@@ -63,29 +69,31 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<form id="new-topic-form" role="form" method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
-						<input type="hidden" name="forumId" value="{{ forum.id }}" />
+					<form id="new-topic-form" class="form-horizontal" role="form" method="post" action="javascript:void(0)" data-event="submit" data-action="addNewTopic">
 						<div class="form-group">
-							<div class="col-md-3">
+							<input type="hidden" name="forumId" value="{{ forum.id }}" />
+						</div>
+						<div class="form-group">
+							<div class="col-md-1">
 								Title
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-11">
 								<input type="text" name="title" class="form-control" placeholder="Topic title" />
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-3">
+							<div class="col-md-1">
 								Body
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-11">
 								<textarea class="form-control" name="content" id="post-content" placeholder="Add your post"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-3">
+							<div class="col-md-1">
 								Attachments
 							</div>
-							<div class="col-sm-9" id="attachments">
+							<div class="col-sm-11" id="attachments">
 								<input type="file" multiple name="attachments[]" />
 
 								<div id="attachment-list"></div>
@@ -98,37 +106,44 @@
 									Moderator options
 								</h4>
 							
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="locked" value="1" />
-										Locked
-									</label>
-									<p class="help help-inline">
-										Only Administrators and Moderators can reply to a locked topic
-									</p>
+								<div class="form-group">
+									<div class="col-sm-1">
+										<label>
+											Locked
+										</label>
+									</div>
+									<div class="col-sm-11 checkbox">
+										<input class="inline" type="checkbox" name="locked" value="1" />
+										<p class="help help-inline">
+											Only Administrators and Moderators can reply to a locked topic
+										</p>
+									</div>
 								</div>
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="sticky" value="1" />
-										Sticky
-									</label>
-									<p class="help help-inline">
-										Topic will appear at the top of the forums topic list
-									</p>
+								<div class="form-group">
+									<div class="col-sm-1">
+										<label>
+											Sticky
+										</label>
+									</div>
+									<div class="col-sm-11 checkbox">
+										<input class="inline" type="checkbox" name="sticky" value="1" />
+										<p class="help help-inline">
+											Topic will appear at the top of the forums topic list
+										</p>
+									</div>
 								</div>
 							</section>
 						{% endif %}
-
-						<button class="btn btn-orange">
-							Create topic
-						</button>
-						<a href="javascript:void(0)" data-event="click" data-action="hideModal" class="btn btn-orange">
-							Cancel
-						</a>
-
-						<script>
-							CKEDITOR.replace('post-content');
-						</script>
+						<div class="form-group">
+							<div class="col-md-offset-1 col-sm-11">
+								<button class="btn btn-orange">
+									Create topic
+								</button>
+								<a href="javascript:void(0)" data-event="click" data-action="hideModal" class="btn btn-orange">
+									Cancel
+								</a>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>

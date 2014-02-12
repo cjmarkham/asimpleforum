@@ -121,33 +121,33 @@
 						<input type="hidden" name="topicId" value="{{ topic.id }}" />
 						
 						<div class="form-group">
-							<div class="col-md-3">
+							<div class="col-md-1">
 								Title
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-11">
 								<input type="text" name="name" class="form-control" value="RE: {{ topic.name }}" />
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-3">
+							<div class="col-md-1">
 								Body
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-11">
 								<textarea class="form-control" name="reply" id="reply" placeholder="Add your reply"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-3">
+							<div class="col-md-1">
 								Attachments
 							</div>
-							<div class="col-sm-9" id="attachments">
+							<div class="col-sm-11" id="attachments">
 								<input type="file" multiple name="attachments[]" />
 
 								<div id="attachment-list"></div>
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-offset-3 col-sm-9">
+							<div class="col-md-offset-1 col-sm-11">
 								<button class="btn btn-orange">
 									Submit Quick Reply
 								</button>
@@ -158,7 +158,91 @@
 						</div>
 
 						<script>
-							CKEDITOR.replace('reply');
+							CKEDITOR.replace('reply', {
+								allowedContent: 'blockquote(post-preview); a[!href]; a(post-preview)',
+								height: 500
+							});
+
+							/*$(function() {
+
+								var editor = CKEDITOR.instances.reply;
+
+								editor.on('contentDom', function () {
+
+									var editable = editor.editable();
+
+									editable.attachListener(editable, 'keyup', function () {
+
+										// Used to check for local url in the content
+										// and format it for a preview
+										var urlPattern = /\<a href="(.*)"\>(.*)\<\/a\>/gm;
+
+										var content = editor.getData();
+
+										if (urlPattern.test(content)) {
+											var url = content.match(urlPattern)[0];
+											
+											var tempUrl = url.replace(/<(?:.|\n)*?>/gm, '').replace(/http:\/\//, '').replace(location.hostname, '').replace(asf.config.board.base, '');
+											var parts = tempUrl.trim().split('/');
+
+											for (var part in parts) {
+												if (parts[part].length == 0) {
+													parts.splice(part, 1);
+												}
+											}
+
+											if (parts.length === 3) {
+
+												var topicId = parts[1].split('-');
+												topicId = topicId[topicId.length - 1];
+
+												$.post('/' + asf.config.board.base + 'post/getFirst/', {
+													topicId: topicId
+												}).done(function (post) {
+
+													var preview = '<blockquote>' + post + '</blockquote>';
+													content = content.replace(url, url.replace(/http:\/\//, '').replace(location.hostname, '').replace(/href=/, 'class="post-preview" href=').replace(asf.config.board.base, '') + preview);
+
+													editor.setData(content);
+
+													var range = editor.createRange();
+													range.moveToElementEditEnd(range.root);
+													editor.getSelection().selectRanges([range]);
+													
+													editor.focus();
+												}).fail(function (response) {
+													asf.error(response.responseText);
+												});
+
+											} else if (parts.length === 4) {
+												var postId = parts[3].replace('#', '');
+
+												$.post('/' + asf.config.board.base + 'post/findById/', {
+													id: postId
+												}).done(function (response) {
+													var post = JSON.parse(response);
+
+													var preview = '<blockquote>' + post.content + '</blockquote>';
+													var niceUrl = url.replace(/http:\/\//, '').replace(/href=/, 'class="post-preview" href=');
+
+													content = content.replace(url, niceUrl + preview);
+
+													editor.setData(content);
+
+													var range = editor.createRange();
+
+													range.moveToPosition(range.root, CKEDITOR.POSITION_BEFORE_END);
+													editor.getSelection().selectRanges([range]);
+
+													//editor.focus();
+												}).fail(function (response) {
+													asf.error(response.responseText);
+												});
+											}											
+										}
+									});
+								});
+							});*/
 						</script>
 					</form>
 				</div>
