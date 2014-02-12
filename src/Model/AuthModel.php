@@ -178,12 +178,12 @@ class AuthModel
 			\ASF\Mailer::send($data['email'], $this->app['email']['noReply'], 'Email confirmation');
 			
 			$response->setStatusCode(200);
-			$response->setContent('ACCOUNT_CREATED_CONFIRM_EMAIL'));
+			$response->setContent($this->app->trans('ACCOUNT_CREATED_CONFIRM_EMAIL'));
 		}
 		else
 		{
 			$response->setStatusCode(200);
-			$resopnse->setContent($this->app->trans($this->app->trans('ACCOUNT_CREATED'));
+			$resopnse->setContent($this->app->trans('ACCOUNT_CREATED'));
 		}
 
 		return $response;
