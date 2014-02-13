@@ -24,7 +24,7 @@
 	<div id="user-quick-access-fixed" class="hidden-no-user hidden-md hidden-lg pull-right">
 		{% if user %}
 			<a href="/{{ config('board', 'base') }}user/{{ user.username }}">
-				{{ user.username }}
+				<img src="{{ avatar_root }}/{{ user.username }}/small.png" alt="{{ user.username }}" title="{{ user.username }}" />
 			</a>
 				&bull;
 			<a href="javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
@@ -69,7 +69,11 @@
 							{% if link.link == '/' %}
 								{% set url = '/' ~ config('board', 'base') %}
 							{% else %}
-								{% set url = '/' ~ config('board', 'base') ~ link.link %}
+								{% if link.link matches '{http:\/\/}' %}
+									{% set url = link.link %}
+								{% else %}
+									{% set url = '/' ~ config('board', 'base') ~ link.link %}
+								{% endif %}
 							{% endif %}
 							<a href="{{ url }}">
 								{{ link.title }}
@@ -80,13 +84,21 @@
 			</ul>
 			<div id="user-quick-access" class="hidden-no-user hidden-xs hidden-sm pull-right">
 				{% if user %}
-					<a href="/{{ config('board', 'base') }}user/{{ user.username }}">
-						{{ user.username }}
-					</a>
-						&bull;
-					<a href="javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
-						Logout
-					</a>
+					<div class="clearfix">
+						<a class="pull-right avatar small background" href="{{ path('user-profile', {username: user.username}) }}">
+							<img width="55" height="55" src="{{ avatar_root }}/{{ user.username }}/small.png" alt="{{ user.username }}" title="{{ user.username }}" />
+						</a>
+						<div class="pull-right quick-links">
+							<a href="javascript:void(0)">
+								<em data-toggle="tooltip" title="Notifications" class="fa fa-envelope"></em>
+							</a>
+							<a href="{{ path('user-settings') }}">
+								<em data-toggle="tooltip" title="Settings" class="fa fa-cogs"></em>
+							</a>
+						</div>
+					</div>
+				{% else %}
+
 				{% endif %}
 			</div>
 		</div>
