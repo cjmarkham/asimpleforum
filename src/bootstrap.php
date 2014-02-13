@@ -69,9 +69,9 @@ $app->register(new Silex\Provider\ValidatorServiceProvider());
 $app->register(new SilexAssetic\AsseticServiceProvider());
 $app['assetic.path_to_web'] = __DIR__ . '/../public/';
 $app['assetic.options'] = array(
-    'debug' => false,
+    'debug' => $app['debug'],
     'formulae_cache_dir' => __DIR__ . '/../cache/assetic',
-    'auto_dump_assets' => true
+    'auto_dump_assets' => $app['debug'] ? true : false
 );
 
 $app['assetic.filter_manager'] = $app->share(
