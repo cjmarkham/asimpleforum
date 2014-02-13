@@ -65,6 +65,9 @@ class ForumModel
 			return new Response($this->app->trans('UNKNOWN_ERROR'), 500);
 		}
 
+		$left = $parent['right'];
+		$right = $parent['right'] + 1;
+
 		$this->app['db']->executeQuery('UPDATE forums SET `right`=`right`+2 WHERE `right`>=? AND id!=?', array(
 			$left,
 			$id
