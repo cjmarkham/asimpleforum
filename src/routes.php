@@ -63,11 +63,11 @@ $app->get('/' . $app['board']['base'] . 'user/{username}/{page}/', function (ASF
 
 $app->get('/' . $app['board']['base'] . 'user/settings/', function (ASFApplication $app) {
     return Route::get('user:settings');
-});
+})->bind('user-settings');
 
 $app->get('/' . $app['board']['base'] . 'user/{username}/', function (ASFApplication $app, $username) {
     return Route::get('user:index', $username);
-});
+})->bind('user-profile');
 
 $app->get('/' . $app['board']['base'] . 'user/confirmEmail/{code}/', function (ASFApplication $app, $code) {
     return Route::get('user:confirmEmail', $code);
