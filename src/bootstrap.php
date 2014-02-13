@@ -66,6 +66,31 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 
+$app->register(new SilexAssetic\AsseticServiceProvider());
+$app['assetic.path_to_web'] = __DIR__ . '/../public/';
+$app['assetic.options'] = array(
+    'debug' => false,
+    'formulae_cache_dir' => __DIR__ . '/../cache/assetic',
+    'auto_dump_assets' => true
+);
+
+$app['assetic.filter_manager'] = $app->share(
+    $app->extend('assetic.filter_manager', function($fm, $app) {
+
+        $fm->set('yui_css', new Assetic\Filter\Yui\CssCompressorFilter(
+            __DIR__ . '/../yuicompressor-2.4.7.jar', 
+            $app['java_path']
+        ));
+
+        $fm->set('yui_js', new Assetic\Filter\Yui\JsCompressorFilter(
+            __DIR__ . '/../yuicompressor-2.4.7.jar', 
+            $app['java_path']
+        ));
+
+        return $fm;
+    })
+);
+
 $truncate = new Twig_SimpleFunction('truncate', array('ASF\Utils', 'truncate'));
 $config_function = new Twig_SimpleFunction('config', function ($section, $key = false) use ($app) {
     if (isset($app[$section]))
