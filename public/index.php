@@ -30,11 +30,15 @@ $app->before(function (Request $request) use ($app) {
         'files' => $app['files']            
     );
 
+    $avatar_root = '/' . $app['board']['base'] . '/uploads/avatars';
+
     // Assign some global template variables
     $app['twig']->addGlobal('user', $user);
     $app['twig']->addGlobal('config', $config);
     $app['twig']->addGlobal('recent_topics', $recent_topics);
     $app['twig']->addGlobal('sessions', $sessions);
+
+    $app['twig']->addGlobal('avatar_root', $avatar_root);
 
 });
 
