@@ -2,9 +2,18 @@
 <head>
 
 	{% block css %}
-		<link rel="stylesheet" href="/{{ config('board', 'base') }}vendor/css/bootstrap.css" />
-		<link rel="stylesheet" href="/{{ config('board', 'base') }}font-awesome/css/font-awesome.css" />
-		<link rel="stylesheet" href="/{{ config('board', 'base') }}css/main.css" />
+
+		{% stylesheets 
+			'css/main.css'
+			'vendor/css/bootstrap.css'
+			'font-awesome/css/font-awesome.css'
+
+			filter="yui_css"
+			output="concat/concat.css"
+		%}
+			<link rel="stylesheet" href="{{ asset_url }}" />
+		{% endstylesheets %}
+
 	{% endblock %}
 
 	<title>{{ title }} - {{ config('board', 'name') }}</title>
@@ -98,7 +107,7 @@
 						</div>
 					</div>
 				{% else %}
-
+					<!-- @todo LOGIN AND SIGNUP BUTTONS -->
 				{% endif %}
 			</div>
 		</div>
@@ -251,13 +260,20 @@
 		{% if not app.debug %}
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
-		
-		<script src="/{{ config('board', 'base') }}vendor/js/jquery.js"></script>
-		<script src="/{{ config('board', 'base') }}vendor/js/bootstrap.js"></script>
-		<script src="/{{ config('board', 'base') }}vendor/js/timeago.js"></script>
-		
-		<script src="/{{ config('board', 'base') }}js/asf.js"></script>
-		<script src="/{{ config('board', 'base') }}js/dom.js"></script>
+
+		{% javascripts 
+			'vendor/js/jquery.js'
+			'vendor/js/bootstrap.js'
+			'vendor/js/timeago.js'
+
+			'js/asf.js'
+			'js/dom.js'
+
+			filter="yui_js"
+			output="concat/concat.js"
+		%}
+			<script src="{{ asset_url }}"></script>
+		{% endjavascripts %}
 
 		{% if user %}
 		<script>
@@ -276,20 +292,6 @@
 			{% endif %}
 
 			asf.config = JSON.parse('{{ config|json_encode|raw }}');
-
-			$(function () {
-
-				$('#alert-tabs p').on('click', function () {
-					$('#alert-tabs p').removeClass('active');
-					$(this).addClass('active');
-					var index = $(this).attr('data-index');
-					$('#alert-box .alert').fadeOut();
-					var target = $('#alert-box .alert').get(index);
-					$(target).fadeIn();
-				});	
-
-			});
-
 		</script>
 	{% endblock %}
 </body>
