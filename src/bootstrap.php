@@ -69,9 +69,9 @@ $app->register(new Silex\Provider\ValidatorServiceProvider());
 $app->register(new SilexAssetic\AsseticServiceProvider());
 $app['assetic.path_to_web'] = __DIR__ . '/../public/';
 $app['assetic.options'] = array(
-    'debug' => $app['debug'],
+    'debug' => false,
     'formulae_cache_dir' => __DIR__ . '/../cache/assetic',
-    'auto_dump_assets' => $app['debug'] ? true : false
+    'auto_dump_assets' => false
 );
 
 $app['assetic.filter_manager'] = $app->share(
@@ -244,5 +244,11 @@ if ($app['debug'] === true)
     if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
     {
         $app['cache']->flush($app, $app['database']['name'], $app['database']['name']);
+
+        $css_flush = dirname(__DIR__) . "/yuicompress.sh -f -o " . dirname(__DIR__) . "/public/concat/concat.css " . dirname(__DIR__) . "/public/vendor/css/bootstrap.css " . dirname(__DIR__) . "/public/vendor/css/datepicker.css " . dirname(__DIR__) . "/public/font-awesome/css/font-awesome.css " . dirname(__DIR__) . "/public/css/main.css";
+        $js_flush  = dirname(__DIR__) . "/yuicompress.sh -f -o " . dirname(__DIR__) . "/public/concat/concat.js " . dirname(__DIR__) . "/public/vendor/js/jquery.js " . dirname(__DIR__) . "/public/vendor/js/bootstrap.js " . dirname(__DIR__) . "/public/vendor/js/timeago.js " . dirname(__DIR__) . "/public/vendor/js/color.js " . dirname(__DIR__) . "/public/vendor/js/twig.js " . dirname(__DIR__) . "/public/vendor/js/datepicker.js " . dirname(__DIR__) . "/public/js/*.js";
+
+        $exec = exec($css_flush);
+        $exec = exec($js_flush);
     }
 }
