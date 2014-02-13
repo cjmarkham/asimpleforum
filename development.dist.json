@@ -6,6 +6,8 @@
 		"domain": ""
 	},
 
+	"java_path": "C:\\Program Files (x86)\\Java\\jre7\bin\\java.exe",
+
 	"board": {
 		"doublePost": "allow",
 		"logo": "logo.png",
