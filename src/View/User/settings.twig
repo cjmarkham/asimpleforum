@@ -9,7 +9,7 @@
 {% block scripts %}
 	{{ parent() }}
 
-	<script src="/{{ app.board.base }}vendor/js/datepicker.js"></script>
+	<script src="{{ asset('vendor/js/datepicker.js') }}"></script>
 
 	<script>
 	$(function () {
