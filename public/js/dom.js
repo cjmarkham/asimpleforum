@@ -4,6 +4,15 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	$('#alert-tabs p').on('click', function () {
+		$('#alert-tabs p').removeClass('active');
+		$(this).addClass('active');
+		var index = $(this).attr('data-index');
+		$('#alert-box .alert').fadeOut();
+		var target = $('#alert-box .alert').get(index);
+		$(target).fadeIn();
+	});
+
 	// User profile editing
 	$('.editable').each(function () {
 		$(this).on({
@@ -314,6 +323,17 @@ $(function () {
 							.removeClass('container')
 							.addClass('clearfix');
 
+				$('#main-nav a.avatar').animate({
+					width: 35,
+					height: 35,
+					marginTop: 20
+				});
+
+				$('#main-nav a.avatar img').animate({
+					width: 35,
+					height: 35
+				});
+
 				$('#main-nav').css({
 					position: 'fixed',
 					top: 0,
@@ -338,7 +358,18 @@ $(function () {
 					marginTop: 0
 				});
 
-				$('#main-nav img').remove();
+				$('#main-nav a.avatar').animate({
+					width: 55,
+					height: 55,
+					marginTop: 0
+				});
+
+				$('#main-nav a.avatar img').animate({
+					width: 55,
+					height: 55
+				});
+
+				$('#main-nav img:first').remove();
 
 				$('#main-nav').css({
 					position: 'relative',
