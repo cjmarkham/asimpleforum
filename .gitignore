@@ -11,3 +11,4 @@ test/
 public/concat/
 public/uploads/avatars/*
 public/uploads/attachments/*
+public/less
