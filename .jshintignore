@@ -1,4 +1,1 @@
-public/js/twig.js
-public/js/bootstrap.js
-public/js/jquery.js
-public/js/timeago.js
+public/concat/concat.js
