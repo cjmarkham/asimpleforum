@@ -256,11 +256,16 @@ section {
 	border: 1px solid #fff;
 	width: 55px;
 	height: 55px;
+	display: block;
 
 	img {
 		width: 55px;
 		height: 55px;
 		border: 1px solid @darkGrey;
+	}
+
+	&.background {
+		background: #fff;
 	}
 
 	&.big {
@@ -460,6 +465,17 @@ date {
 	}
 }
 
+#quick-reply-modal, #create-topic-modal {
+	.modal-dialog {
+		width: 1200px;
+		height: 880px;
+
+		.modal-body {
+			height: 800px;
+		}
+	}
+}
+
 .preview-tooltip {
 	display: none;
 }
@@ -527,7 +543,7 @@ date {
 
 	.modal-header {
 		color: #fff;
-		background: url(/images/section-header.png);
+		background: @lightBlue;
 		border-radius: 5px 5px 0 0;
 	}
 
@@ -952,14 +968,48 @@ section h4 {
 	border: 0;
 }
 
+#user-quick-access {
+	margin-top: -25px;
+
+	.quick-links {
+		margin: 30px 20px 0 0;
+
+		em {
+			font-size: 20px;
+			margin: 0 5px;
+		}
+	}
+}
+
+.tooltip-inner {
+	background: #fff !important;
+	color: @darkerGrey;
+	border-radius: 0;
+}
+
+.tooltip.right .tooltip-arrow {
+	border-right-color: #fff;
+}
+
+.tooltip.left .tooltip-arrow {
+	border-left-color: #fff;
+}
+
+.tooltip.top .tooltip-arrow {
+	border-top-color: #fff;
+}
+
+.tooltip.bottom .tooltip-arrow {
+	border-bottom-color: #fff;
+}
+
+
 #user-quick-access, #user-quick-access-fixed {
-	padding-top: 10px;
 	color: #fff;
 
 	a {
 		color: #d4e5f5;
 		text-shadow: 0 1px 1px #08192b;
-		padding: 0 10px;
 		font-weight: bold;
 		font-size: 14px;
 	}
@@ -967,6 +1017,7 @@ section h4 {
 
 #user-quick-access-fixed {
 	position: absolute;
+	padding-top: 10px;
 	top: 0;
 	right: 20px;
 }
