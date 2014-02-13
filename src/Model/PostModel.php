@@ -178,9 +178,11 @@ class PostModel extends BaseModel
 	 */
 	public function add ($request)
 	{
+		// The topic id that this post belongs to
 		$topic_id = (int) $request->get('topicId');
 		$response = new Response();
 
+		// Should never happen legit but just incase
 		if (!$topic_id)
 		{
 	        $response->setStatusCode(400);
@@ -188,8 +190,21 @@ class PostModel extends BaseModel
 	        return $response;
 		}
 
+		// Get the topic so we can use it later
 		$topic = $this->app['topic']->findById($topic_id);
 
+		// get the logged in user
+		// @todo make a wrapper for this
+		$user = $this->app['session']->get('user');
+
+		if (!$user)
+		{
+	        $response->setStatusCode(400);
+	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
+	        return $response;
+		}
+
+		// Should never happen legit but just incase
 		if (!$topic)
 		{
 	        $response->setStatusCode(400);
@@ -197,19 +212,11 @@ class PostModel extends BaseModel
 	        return $response;
 		}
 
+		// If the topic is locked and user cannot bypass it
 		if ($topic['locked'] && !\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
 			$response->setStatusCode(400);
 	        $response->setContent($this->app->trans('TOPIC_LOCKED'));
-	        return $response;
-		}
-
-		$user = $this->app['session']->get('user');
-
-		if (!$user)
-		{
-	        $response->setStatusCode(400);
-	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
 	        return $response;
 		}
 
@@ -265,7 +272,7 @@ class PostModel extends BaseModel
 				)),
 				new Assert\Length(array(
 					'min' => 6,
-					'max' => 25,
+					'max' => 50,
 					'minMessage' => $this->app->trans('MIN_LENGTH', array('%field%' => 'body', '%min%' => 6)),
 					'maxMessage' => $this->app->trans('MAX_LENGTH', array('%field%' => 'title', '%max%' => 25))
 				))
@@ -299,6 +306,8 @@ class PostModel extends BaseModel
 		}
 		
 		$content = strip_tags($content, implode(',', $this->allowed_html));
+		$content = str_replace('href=', 'target="_blank" rel="nofollow" href=');
+
 		$time = time();
 
 		$last = $this->app['db']->fetchAssoc('SELECT * FROM posts WHERE topic=? ORDER BY added DESC LIMIT 1', array(
@@ -496,7 +505,7 @@ class PostModel extends BaseModel
 			$topic_id
 		));
 
-		return \Utils::truncate($content, 200);
+		return \ASF\Utils::truncate($content, 200);
 	}
 
 	/**
@@ -536,8 +545,8 @@ class PostModel extends BaseModel
 
 	/**
 	 * Finds a post by its id
-	 * @param  Request $request The request object
-	 * @return string           json encoded post data
+	 * @param  Silex\Request $request The request object
+	 * @return string json encoded post data
 	 */
 	public function findById (Request $request)
 	{
@@ -564,14 +573,24 @@ class PostModel extends BaseModel
 	 */
 	public function update (Request $request)
 	{
+		$response = new Response();
+
 		$id = (int) $request->get('id');
 		$content = strip_tags($request->get('content'), implode(',', $this->allowed_html));
 
 		if (!$content)
 		{
-			$response = new Response();
 	        $response->setStatusCode(400);
 	        $response->setContent($this->app->trans('FILL_ALL_FIELDS'));
+	        return $response;
+		}
+
+		$post = json_decode($this->findById(new Request(array('id' => $id))), true);
+
+		if (!$post)
+		{
+			$response->setStatusCode(500);
+	        $response->setContent($this->app->trans('UNKNOWN_ERROR'));
 	        return $response;
 		}
 
