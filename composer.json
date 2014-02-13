@@ -13,7 +13,8 @@
         "igorw/config-service-provider": "1.2.*@dev",
         "entea/silex-twig-simple-asset-extension": "v1.0.0",
         "symfony/config": "2.5.*@dev",
-        "symfony/translation": "~2.3"
+        "symfony/translation": "~2.3",
+        "mheap/Silex-Assetic": "*"
     },
 
     "autoload" : {
