@@ -39,6 +39,8 @@ ok, the "..." is where I have left blank because you will put your own details t
 
 # Database Layout
 
+![Data Model](http://splat.splats-vps.info/web_images/ASF-data-model.png)
+
 ## 'forum' table
 
 The forums and categories are all recorded in the *forums* table.  The *parent* field is set to the *id* of the parent form if it is a sub-forum and is set to 0 otherwise.
@@ -51,11 +53,11 @@ A similar thing happens when deleting a forum.  All nodes later in the tree have
 
 The fields *added* and *updated* store data in PHP time() function format.
 
-![Forum Node Tree](http://i1241.photobucket.com/albums/gg517/KiwiHeretic/Screenshots/forumnodes_zpsb6935176.png)
+![Forum Node Tree](http://splat.splats-vps.info/web_images/ASF-Node-Tree.png)
 
 In the example above, a new forum is created under "2 Forum 5".  The 2 being the left node number and 5 being the right. After adding the forum "5 Forum 6" then the right value for the following nodes are incremented by 2.  A similar scenario, but in reverse, when forums are deleted.
 
 
 # Refreshing Pages
 
-During development you geberally want to delete the files in cache/ folder to ensure your code changes are visible immediately in your browser.
+During development you generally want to delete the files in cache/ folder to ensure your code changes are visible immediately in your browser.
