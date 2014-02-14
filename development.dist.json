@@ -6,7 +6,10 @@
 		"domain": ""
 	},
 
-	"java_path": "C:\\Program Files (x86)\\Java\\jre7\bin\\java.exe",
+	"java_path": "\\usr\\bin\\java",
+	"jar_path": "../yuicompressor-2.4.7.jar",
+	
+	"compression": "yui",
 
 	"board": {
 		"doublePost": "allow",

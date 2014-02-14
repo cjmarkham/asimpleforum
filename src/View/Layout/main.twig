@@ -1,18 +1,8 @@
 <!doctype html>
 <head>
-
 	{% block css %}
 
-		{% stylesheets 
-			'css/main.css'
-			'vendor/css/bootstrap.css'
-			'font-awesome/css/font-awesome.css'
-
-			filter="yui_css"
-			output="concat/concat.css"
-		%}
-			<link rel="stylesheet" href="{{ asset_url }}" />
-		{% endstylesheets %}
+		<link rel="stylesheet" href="/{{ config('board', 'base') }}css/concat.css" />
 
 	{% endblock %}
 
@@ -261,19 +251,8 @@
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
 
-		{% javascripts 
-			'vendor/js/jquery.js'
-			'vendor/js/bootstrap.js'
-			'vendor/js/timeago.js'
-
-			'js/asf.js'
-			'js/dom.js'
-
-			filter="yui_js"
-			output="concat/concat.js"
-		%}
-			<script src="{{ asset_url }}"></script>
-		{% endjavascripts %}
+		
+		<script src="/{{ config('board', 'base') }}js/concat.js"></script>
 
 		{% if user %}
 		<script>

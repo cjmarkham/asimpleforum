@@ -66,29 +66,97 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 
-$app->register(new SilexAssetic\AsseticServiceProvider());
-$app['assetic.path_to_web'] = __DIR__ . '/../public/';
-$app['assetic.options'] = array(
-    'debug' => false,
-    'formulae_cache_dir' => __DIR__ . '/../cache/assetic',
-    'auto_dump_assets' => false
-);
+$compression_method = $app['compression'];
+
+if (in_array($compression_method, array('yui', 'closure')))
+{
+    if (!isset($app['java_path']))
+    {
+        throw new Exception('A path to Java needs to be specified to use YUI or Google Closure compression methods.');
+    }
+}
+
+/**
+ * Set compression method based on config
+ */
+switch ($compression_method)
+{
+    case 'yui':
+        $css_filter = 'Yui\CssCompressorFilter';
+        $js_filter  = 'Yui\JsCompressorFilter';
+        break;
+    case 'closure':
+        $css_filter = 'GoogleClosure\CompilerJarFilter';
+        $js_filter  = 'GoogleClosure\CompilerJarFilter';
+        break;
+    case 'min':
+    default:
+        $css_filter = 'CssMinFilter';
+        $js_filter  = 'JsMinFilter';
+        break;
+}
+
+$js_filter = 'Assetic\Filter\\' . $js_filter;
+$css_filter = 'Assetic\Filter\\' . $css_filter;
+
+$app->register(new SilexAssetic\AsseticServiceProvider(), array(
+    'assetic.options' => array(
+        'debug' => false,
+        'formulae_cache_dir' => __DIR__ . '/../cache/assetic',
+        'auto_dump_assets' => false
+    ),
+    'assetic.path_to_web' => __DIR__ . '/../public/'
+   
+));
 
 $app['assetic.filter_manager'] = $app->share(
-    $app->extend('assetic.filter_manager', function($fm, $app) {
-
-        $fm->set('yui_css', new Assetic\Filter\Yui\CssCompressorFilter(
-            __DIR__ . '/../yuicompressor-2.4.7.jar', 
-            $app['java_path']
-        ));
-
-        $fm->set('yui_js', new Assetic\Filter\Yui\JsCompressorFilter(
-            __DIR__ . '/../yuicompressor-2.4.7.jar', 
-            $app['java_path']
-        ));
+    
+    $app->extend('assetic.filter_manager', function($fm, $app) use ($css_filter, $js_filter) {
+        $fm->set('css_filter', new $css_filter($app['jar_path'], $app['java_path']));
+        $fm->set('js_filter', new $js_filter($app['jar_path'], $app['java_path']));
 
         return $fm;
     })
+
+);
+
+$app['assetic.asset_manager'] = $app->share(
+
+    $app->extend('assetic.asset_manager', function($am, $app) {
+        
+        $am->set('css', new Assetic\Asset\AssetCache(
+            new Assetic\Asset\GlobAsset(
+                array(
+                    __DIR__ . '/../public/css/bootstrap.css',
+                    __DIR__ . '/../public/css/datepicker.css',
+                    __DIR__ . '/../public/css/main.css'
+                ),
+                array($app['assetic.filter_manager']->get('css_filter'))
+            ),
+            new Assetic\Cache\FilesystemCache(__DIR__ . '/../cache/assetic')
+        ));
+        $am->get('css')->setTargetPath('css/concat.css');
+
+        $am->set('js', new Assetic\Asset\AssetCache(
+            new Assetic\Asset\GlobAsset(
+                array(
+                    __DIR__ . '/../public/js/jquery.js',
+                    __DIR__ . '/../public/js/bootstrap.js',
+                    __DIR__ . '/../public/js/twig.js',
+                    __DIR__ . '/../public/js/timeago.js',
+                    __DIR__ . '/../public/js/color.js',
+                    __DIR__ . '/../public/js/asf.js',
+                    __DIR__ . '/../public/js/dom.js'
+                ),
+                array($app['assetic.filter_manager']->get('js_filter'))
+            ),
+            new Assetic\Cache\FilesystemCache(__DIR__ . '/../cache/assetic')
+        ));
+        $am->get('js')->setTargetPath('js/concat.js');
+
+        return $am;
+    })
+
 );
 
 $truncate = new Twig_SimpleFunction('truncate', array('ASF\Utils', 'truncate'));
@@ -244,11 +312,7 @@ if ($app['debug'] === true)
     if (strpos($_SERVER['REQUEST_URI'], '?purge') !== false)
     {
         $app['cache']->flush($app, $app['database']['name'], $app['database']['name']);
-
-        $css_flush = dirname(__DIR__) . "/yuicompress.sh -f -o " . dirname(__DIR__) . "/public/concat/concat.css " . dirname(__DIR__) . "/public/vendor/css/bootstrap.css " . dirname(__DIR__) . "/public/vendor/css/datepicker.css " . dirname(__DIR__) . "/public/font-awesome/css/font-awesome.css " . dirname(__DIR__) . "/public/css/main.css";
-        $js_flush  = dirname(__DIR__) . "/yuicompress.sh -f -o " . dirname(__DIR__) . "/public/concat/concat.js " . dirname(__DIR__) . "/public/vendor/js/jquery.js " . dirname(__DIR__) . "/public/vendor/js/bootstrap.js " . dirname(__DIR__) . "/public/vendor/js/timeago.js " . dirname(__DIR__) . "/public/vendor/js/color.js " . dirname(__DIR__) . "/public/vendor/js/twig.js " . dirname(__DIR__) . "/public/vendor/js/datepicker.js " . dirname(__DIR__) . "/public/js/*.js";
-
-        $exec = exec($css_flush);
-        $exec = exec($js_flush);
+        
+        $app['assetic.dumper']->dumpAssets();
     }
 }
