@@ -1,6 +1,8 @@
 # ASimpleForum
 
-Make sure there are no comments in the development.json file.
+## Architecture
+
+ASF is a forum built on top of Silex, MySql, JQuery and of course PHP.  It also optionally uses MongoDB as a caching layer.
 
 ## Apache Configuration
 
@@ -34,10 +36,30 @@ for the website.
 
 ok, the "..." is where I have left blank because you will put your own details there but don't leave as "..."
 
-# Silex Directory Layout
+You will need mod-expires.so to be enabled in Apache.  In my case I added:
 
+```
+LoadModule expires_module modules/mod_expires.so ```
+To httpd.conf file.  This is needed to support the Expires... directives in the .htaccess file.
+ 
+Since the addition of the ExpiresByType directives 
+## Silex 
 
-# Database Layout
+Silex is a MVC framework (citation?).
+ 
+### SilexAssetic
+
+ASF uses SilexAssetic for css and js compression.  [More documentation](http://code.ohloh.net/file?fid=Vq0SbQn5NS8JRHAIEmrSd8uHAUI&cid=-rl2u2Pu4rw&s=)
+
+*Not yet sure whether this means Java is a dependency or not.*
+
+### Directory Layout
+
+All the ASF project files are in the src/ folder.  The entry point for PHP code is the index.php from within the public/ folder.  (It's good practice to put most of the php files in a folder that is not directly  accessible by the web server for security reasons.)
+
+### Routing
+
+## Database Layout
 
 ![Data Model](http://splat.splats-vps.info/web_images/ASF-data-model.png)
 The direction of the arrow, points to the table with the primary key.  You can also think of it as the arrow points to the "one" part of the one-to-many relationship.
@@ -59,6 +81,6 @@ The fields *added* and *updated* store data in PHP time() function format.
 In the example above, a new forum is created under "2 Forum 5".  The 2 being the left node number and 5 being the right. After adding the forum "5 Forum 6" then the right value for the following nodes are incremented by 2.  A similar scenario, but in reverse, when forums are deleted.
 
 
-# Refreshing Pages
+# Browser Page Refreshes
 
-During development you generally want to delete the files in cache/ folder to ensure your code changes are visible immediately in your browser.
+During development you often want to change files and immediately see the result of those changes in the web browser.  If using 'disk' caching (specified in development.json file) you  generally want to delete the files in cache/ folder to ensure your code changes are  immediately  visible in your browser.
