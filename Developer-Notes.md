@@ -39,7 +39,8 @@ ok, the "..." is where I have left blank because you will put your own details t
 You will need mod-expires.so to be enabled in Apache.  In my case I added:
 
 ```
-LoadModule expires_module modules/mod_expires.so ```
+LoadModule expires_module modules/mod_expires.so 
+```
 To httpd.conf file.  This is needed to support the Expires... directives in the .htaccess file.
 
 Since the addition of the ExpiresByType directives
