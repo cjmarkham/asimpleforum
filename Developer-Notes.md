@@ -34,6 +34,9 @@ for the website.
 
 ok, the "..." is where I have left blank because you will put your own details there but don't leave as "..."
 
+# Silex Directory Layout
+
+
 # Database Layout
 
 ## 'forum' table
@@ -49,6 +52,9 @@ A similar thing happens when deleting a forum.  All nodes later in the tree have
 The fields *added* and *updated* store data in PHP time() function format.
 
 ![Forum Node Tree](http://i1241.photobucket.com/albums/gg517/KiwiHeretic/Screenshots/forumnodes_zpsb6935176.png)
+
+In the example above, a new forum is created under "2 Forum 5".  The 2 being the left node number and 5 being the right. After adding the forum "5 Forum 6" then the right value for the following nodes are incremented by 2.  A similar scenario, but in reverse, when forums are deleted.
+
 
 # Refreshing Pages
 

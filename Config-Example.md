@@ -45,7 +45,7 @@ Below are the definitions of a config file. You can find the actual file in the 
 ***
 
 * `navLinks` An array of links to be shown on the top of the forum
-    * `link`: The link to the page`
+    * `link`: The link to the page.  If `board.base`is blank (not set) then this should not have a leading "/". 
     * `title`: The text for the link`
     * `section`: The name of it's section
 
