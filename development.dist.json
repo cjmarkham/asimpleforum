@@ -46,23 +46,23 @@
 		"title": "Forums",
 		"section": "forums"
 	}, {
-		"link": "/members",
+		"link": "members",
 		"title": "Members",
 		"section": "user"
 	}, {
-		"link": "/search",
+		"link": "search",
 		"title": "Search",
 		"section": "search"
 	}, {
-		"link": "/new-topics",
+		"link": "new-topics",
 		"title": "New Topics",
 		"section": "new-topics"
 	}, {
-		"link": "/faqs",
+		"link": "faqs",
 		"title": "FAQs",
 		"section": "faqs"
 	}, {
-		"link": "/download",
+		"link": "download",
 		"title": "Download",
 		"section": "download"
 	}],
