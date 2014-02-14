@@ -2,9 +2,37 @@
 
 Make sure there are no comments in the development.json file.
 
+## Apache Configuration
+
 I needed to add this in one of the apache config files.  In my case with the vhosts section
 for the website.
-* SetEnv AppEnv "development"
+
+```
+<VirtualHost *:80>
+    DocumentRoot "..."
+    ServerName ...
+    ErrorLog "logs/asimpleforum-error.log"
+    CustomLog "logs/asimpleforum-access.log" common
+
+    # Uncomment below for rewrite rule logging
+    #LogLevel alert rewrite:trace5
+    SetEnv APP_ENV "development"
+    <Directory "...">
+
+        Options Indexes FollowSymLinks  # otherwise rewrite rules fail
+        AllowOverride All    # otherwise .htaccess won't work
+
+        Order deny,allow
+        Allow from all
+        require all granted
+        satisfy any
+
+
+    </Directory>
+</VirtualHost>
+```
+
+ok, the "..." is where I have left blank because you will put your own details there but don't leave as "..."
 
 # Database Layout
 
