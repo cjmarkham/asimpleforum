@@ -52,7 +52,7 @@ Silex is a MVC framework (citation?).
 
 ASF uses SilexAssetic for css and js compression.  [More documentation](http://code.ohloh.net/file?fid=Vq0SbQn5NS8JRHAIEmrSd8uHAUI&cid=-rl2u2Pu4rw&s=)
 
-*Not yet sure whether this means Java is a dependency or not.  Apparently there is a way of making it optional.  Will add here when answer known.*
+Users have the option to choose their compression method from within their [Config File](https://github.com/kiwiheretic/asimpleforum/wiki/Config-Example)
 
 ### Directory Layout
 
