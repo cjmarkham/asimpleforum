@@ -40,6 +40,7 @@ ok, the "..." is where I have left blank because you will put your own details t
 # Database Layout
 
 ![Data Model](http://splat.splats-vps.info/web_images/ASF-data-model.png)
+The direction of the arrow, points to the table with the primary key.  You can also think of it as the arrow points to the "one" part of the one-to-many relationship.
 
 ## 'forum' table
 
