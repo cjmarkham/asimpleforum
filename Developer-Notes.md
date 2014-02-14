@@ -41,17 +41,17 @@ You will need mod-expires.so to be enabled in Apache.  In my case I added:
 ```
 LoadModule expires_module modules/mod_expires.so ```
 To httpd.conf file.  This is needed to support the Expires... directives in the .htaccess file.
- 
-Since the addition of the ExpiresByType directives 
-## Silex 
+
+Since the addition of the ExpiresByType directives
+## Silex
 
 Silex is a MVC framework (citation?).
- 
+
 ### SilexAssetic
 
 ASF uses SilexAssetic for css and js compression.  [More documentation](http://code.ohloh.net/file?fid=Vq0SbQn5NS8JRHAIEmrSd8uHAUI&cid=-rl2u2Pu4rw&s=)
 
-*Not yet sure whether this means Java is a dependency or not.*
+*Not yet sure whether this means Java is a dependency or not.  Apparently there is a way of making it optional.  Will add here when answer known.*
 
 ### Directory Layout
 
