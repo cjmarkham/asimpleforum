@@ -9,7 +9,7 @@ output
 package.xml
 test/
 public/css/concat.css
-public/jss/concat.js
+public/js/concat.js
 public/uploads/avatars/*
 public/uploads/attachments/*
 public/less
