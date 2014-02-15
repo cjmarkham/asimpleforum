@@ -6,6 +6,14 @@ Below are the definitions of a config file. You can find the actual file in the 
 
 ***
 
+* `compression`: The method of compression to use (yui, closure, min)
+  * if compression is set to yui or closure the java_path and jar_path settings must be specified
+
+* `java_path`: The path to where Java is installed
+* `jar_path`: The path to the compiler jar file
+
+***
+
 * `cookie.name`: The name of the sites cookie
 * `cookie.domain`: The domain path for this cookie
 
