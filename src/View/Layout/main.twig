@@ -81,21 +81,9 @@
 					</li>
 				{% endfor %}
 			</ul>
-			<div id="user-quick-access" class="hidden-no-user hidden-xs hidden-sm pull-right">
+			<div id="user-quick-access" class="pull-right">
 				{% if user %}
-					<div class="clearfix">
-						<a class="pull-right avatar small background" href="{{ path('user-profile', {username: user.username}) }}">
-							<img width="55" height="55" src="{{ avatar_root }}/{{ user.username }}/small.png" alt="{{ user.username }}" title="{{ user.username }}" />
-						</a>
-						<div class="pull-right quick-links">
-							<a href="javascript:void(0)">
-								<em data-toggle="tooltip" title="Notifications" class="fa fa-envelope"></em>
-							</a>
-							<a href="{{ path('user-settings') }}">
-								<em data-toggle="tooltip" title="Settings" class="fa fa-cogs"></em>
-							</a>
-						</div>
-					</div>
+					{% include "Partials/user/navQuickAccess.twig" %}
 				{% else %}
 					<!-- @todo LOGIN AND SIGNUP BUTTONS -->
 				{% endif %}
@@ -251,13 +239,12 @@
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
 
-		
 		<script src="/{{ config('board', 'base') }}js/concat.js"></script>
-
+		
 		{% if user %}
-		<script>
-			asf.user = JSON.parse('{{ user|json_encode|raw }}');
-		</script>
+			<script>
+				asf.user = JSON.parse('{{ user|json_encode|raw }}');
+			</script>
 		{% endif %}
 
 		<script>
