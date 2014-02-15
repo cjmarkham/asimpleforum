@@ -60,6 +60,8 @@ The fields *added* and *updated* store data in PHP time() function format.
 In the example above, a new forum is created under "2 Forum 5".  The 2 being the left node number and 5 being the right. After adding the forum "5 Forum 6" then the right value for the following nodes are incremented by 2.  A similar scenario, but in reverse, when forums are deleted.
 
 
-# Browser Page Refreshes
+# Cache flushing
 
-During development you often want to change files and immediately see the result of those changes in the web browser.  To remove the cache add ?purge to the end of the url
+A Simple Forum caches data to avoid pointless data fetches from the database. If the user chooses to use MongoDB then the data will be stored in a Mongo Collection. If the user chooses to use disk caching (may be removed later) then the data will be stored in the cache folder located in the root.
+
+To clear this cache you can add ?purge to the end of a url and refresh. This will also force a rebuild of the CSS and Javascript concat files.
