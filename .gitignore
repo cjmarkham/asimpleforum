@@ -8,7 +8,8 @@ phpdoc
 output
 package.xml
 test/
-public/concat/
+public/css/concat.css
+public/jss/concat.js
 public/uploads/avatars/*
 public/uploads/attachments/*
 public/less
