@@ -36,4 +36,5 @@ To contribute to A Simple Forum:
 Contributors
 =
 
-[Kiwiheretic](https://github.com/kiwiheretic)
+* [Marc Qualie](https://github.com/marcqualie)
+* [Kiwiheretic](https://github.com/kiwiheretic)
