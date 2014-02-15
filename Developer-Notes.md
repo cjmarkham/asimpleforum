@@ -6,59 +6,37 @@ ASF is a forum built on top of Silex, MySql, JQuery and of course PHP.  It also 
 
 ## Apache Configuration
 
-I needed to add this in one of the apache config files.  In my case with the vhosts section
-for the website.
+An example of the minimum needed in your apache vhost configuration.
 
 ```
 <VirtualHost *:80>
-    DocumentRoot "..."
-    ServerName ...
-    ErrorLog "logs/asimpleforum-error.log"
-    CustomLog "logs/asimpleforum-access.log" common
+    DocumentRoot "SITE_ROOT"
+    ServerName yoursite.com
 
-    # Uncomment below for rewrite rule logging
-    #LogLevel alert rewrite:trace5
-    SetEnv APP_ENV "development"
-    <Directory "...">
+    SetEnv APP_ENV "development" # Only needed if you want debugging enabled
+
+    <Directory "SITE_ROOT">
 
         Options Indexes FollowSymLinks  # otherwise rewrite rules fail
         AllowOverride All    # otherwise .htaccess won't work
 
-        Order deny,allow
-        Allow from all
-        require all granted
-        satisfy any
-
+        Order allow,deny 
+	Allow from all 
 
     </Directory>
 </VirtualHost>
 ```
 
-ok, the "..." is where I have left blank because you will put your own details there but don't leave as "..."
-
-You will need mod-expires.so to be enabled in Apache.  In my case I added:
-
-```
-LoadModule expires_module modules/mod_expires.so 
-```
-To httpd.conf file.  This is needed to support the Expires... directives in the .htaccess file.
-
-Since the addition of the ExpiresByType directives
 ## Silex
 
-Silex is a MVC framework (citation?).
+Silex is a Micro Framework built on PHP. [Silex website](http://silex.sensiolabs.org/)
 
-### SilexAssetic
+### Assetic
 
-ASF uses SilexAssetic for css and js compression.  [More documentation](http://code.ohloh.net/file?fid=Vq0SbQn5NS8JRHAIEmrSd8uHAUI&cid=-rl2u2Pu4rw&s=)
+A Simple Forum uses Symfony's Assetic for CSS and JS compression with the help of the Silex Service Provider.
 
-Users have the option to choose their compression method from within their [Config File](Config-Example)
-
-### Directory Layout
-
-All the ASF project files are in the src/ folder.  The entry point for PHP code is the index.php from within the public/ folder.  (It's good practice to put most of the php files in a folder that is not directly  accessible by the web server for security reasons.)
-
-### Routing
+Users have the option to choose their compression method from within their [Config File](Config-Example).
+If you choose to use either the YUI or Google Closure compression methods you will need to specify the path to the jar file and path to your installed Java. You can choose basic CSS and JS minification if you don't want to use these methods.
 
 ## Database Layout
 
