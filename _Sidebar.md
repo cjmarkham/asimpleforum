@@ -1,4 +1,4 @@
 * [Contributing](wiki/Contributing)
-* [Installation](Installation)
-* [Configuration](Config-Example)
-* [Developer Notes](Developer-Notes)
+* [Installation](wiki/Installation)
+* [Configuration](wiki/Config-Example)
+* [Developer Notes](wiki/Developer-Notes)
