@@ -1000,3 +1000,31 @@ section h4 {
   width: 300px;
   padding: 5px;
 }
+.datepicker-days,
+.datepicker-months,
+.datepicker-years {
+  background: #fff;
+}
+.datepicker-months span {
+  padding: 5px;
+  cursor: pointer;
+}
+.datepicker-months span.active {
+  background: #f46626;
+  color: #fff;
+}
+.datepicker-years span {
+  padding: 5px;
+  cursor: pointer;
+}
+.datepicker-years span.active {
+  background: #f46626;
+  color: #fff;
+}
+.datepicker-days .day {
+  cursor: pointer;
+}
+.datepicker-days .day.active {
+  background: #f46626;
+  color: #fff;
+}
