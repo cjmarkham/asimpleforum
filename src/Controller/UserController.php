@@ -46,15 +46,14 @@ class UserController extends Controller
 			return $this->app->redirect('/' . $this->app['board']['base']);
 		}
 
-		// reset with profile information
-		$user = $this->app['user']->findByUsername($user['username']);
+		$profile = $this->app['user']->findByUsername($user['username']);
 
 		return $this->app['twig']->render('User/settings.twig', array(
 			'title' 			=> 'Settings',
 			'section'			=> 'settings',
-			'user'				=> $user['data'],
-			'profile'			=> $user['data']['profile'],
-			'settings'			=> $user['data']['settings']
+			'user'				=> $user,
+			'profile'			=> $profile['data']['profile'],
+			'settings'			=> $profile['data']['settings']
 		) + $this->extras);
 	}
 
