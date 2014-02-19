@@ -71,6 +71,12 @@ class UserModel extends BaseModel
 
 		$upload_dir = dirname(dirname(__DIR__)) . '/public/uploads/avatars/' . $user['username'];
 
+		if (!is_dir($upload_dir))
+		{
+			mkdir($upload_dir);
+			chmod($upload_dir, 0777);
+		}
+
 		$this->app['imagine']
             ->open($avatar->getPathname())
             ->resize(new \Imagine\Image\Box(35, 35))
