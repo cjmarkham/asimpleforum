@@ -19,6 +19,12 @@
 .marginTop80 {
   margin-top: 80px;
 }
+.alignTop img {
+  vertical-align: top;
+}
+.alignBottom img {
+  vertical-align: bottom;
+}
 .loading {
   text-align: center;
 }
@@ -236,19 +242,27 @@ thead.section-header h5 {
 .avatar.background {
   background: #fff;
 }
-.avatar.big {
+.avatar.tiny {
+  width: 35px;
+  height: 35px;
+}
+.avatar.tiny img {
   width: 72px;
   height: 72px;
 }
-.avatar.big img {
+.avatar.medium {
   width: 72px;
   height: 72px;
 }
-.avatar.huge {
+.avatar.medium img {
+  width: 72px;
+  height: 72px;
+}
+.avatar.large {
   width: 100px;
   height: 100px;
 }
-.avatar.huge img {
+.avatar.large img {
   width: 100px;
   height: 100px;
 }
@@ -744,6 +758,7 @@ section h4 {
 }
 .recent-topic .topic-name {
   width: 150px;
+  height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -827,7 +842,8 @@ section h4 {
 #user-quick-access .quick-links {
   margin: 30px 20px 0 0;
 }
-#user-quick-access .quick-links em {
+#user-quick-access .quick-links em,
+#user-quick-access .quick-links a {
   font-size: 20px;
   margin: 0 5px;
 }
@@ -948,4 +964,39 @@ section h4 {
 .help {
   color: #79828b;
   font-size: 12px;
+}
+.file-input {
+  position: relative;
+  height: 30px;
+}
+.file-input button {
+  position: absolute;
+}
+.file-input input {
+  position: absolute;
+  opacity: 0.0000001;
+  top: 0;
+  height: 35px;
+}
+#new-notifications {
+  position: absolute;
+  left: 0px;
+  top: -5px;
+  font-size: 24px !important;
+}
+.dropdown-menu {
+  border-radius: 0;
+  background: #0d2c49;
+  font-size: 12px !important;
+  border: 0;
+}
+.dropdown-menu a {
+  font-size: 12px !important;
+  display: inline-block !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#notifications {
+  width: 300px;
+  padding: 5px;
 }
