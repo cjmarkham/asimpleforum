@@ -92,7 +92,7 @@ switch ($compression_method)
     case 'min':
     default:
         $css_filter = 'CssMinFilter';
-        $js_filter  = 'JsMinFilter';
+        $js_filter  = 'JSMinFilter';
         break;
 }
 
