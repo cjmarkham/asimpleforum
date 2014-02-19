@@ -49,3 +49,8 @@ $app['language'] = $app->share(function() use ($app) {
     $model = new ASF\Language($app);
     return $model;
 });
+
+$app['notification'] = $app->share(function() use ($app) {
+    $model = new \Model\NotificationModel($app);
+    return $model;
+});
