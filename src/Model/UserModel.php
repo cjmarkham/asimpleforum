@@ -135,6 +135,10 @@ class UserModel extends BaseModel
 			'email' => $email
 		], ['id' => $user['id']]);
 
+		$this->app['cache']->setCollection($this->app['database']['name'], 'users');
+		$this->app['cache']->delete('user-' . $user['id']);
+		$this->app['cache']->delete('user-' . $user['username']);
+
 		return true;
 	}
 
@@ -165,6 +169,9 @@ class UserModel extends BaseModel
 		$this->app['db']->update('settings', [
 			'date_format' => $format
 		], ['id' => $user['id']]);
+
+		$this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->delete('profile-' . $user['id']);
 
 		return true;
 	}
@@ -197,6 +204,9 @@ class UserModel extends BaseModel
 			'name' => $name
 		], ['id' => $user['id']]);
 
+		$this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->delete('profile-' . $user['id']);
+
 		return true;
 	}
 
@@ -228,6 +238,9 @@ class UserModel extends BaseModel
 			'location' => $location
 		], ['id' => $user['id']]);
 
+		$this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->delete('profile-' . $user['id']);
+
 		return true;
 	}
 
@@ -258,6 +271,9 @@ class UserModel extends BaseModel
 		$this->app['db']->update('profiles', [
 			'dob' => $dob
 		], ['id' => $user['id']]);
+
+		$this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
+		$this->app['cache']->delete('profile-' . $user['id']);
 
 		return true;
 	}
