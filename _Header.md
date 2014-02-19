@@ -1,1 +1,0 @@
-![A Simple Forum](http://www.asimpleforum.co.uk/git-header.png)

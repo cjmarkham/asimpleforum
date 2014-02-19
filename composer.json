@@ -14,7 +14,8 @@
         "entea/silex-twig-simple-asset-extension": "v1.0.0",
         "symfony/config": "2.5.*@dev",
         "symfony/translation": "~2.3",
-        "mheap/Silex-Assetic": "*"
+        "mheap/Silex-Assetic": "*",
+        "neutron/silex-imagine-provider": "dev-master"
     },
 
     "autoload" : {
