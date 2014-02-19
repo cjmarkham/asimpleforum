@@ -980,9 +980,11 @@ section h4 {
 }
 #new-notifications {
   position: absolute;
-  left: 0px;
-  top: -5px;
-  font-size: 24px !important;
+  left: 5px;
+  top: -7px;
+  padding: 0 4px;
+  background: #f46626;
+  color: #fff;
 }
 .dropdown-menu {
   border-radius: 0;
@@ -999,6 +1001,9 @@ section h4 {
 #notifications {
   width: 300px;
   padding: 5px;
+}
+#notifications li:not(:last-child) {
+  margin-bottom: 5px;
 }
 .datepicker-days,
 .datepicker-months,

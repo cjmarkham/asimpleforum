@@ -11,7 +11,9 @@
 				<em data-toggle="tooltip" title="Settings" class="fa fa-cogs"></em>
 			</a>
 			{% if user.notifications.unread|length %}
-				<em data-toggle="dropdown" data-target="#notifications" class="fa fa-exclamation orange" id="new-notifications"></em>
+				<strong data-toggle="dropdown" data-target="#notifications" id="new-notifications">
+					{{ user.notifications.unread|length }}
+				</strong>
 			
 				<div id="notifications" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 					<ul class="list-unstyled">
