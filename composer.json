@@ -26,6 +26,7 @@
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "filp/whoops": "1.*",
-        "silex/web-profiler": "1.0.*@dev"
+        "natxet/CssMin": "dev-master",
+        "lmammino/jsmin4assetic": "1.0.*@dev"
     }
 }

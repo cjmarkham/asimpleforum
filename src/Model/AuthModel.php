@@ -226,10 +226,9 @@ class AuthModel
 			return $response;
 		}
 
-		$user['group'] = $this->app['group']->findById($user['perm_group']);
-
+		$this->app['session']->set('userId', $user['id']);
 		$this->app['session']->set('user', $user);
 
-		return new Response(json_encode($this->app['session']->get('user')), 200);
+		return new Response(json_encode($user), 200);
 	}
 }

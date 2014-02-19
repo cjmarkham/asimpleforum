@@ -19,57 +19,12 @@
 .marginTop80 {
   margin-top: 80px;
 }
-.greyGradient {
-  background: #ffffff;
-  /* Old browsers */
-
-  background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 50%, #e8e8e8 51%, #f0f0f0 52%, #ffffff 100%);
-  /* FF3.6+ */
-
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(50%, #ffffff), color-stop(51%, #e8e8e8), color-stop(52%, #f0f0f0), color-stop(100%, #ffffff));
-  /* Chrome,Safari4+ */
-
-  background: -webkit-linear-gradient(top, #ffffff 0%, #ffffff 50%, #e8e8e8 51%, #f0f0f0 52%, #ffffff 100%);
-  /* Chrome10+,Safari5.1+ */
-
-  background: -o-linear-gradient(top, #ffffff 0%, #ffffff 50%, #e8e8e8 51%, #f0f0f0 52%, #ffffff 100%);
-  /* Opera 11.10+ */
-
-  background: -ms-linear-gradient(top, #ffffff 0%, #ffffff 50%, #e8e8e8 51%, #f0f0f0 52%, #ffffff 100%);
-  /* IE10+ */
-
-  background: linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #e8e8e8 51%, #f0f0f0 52%, #ffffff 100%);
-  /* W3C */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0);
-  /* IE6-9 */
-
+.loading {
+  text-align: center;
 }
-.inverseGreyGradient {
-  background: #fcfcfc;
-  /* Old browsers */
-
-  background: -moz-linear-gradient(top, #fcfcfc 0%, #f1f1f1 100%);
-  /* FF3.6+ */
-
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fcfcfc), color-stop(100%, #f1f1f1));
-  /* Chrome,Safari4+ */
-
-  background: -webkit-linear-gradient(top, #fcfcfc 0%, #f1f1f1 100%);
-  /* Chrome10+,Safari5.1+ */
-
-  background: -o-linear-gradient(top, #fcfcfc 0%, #f1f1f1 100%);
-  /* Opera 11.10+ */
-
-  background: -ms-linear-gradient(top, #fcfcfc 0%, #f1f1f1 100%);
-  /* IE10+ */
-
-  background: linear-gradient(to bottom, #fcfcfc 0%, #f1f1f1 100%);
-  /* W3C */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#f1f1f1', GradientType=0);
-  /* IE6-9 */
-
+.loading em {
+  font-size: 100px;
+  margin: 10px;
 }
 .topRadius5 {
   border-radius: 5px 5px 0 0;
@@ -235,6 +190,22 @@ section header h5 {
 section .content {
   background: #f2f2f2;
   padding: 10px;
+}
+thead.section-header {
+  height: 35px;
+  padding: 8px 8px 0;
+  background: #3d78b2;
+  color: #fff;
+  text-shadow: 0 1px 1px #08192b;
+  font-weight: bold;
+}
+thead.section-header h2,
+thead.section-header h3,
+thead.section-header h4,
+thead.section-header h5 {
+  margin: 3px 0 0;
+  font-weight: bold;
+  font-size: 14px;
 }
 #main-nav h2 {
   font-size: 14px;
@@ -973,4 +944,8 @@ section h4 {
 [contenteditable] {
   background: #fff;
   border: 1px solid #c6c6c6;
+}
+.help {
+  color: #79828b;
+  font-size: 12px;
 }

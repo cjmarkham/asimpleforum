@@ -101,8 +101,7 @@ $css_filter = 'Assetic\Filter\\' . $css_filter;
 
 $app->register(new SilexAssetic\AsseticServiceProvider(), array(
     'assetic.options' => array(
-        'debug' => false,
-        'formulae_cache_dir' => __DIR__ . '/../cache/assetic',
+        'debug' => $app['debug'],
         'auto_dump_assets' => false
     ),
     'assetic.path_to_web' => __DIR__ . '/../public/'
@@ -126,9 +125,11 @@ $app['assetic.asset_manager'] = $app->share(
         
         $am->set('css', new Assetic\Asset\AssetCache(
             new Assetic\Asset\GlobAsset(
+                // Specified one by one to define order
                 array(
                     __DIR__ . '/../public/css/bootstrap.css',
                     __DIR__ . '/../public/css/datepicker.css',
+                    __DIR__ . '/../public/font-awesome/css/font-awesome.css',
                     __DIR__ . '/../public/css/main.css'
                 ),
                 array($app['assetic.filter_manager']->get('css_filter'))
@@ -139,12 +140,16 @@ $app['assetic.asset_manager'] = $app->share(
 
         $am->set('js', new Assetic\Asset\AssetCache(
             new Assetic\Asset\GlobAsset(
+                // Specified one by one to define order
                 array(
                     __DIR__ . '/../public/js/jquery.js',
+                    __DIR__ . '/../public/js/handlebars.js',
+                    __DIR__ . '/../public/js/ember.js',
                     __DIR__ . '/../public/js/bootstrap.js',
                     __DIR__ . '/../public/js/twig.js',
                     __DIR__ . '/../public/js/timeago.js',
                     __DIR__ . '/../public/js/color.js',
+                    __DIR__ . '/../public/js/datepicker.js',
                     __DIR__ . '/../public/js/asf.js',
                     __DIR__ . '/../public/js/dom.js'
                 ),
@@ -184,10 +189,30 @@ $repeat_function = new Twig_SimpleFunction('repeat', function ($string, $length)
     return str_repeat($string, $length);
 });
 
+$to_date = new Twig_SimpleFilter('toDate', function ($string) use ($app) {
+    $user = $app['session']->get('user');
+    
+    if (!$user)
+    {
+        // @todo add an admin setting for default date format
+        return date('jS m y, H:i', $string);
+    }
+    else
+    {
+        if (!$user['settings']['date_format'])
+        {
+            return date('jS m y, H:i', $string);
+        }
+
+        return date($user['settings']['date_format'], $string);
+    }
+});
+
 $app['twig']->addFunction($truncate);
 $app['twig']->addFunction($config_function);
 $app['twig']->addFunction($permissions_function);
 $app['twig']->addFunction($repeat_function);
+$app['twig']->addFilter($to_date);
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
@@ -227,80 +252,11 @@ $app['cache']->app = $app;
 $logger = new Doctrine\DBAL\Logging\DebugStack();
 $app['db']->getConfiguration()->setSQLLogger($logger);
 
-$app->register(new \Silex\Provider\ServiceControllerServiceProvider());
-
-/*if ($app['debug'])
-{
-    $app->register(new \Silex\Provider\WebProfilerServiceProvider(), array(
-        'profiler.cache_dir' => __DIR__.'/../cache/profiler',
-        'profiler.mount_prefix' => '/_profiler', // this is the default
-    ));
-
-    $webProfilerPath = dirname(dirname(__FILE__)) . '/vendor/symfony/web-profiler-bundle/Symfony/Bundle/WebProfilerBundle/Resources/views'; 
-    $app['twig.loader.filesystem']->addPath($webProfilerPath, 'WebProfiler');
-}*/
-
-// Facebook SDK
-/*$app->register(new Tobiassjosten\Silex\Provider\FacebookServiceProvider(), array(
-    'facebook.app_id'     => '480210532061315',
-    'facebook.secret'     => 'f5bc907e9ac2bb6ea651fc9bfe89f7b8',
-));*/
-
 ASF\Route::$app = $app;
 ASF\Permissions::$app = $app;
 
-$app->register(new Silex\Provider\ServiceControllerServiceProvider());
-
 // Models
-$app['sessions'] = $app->share(function() use ($app) {
-    $model = new \Model\SessionModel($app);
-    return $model;
-});
-
-$app['forum'] = $app->share(function() use ($app) {
-    $model = new \Model\ForumModel($app);
-    return $model;
-});
-
-$app['alert'] = $app->share(function() use ($app) {
-    $model = new \Model\AlertModel($app);
-    return $model;
-});
-
-$app['search'] = $app->share(function() use ($app) {
-    $model = new \Model\SearchModel($app);
-    return $model;
-});
-
-$app['group'] = $app->share(function() use ($app) {
-    $model = new \Model\GroupModel($app);
-    return $model;
-});
-
-$app['topic'] = $app->share(function() use ($app) {
-    $model = new \Model\TopicModel($app);
-    return $model;
-});
-
-$app['post'] = $app->share(function() use ($app) {
-    $model = new \Model\PostModel($app);
-    return $model;
-});
-
-$app['user'] = $app->share(function() use ($app) {
-    $model = new \Model\UserModel($app);
-    return $model;
-});
-
-$app['auth'] = $app->share(function() use ($app) {
-    $model = new \Model\AuthModel($app);
-    return $model;
-});
-
-$app['language'] = $app->share(function() use ($app) {
-    $model = new ASF\Language($app);
-    return $model;
-});
+include 'models.php';
 
 // Routes
 include 'routes.php';

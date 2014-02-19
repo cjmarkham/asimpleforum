@@ -25,55 +25,265 @@ class UserModel extends BaseModel
 		$this->app['cache']->collection = $this->app['cache']->setCollection($app['database']['name'], 'posts');
 	}
 
-	public function save (Request $request)
+	/**
+	 * Finds all users
+	 * @return array
+	 */
+	public function findAll (Request $request)
+	{
+		$offset = (int) $request->get('offset');
+		$users = [];
+
+		$ids = $this->app['db']->fetchAll('SELECT id FROM users ORDER BY username ASC LIMIT ' . $offset . ', 20');
+
+		foreach ($ids as $id)
+		{
+			$users[] = $this->findById($id['id'])['data'];
+		}
+
+		return json_encode($users);
+	}
+
+	/**
+	 * Saves the users email change
+	 * @param  Request $request The request object
+	 * @return bool|Response
+	 */
+	public function saveEmail (Request $request)
 	{
 		$user = $this->app['session']->get('user');
-
 		if (!$user)
 		{
-			$response->setStatusCode(400);
-	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
-	        return $response;
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 400);
 		}
 
-		$response = new Response;
-		$params = $request->request;
+		$email = $request->get('email');
 
-		$params = iterator_to_array($params);
+		$constraints = [
+			new Assert\Email([
+				'message' => 'MUST_BE_EMAIL'
+			]),
+			new Assert\NotBlank([
+				'message' => 'CANNOT_BE_BLANK'
+			])
+		];
 
-		$constraints = array();
+		$errors = $this->app['validator']->validateValue($email, $constraints);
 
-		foreach ($params as $key => $value)
+		if (count($errors))
 		{
-			$constraints[$key] = array(
-				new Assert\NotBlank(array(
-					'message' => 'CANNOT_BE_BLANK'
-				))
-			);
+			return new Response($this->app->trans($errors[0]->getMessage()), 400);
 		}
 
-		$constraints = new Assert\Collection($constraints);
-
-		$errors = $this->app['validator']->validateValue($params, $constraints);
-
-		if (count($errors) > 0)
-		{
-	        $response->setStatusCode(400);
-	        $response->setContent($this->app->trans($errors[0]->getMessage()));
-	        return $response;
-		}
-
-		$columns = array();
-		$update = array();
-
-		foreach ($params as $key => $value)
-		{
-			$update[$key] = $value;
-		}
-
-		$this->app['db']->update('profiles', $update, array('id' => $user['id']));
+		$this->app['db']->update('users', [
+			'email' => $email
+		], ['id' => $user['id']]);
 
 		return true;
+	}
+
+	/**
+	 * Saves the users name change
+	 * @param  Request $request The request object
+	 * @return bool|Response
+	 */
+	public function saveDateFormat (Request $request)
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 400);
+		}
+
+		$format = $request->get('format');
+
+		$errors = $this->app['validator']->validateValue($format, new Assert\NotBlank([
+			'message' => 'CANNOT_BE_BLANK'
+		]));
+
+		if (count($errors))
+		{
+			return new Response($this->app->trans($errors[0]->getMessage()), 400);
+		}
+
+		$this->app['db']->update('settings', [
+			'date_format' => $format
+		], ['id' => $user['id']]);
+
+		return true;
+	}
+
+	/**
+	 * Saves the users name change
+	 * @param  Request $request The request object
+	 * @return bool|Response
+	 */
+	public function saveName (Request $request)
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 400);
+		}
+
+		$name = $request->get('name');
+
+		$errors = $this->app['validator']->validateValue($name, new Assert\NotBlank([
+			'message' => 'CANNOT_BE_BLANK'
+		]));
+
+		if (count($errors))
+		{
+			return new Response($this->app->trans($errors[0]->getMessage()), 400);
+		}
+
+		$this->app['db']->update('profiles', [
+			'name' => $name
+		], ['id' => $user['id']]);
+
+		return true;
+	}
+
+	/**
+	 * Saves the users location change
+	 * @param  Request $request The request object
+	 * @return bool|Response
+	 */
+	public function saveLocation (Request $request)
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 400);
+		}
+
+		$location = $request->get('location');
+
+		$errors = $this->app['validator']->validateValue($location, new Assert\NotBlank([
+			'message' => 'CANNOT_BE_BLANK'
+		]));
+
+		if (count($errors))
+		{
+			return new Response($this->app->trans($errors[0]->getMessage()), 400);
+		}
+
+		$this->app['db']->update('profiles', [
+			'location' => $location
+		], ['id' => $user['id']]);
+
+		return true;
+	}
+
+	/**
+	 * Saves the users location change
+	 * @param  Request $request The request object
+	 * @return bool|Response
+	 */
+	public function saveDob (Request $request)
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 400);
+		}
+
+		$dob = $request->get('dob');
+
+		$errors = $this->app['validator']->validateValue($dob, new Assert\NotBlank([
+			'message' => 'CANNOT_BE_BLANK'
+		]));
+
+		if (count($errors))
+		{
+			return new Response($this->app->trans($errors[0]->getMessage()), 400);
+		}
+
+		$this->app['db']->update('profiles', [
+			'dob' => $dob
+		], ['id' => $user['id']]);
+
+		return true;
+	}
+
+	public function findById ($id)
+	{
+		$id = (int) $id;
+		if (!$id)
+		{
+			return false;
+		}
+
+
+		$cache_key = 'user-' . $id;
+		$user = $this->app['cache']->get($cache_key, function () use ($id) {
+			$data = array(
+				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate,topics,posts,email,locale,perm_group FROM users WHERE id=? LIMIT 1', array(
+					$id
+				))
+			);
+
+			return $data;
+		});
+
+		if (!$user['data'])
+		{
+			return false;
+		}
+
+		$user['data']['profile'] = $this->getUserProfile($user['data']['id']);
+		$user['data']['settings'] = $this->getUserSettings($user['data']['id']);
+		$user['data']['group'] = $this->app['group']->findById($user['data']['perm_group']);
+
+		return $user;
+	}
+
+	public function getUserSettings ($user_id)
+	{
+		$user_id = (int) $user_id;
+
+		if (!$user_id)
+		{
+			return false;
+		}
+
+		$this->app['cache']->setCollection($this->app['database']['name'], 'settings');
+
+		$settings = $this->app['cache']->get('settings-' . $user_id, function () use ($user_id) {
+			$data = [
+				'data' => $this->app['db']->fetchAssoc('SELECT * FROM settings WHERE id=? LIMIT 1', [
+					$user_id
+				])
+			];
+
+			return $data;
+		});
+
+		return $settings['data'];
+	}
+
+	public function getUserProfile ($id)
+	{
+		$id = (int) $id;
+
+		if (!$id)
+		{
+			return false;
+		}
+
+		$this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
+
+		$profile = $this->app['cache']->get('profile-' . $id, function () use ($id) {
+			$data = [
+				 'data' => $this->app['db']->fetchAssoc('SELECT * FROM profiles WHERE id=? LIMIT 1', [
+					$id
+				])
+			];
+
+			return $data;
+		});
+
+		return $profile['data'];
 	}
 
 	public function findByUsername ($username)
@@ -83,10 +293,12 @@ class UserModel extends BaseModel
 			return false;
 		}
 
+		$this->app['cache']->setCollection($this->app['database']['name'], 'users');
+
 		$cache_key = 'user-' . $username;
 		$user = $this->app['cache']->get($cache_key, function () use ($username) {
 			$data = array(
-				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate,topics,posts,email FROM users WHERE username=? LIMIT 1', array(
+				'data' => $this->app['db']->fetchAssoc('SELECT id,username,ip,regdate,topics,posts,email,locale,perm_group FROM users WHERE username=? LIMIT 1', array(
 					$username
 				))
 			);
@@ -94,16 +306,14 @@ class UserModel extends BaseModel
 			return $data;
 		});
 
-		$profile = $this->app['db']->fetchAssoc('SELECT * FROM profiles WHERE id=? LIMIT 1', array(
-			$user['data']['id']
-		));
+		if (!$user['data'])
+		{
+			return false;
+		}
 
-		$settings = $this->app['db']->fetchAssoc('SELECT * FROM settings WHERE id=? LIMIT 1', array(
-			$user['data']['id']
-		));
-
-		$user['data']['profile'] = $profile;
-		$user['data']['settings'] = $settings;
+		$user['data']['profile'] = $this->getUserProfile($user['data']['id']);
+		$user['data']['settings'] = $this->getUserSettings($user['data']['id']);
+		$user['data']['group'] = $this->app['group']->findById($user['data']['perm_group']);
 
 		return $user;
 	}

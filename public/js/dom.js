@@ -4,17 +4,32 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	$('[data-toggle="tab"]').each(function () {
+
+		$(this).on('click', function () {
+			var target = $(this).data('target').replace('#', '');
+
+			var state = {settings: target};
+			window.history.pushState(state, '', target);
+
+		});
+
+	});
+
 	$('#alert-tabs p').on('click', function () {
 		$('#alert-tabs p').removeClass('active');
 		$(this).addClass('active');
+
 		var index = $(this).attr('data-index');
+
 		$('#alert-box .alert').fadeOut();
+
 		var target = $('#alert-box .alert').get(index);
 		$(target).fadeIn();
 	});
 
 	// User profile editing
-	$('.editable').each(function () {
+	/*$('.editable').each(function () {
 		$(this).on({
 			click: function () {
 				$(this).attr('contenteditable', true);
@@ -57,37 +72,11 @@ $(function () {
 			}
 		});
 	});
+	*/
 
 	var formDataCheck = window.FormData;
 
-	// Attachment selection for quick reply
-	/*$('#attachments input').on('change', function () {
-		var files = $(this)[0].files;
-
-		$('#attachment-list').empty();
-
-		for (var i = 0; i < files.length; i++) {
-			var fileReader = new FileReader();
-			var file = files[i];
-			fileReader.readAsDataURL(file);
-			
-			var container = $('<div />');
-			var p = $('<p />').text(file.name).addClass('inline');
-			var a = $('<a />').text('Place inline').addClass('inline btn btn-orange btn-xs');
-
-			container.append(p, a);
-
-			a.on('click', function () {
-				var editor = CKEDITOR.instances.reply;
-
-				editor.insertElement(CKEDITOR.dom.element.createFromHtml('<img src="' + fileReader.result + '" alt="" title="" />'));
-
-			});	
-
-			$('#attachment-list').append(container);
-		}
-
-	});*/
+	$('.calander').datepicker();
 
 	// Modal for attachment images
 	$(document.body).on('click', '.post-attachment img', function () {
@@ -184,6 +173,77 @@ $(function () {
 	});
 
 	$(document).on('click', '[data-event="click"]', function (e) {
+		var action = $(this).data('action');
+		var params = $(this).data('params');
+
+		var parts = action.split('.');
+		var method = asf;
+
+		if (parts.length === 1) {
+			method = method[action];
+		} else {
+			$(parts).each(function () {
+				method = method[this];
+			});
+		}
+
+		if (typeof method == 'function') {
+			method(this, params);
+		} else {
+			console.error('No function ASF.' + action);
+		}
+	});
+
+	$(document).on('keyup', '[data-event="keyup"]', function (e) {
+		var action = $(this).data('action');
+		var params = $(this).data('params');
+
+		var parts = action.split('.');
+		var method = asf;
+
+		if (parts.length === 1) {
+			method = method[action];
+		} else {
+			$(parts).each(function () {
+				method = method[this];
+			});
+		}
+
+		if (typeof method == 'function') {
+			method(this, params);
+		} else {
+			console.error('No function ASF.' + action);
+		}
+	});
+
+	$(document).on('change', '[data-event="change"]', function (e) {
+		var action = $(this).data('action');
+		var params = $(this).data('params');
+
+		var parts = action.split('.');
+		var method = asf;
+
+		if (parts.length === 1) {
+			method = method[action];
+		} else {
+			$(parts).each(function () {
+				method = method[this];
+			});
+		}
+
+		if (typeof method == 'function') {
+			method(this, params);
+		} else {
+			console.error('No function ASF.' + action);
+		}
+	});
+
+	$(document).on('keyup', '[data-event="return"]', function (e) {
+
+		if (e.keyCode !== 13) {
+			return false;
+		}
+
 		var action = $(this).data('action');
 		var params = $(this).data('params');
 

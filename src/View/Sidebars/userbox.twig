@@ -3,7 +3,6 @@
 		Account Control
 	</header>
 	<div class="content">
-
 		{% if user.id is not defined %}
 			<form data-event="submit" data-action="login" method="post" action="javascript:void(0)">
 				<div class="form-group">
@@ -73,7 +72,7 @@
 				</div>
 			</div>
 			<div class="seperator"></div>
-			<a class="btn btn-orange" javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
+			<a class="btn btn-orange" href="javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
 				Logout
 			</a>
 		{% endif %}

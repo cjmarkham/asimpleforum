@@ -306,7 +306,7 @@ class PostModel extends BaseModel
 		}
 		
 		$content = strip_tags($content, implode(',', $this->allowed_html));
-		$content = str_replace('href=', 'target="_blank" rel="nofollow" href=');
+		$content = str_replace('href=', 'target="_blank" rel="nofollow" href=', $content);
 
 		$time = time();
 
@@ -401,6 +401,9 @@ class PostModel extends BaseModel
 			}
 		}
 
+		// Format mentions
+		$content = preg_replace_callback('/@([\w]+)/si', array($this, 'parseMention'), $content);
+
 		$this->app['db']->insert('posts', array(
 			'topic' => $topic['id'],
 			'forum' => $topic['forum'],
@@ -486,6 +489,26 @@ class PostModel extends BaseModel
 			'page' => $page
 		));
 	}
+
+	private function parseMention ($matches)
+	{
+		$mentioned = $this->app['user']->findByUsername($matches[1]);
+		$user = $this->app['session']->get('user');
+
+		if ($mentioned)
+		{
+			$this->app['notification']->add(new Request([
+				'user_id' => $mentioned['data']['id'],
+				'notification' => '<a href="" class="user-link">' . $user['username'] . '</a> mentioned you in a post'
+			]));
+
+			return '<a href="/' . $this->app['board']['base'] . 'user/' . $matches[1] . '/" class="mention user-link">' . $matches[0] . '</a>';
+		}
+		else
+		{
+			return $matches[0];
+		}
+	}	
 
 	/**
 	 * Gets the first post for a topic

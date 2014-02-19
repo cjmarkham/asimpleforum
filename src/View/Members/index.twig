@@ -1,9 +1,44 @@
 {% extends "Layout/main.twig" %}
 
 {% block content %}
-	<section>
+	<section id="members">
 		<header>
 			<h5>Members</h5>
 		</header>
+		<div class="content">
+
+			<div class="loading">
+				<em class="fa fa-spinner fa-spin orange"></em>
+			</div>
+
+			<form method="post" action="javascript:void(0)" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-1">	
+						Filter
+					</label>
+					<div class="col-sm-6">
+						<input class="form-control" type="text" name="filter" data-event="keyup" data-action="members.filter" placeholder="Type a username to filter" />
+					</div>
+				</div>
+			</form>
+		</div>
 	</section>
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+
+	<script>
+		$(function () {
+			asf.members.loadMore();
+
+			$(document).on('scroll', function () {
+				
+				if ($(window).scrollTop() == $(this).height() - $(window).height()) {
+					asf.members.loadMore();
+				}
+
+			});
+		});
+	</script>
 {% endblock %}

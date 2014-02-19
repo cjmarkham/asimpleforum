@@ -41,6 +41,7 @@ class AuthController extends Controller
 
 	public function logout ()
 	{
+		$this->app['session']->remove('userId');
 		$this->app['session']->remove('user');
 
 		return true;

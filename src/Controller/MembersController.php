@@ -10,11 +10,12 @@ class MembersController extends Controller
 		$this->init();
 	}
 
-	public function index()
+	public function index ($page = 1)
 	{
 		return $this->app['twig']->render('Members/index.twig', array(
 			'title' 			=> 'Members',
-			'section'			=> 'members'
+			'section'			=> 'members',
+			'page'				=> $page
 		) + $this->extras);
 	}
 }

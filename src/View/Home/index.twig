@@ -50,8 +50,8 @@
 											{% endif %}
 										</p>
 										{% if child.lastTopic.name %}
-											<p title="{{ child.updated|date('c') }}" class="date">
-												{{ child.updated|date('jS M y, H:i') }}
+											<p data-default="{{ child.updated|date('jS M y, H:i') }}" title="{{ child.updated|date('c') }}" class="date">
+												{{ child.updated|toDate }}
 											</p>
 										{% endif %}
 									</div>

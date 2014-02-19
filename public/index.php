@@ -65,7 +65,7 @@ $app->finish(function (Request $request) use ($app, $logger) {
             $query_length = count($logger->queries);
             $query_list = implode('<br /><hr />', $queries);
 
-/*echo <<<HEREDOC
+echo <<<HEREDOC
     <div id="logger">
         <button onclick="$(this).next().slideToggle()" class="btn btn-danger">
             Queries: $query_length
@@ -77,7 +77,7 @@ $app->finish(function (Request $request) use ($app, $logger) {
             Query Time: $time
         </button>
     </div>
-HEREDOC;*/
+HEREDOC;
         }
     }
 

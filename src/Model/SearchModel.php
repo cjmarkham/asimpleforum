@@ -39,13 +39,17 @@ class SearchModel
 
 		$topic_sql = 'SELECT t.*, f.name as forumName, p.name as lastPostName, p.id as lastPostId, u.username as author, us.username as lastPosterUsername FROM topics t JOIN forums f ON f.id=t.forum JOIN users u ON t.poster=u.id JOIN users us ON us.id=t.lastPosterId LEFT JOIN posts p ON t.lastPostId=p.id WHERE t.name LIKE ? ORDER BY sticky DESC, updated DESC LIMIT 10';
 
-		$forums = $this->app['db']->fetchAll($forum_sql, array('%' . $query . '%', '%' . $query . '%'));
-		$topics = $this->app['db']->fetchAll($topic_sql, array('%' . $query . '%'));
+		$user_sql = 'SELECT username,regdate,email FROM users WHERE username LIKE ? LIMIT 10';
 
-		$data = array(
+		$forums = $this->app['db']->fetchAll($forum_sql, ['%' . $query . '%', '%' . $query . '%']);
+		$topics = $this->app['db']->fetchAll($topic_sql, ['%' . $query . '%']);
+		$users  = $this->app['db']->fetchAll($user_sql, ['%' . $query . '%']);
+
+		$data = [
 			'forums' => $forums,
-			'topics' => $topics
-		);
+			'topics' => $topics,
+			'users'  => $users
+		];
 
 		return $data;
 	}

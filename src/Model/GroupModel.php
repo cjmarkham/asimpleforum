@@ -31,8 +31,18 @@ class GroupModel extends BaseModel
 			return false;
 		}
 
-		return $this->app['db']->fetchAssoc('SELECT * FROM groups WHERE id=? LIMIT 1', array(
-			$id
-		));
+		$this->app['cache']->setCollection($this->app['database']['name'], 'groups');
+
+		$group = $this->app['cache']->get('group-' . $id, function () use ($id) {
+			$data = [
+				'data' => $this->app['db']->fetchAssoc('SELECT * FROM groups WHERE id=? LIMIT 1',[
+					$id
+				])
+			];
+
+			return $data;
+		});
+
+		return $group['data'];
 	}
 }

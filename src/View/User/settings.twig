@@ -1,23 +1,5 @@
 {% extends "Layout/main.twig" %}
 
-{% block css %}
-	{{ parent() }}
-
-	<link rel="stylesheet" href="/{{ app.board.base }}vendor/css/datepicker.css" />
-{% endblock %}
-
-{% block scripts %}
-	{{ parent() }}
-
-	<script src="{{ asset('vendor/js/datepicker.js') }}"></script>
-
-	<script>
-	$(function () {
-		$('.calander').datepicker();
-	});
-	</script>
-{% endblock %}
-
 {% block content %}
 	
 	<div class="tab-content">
@@ -43,4 +25,30 @@
 		</div>
 	</div>
 
+{% endblock %}
+
+{% block scripts %}
+
+	{{ parent() }}
+
+	<script>
+	$(function () {
+		var sections = [
+			'profile-information',
+			'board-preferences'
+		];
+
+		var url = window.location.href;
+		var section = url.split('/');
+		section = section[section.length - 1];
+
+		if (sections.indexOf(section) > -1) {
+			$('.tab-pane').removeClass('active');
+			$('#settings-links li').removeClass('active');
+
+			$('#' + section).addClass('active');
+			$('[data-target="#' + section + '"]').parent().addClass('active');
+		}
+	});
+	</script>
 {% endblock %}

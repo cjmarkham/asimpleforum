@@ -3,7 +3,158 @@ var asf = {
 	medSpeed: 300,
 	fastSpeed: 100,
 
-	user: null,
+	members: {
+		filter: function (node) {
+
+			var input = $(node);
+			var username = input.val();
+
+			var users = $('#member-list .username');
+
+			$(users).each(function () {
+				if ($(this).text().indexOf(username) == -1) {
+					$(this).parents('.member').hide();
+				} else {
+					$(this).parents('.member').show();
+				}
+			});
+		},
+
+		loadMore: function () {
+			var offset = $('.member').length;
+
+			if ($('#no-topics').length) {
+				return false;
+			}
+
+			$.post('/' + asf.config.board.base + 'members/findAll/', {
+				offset: offset
+			}).done(function (response) {
+				response = JSON.parse(response);
+
+				$.post('/' + asf.config.board.base + 'partial/memberList/', {
+					params: {
+						members: response
+					}
+				}).done(function (html) {
+					$('#members .content .loading').remove();
+					$('#members .content').prepend(html);
+				});
+
+			}).fail(function (response) {
+				return asf.error(response.responseText);
+			});
+		}
+	},
+
+	user: {
+
+		data: null,
+		
+		saveEmail: function (node) {
+			asf.elements.loader.append($(node));
+
+			var value = $(node).val().trim();
+
+			$.post('/' + asf.config.board.base + 'user/save/email', {
+				email: value
+			}).done(function (response) {
+				asf.inputSuccess($(node));
+				$(node).blur();
+
+				return true;
+			}).fail(function (response) {
+				asf.error(response.responseText);
+				asf.inputError($(node));
+
+				return false;
+			});
+		},
+
+		saveDateFormat: function (node) {
+			asf.elements.loader.append($(node));
+
+			var value = $(node).find('option:selected').val().trim();
+
+			$.post('/' + asf.config.board.base + 'user/save/dateFormat', {
+				format: value
+			}).done(function (response) {
+				asf.inputSuccess($(node));
+				$(node).blur();
+
+				return true;
+			}).fail(function (response) {
+				asf.error(response.responseText);
+				asf.inputError($(node));
+
+				return false;
+			});
+		},
+
+		saveName: function (node) {
+			asf.elements.loader.append($(node));
+
+			var value = $(node).val().trim();
+
+			$.post('/' + asf.config.board.base + 'user/save/name', {
+				name: value
+			}).done(function (response) {
+				asf.inputSuccess($(node));
+				$(node).blur();
+
+				return true;
+			}).fail(function (response) {
+				asf.error(response.responseText);
+				asf.inputError($(node));
+
+				return false;
+			});
+		},
+
+		saveLocation: function (node) {
+			asf.elements.loader.append($(node));
+
+			var value = $(node).val().trim();
+
+			$.post('/' + asf.config.board.base + 'user/save/location', {
+				location: value
+			}).done(function (response) {
+				asf.inputSuccess($(node));
+				$(node).blur();
+
+				return true;
+			}).fail(function (response) {
+				asf.error(response.responseText);
+				asf.inputError($(node));
+
+				return false;
+			});
+		},
+
+		saveDOB: function (node) {
+			asf.elements.loader.append($(node));
+
+			var value = $(node).val().trim();
+			var date = value.split('-');
+
+			var dob = date[2] + '-' + date[1] + '-' + date[0];
+
+			$.post('/' + asf.config.board.base + 'user/save/dob', {
+				dob: dob
+			}).done(function (response) {
+				asf.inputSuccess($(node));
+				$(node).blur();
+
+				return true;
+			}).fail(function (response) {
+				asf.error(response.responseText);
+				asf.inputError($(node));
+
+				return false;
+			});
+		}
+
+	},
 
 	forums: {
 
@@ -129,6 +280,14 @@ var asf = {
 					});
 				}
 
+				$.post('/' + asf.config.board.base + 'partial/user/navQuickAccess/', {
+					params: {
+						
+					}
+				}).done(function (html) {
+					$('#user-quick-access').hide().html(html).fadeIn(asf.medSpeed);
+				});
+
 				asf.user = {
 					username: username
 				};
@@ -153,6 +312,11 @@ var asf = {
 			if ($('#users a').length === 0) {
 				$('#sessions section').fadeOut();
 			}
+
+			$('.date').each(function () {
+				var def = $(this).data('default');
+				$(this).text(def);
+			});
 
 			var onlineCount = parseInt($('#sessions p:first span').text().trim(), 10);
 			var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
@@ -533,47 +697,46 @@ var asf = {
 
 	},
 
+	inputError: function (el) {
+		asf.elements.loader.remove(el);
+
+		el.css('position', 'relative');
+
+		el.animate({
+			backgroundColor: $.Color('#f2dede')
+		}, 300, function () {
+			el.animate({
+				backgroundColor: $.Color('#fff')
+			}, 300);
+		});
+
+		for (var x = 1; x <= 2; x++) {
+			el.animate({
+				left: (10 * -1)
+			}, (200 / 2) / 4)
+			.animate({
+				left: 10
+			}, (200 / 2) / 2)
+			.animate({
+				left:0
+			}, (200 / 2) / 4);
+		}
+
+	},
+
+	inputSuccess: function (el) {
+		asf.elements.loader.remove(el);
+
+		el.animate({
+			backgroundColor: $.Color('#dff0d8')
+		}, 300, function () {
+			el.animate({
+				backgroundColor: $.Color('#fff')
+			}, 300);
+		});
+	},
+
 	profile: {
-
-		saveName: function (node, callback) {
-			var value = $(node).text().trim();
-
-			$.post('/' + asf.config.board.base + 'user/save/', {
-				name: value
-			}).done(function (response) {
-				if (typeof callback == 'function') {
-					callback();
-				}
-			}).fail(function (response) {
-				asf.error(response.responseText);
-
-				if (typeof callback == 'function') {
-					callback();
-				}
-
-				return false;
-			});
-		},
-
-		saveLocation: function (node, callback) {
-			var value = $(node).text().trim();
-
-			$.post('/' + asf.config.board.base + 'user/save/', {
-				location: value
-			}).done(function (response) {
-				if (typeof callback == 'function') {
-					callback();
-				}
-			}).fail(function (response) {
-				asf.error(response.responseText);
-
-				if (typeof callback == 'function') {
-					callback();
-				}
-
-				return false;
-			});
-		},
 
 		follow: function (node) {
 			node = $(node);

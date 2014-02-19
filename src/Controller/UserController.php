@@ -12,9 +12,9 @@ class UserController extends Controller
 
 	public function index($username)
 	{
-		$user = $this->app['user']->findByUsername($username);
+		$profile = $this->app['user']->findByUsername($username);
 
-		if (!$user)
+		if (!$profile['data'])
 		{
 			return $this->app->redirect('/' . $this->app['board']['base']);
 		}
@@ -24,15 +24,15 @@ class UserController extends Controller
 
 		if ($loggedInUser)
 		{
-			$following = $this->app['user']->checkFollowing($loggedInUser['id'], $user['data']['id']);
+			$following = $this->app['user']->checkFollowing($loggedInUser['id'], $profile['data']['id']);
 		}
 
 		return $this->app['twig']->render('User/index.twig', array(
-			'title' 			=> $user['data']['username'],
-			'section'			=> 'members',
-			'profileId'			=> $user['data']['id'],
-			'profileUser'		=> $user['data'],
-			'profile'			=> $user['data']['profile'],
+			'title' 			=> $profile['data']['username'],
+			'section'			=> 'profile',
+			'profileId'			=> $profile['data']['id'],
+			'profileUser'		=> $profile['data'],
+			'profile'			=> $profile['data']['profile'],
 			'following'			=> $following
 		) + $this->extras);
 	}

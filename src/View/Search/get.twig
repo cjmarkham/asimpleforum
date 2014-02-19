@@ -14,6 +14,11 @@
 				Topics ( {{ data.topics|length }} )
 			</a>
 		</li>
+		<li>
+			<a href="javascript:void(0)" data-target="#users" data-toggle="tab">
+				Users ( {{ data.users|length }} )
+			</a>
+		</li>
 	</ul>
 
 	<!-- Tab panes -->
@@ -178,6 +183,24 @@
 					{% endfor %}
 				</div>
 			</section>
+		</div>
+
+		<div class="tab-pane" id="users">
+
+			<section id="topics">
+				<header>
+					<h5>User results matching "<em>{{ query }}</em>"</h5>
+				</header>
+
+				<div class="content">
+					{% for user in data.users %}
+						<div>
+							{{ user.username }}
+						</div>
+					{% endfor %}
+				</div>
+			</section>
+
 		</div>
 	</div>
 

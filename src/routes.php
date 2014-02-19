@@ -25,6 +25,10 @@ $app->get('/' . $app['board']['base'] . 'members/', function (ASFApplication $ap
     return Route::get('members:index');
 });
 
+$app->post('/' . $app['board']['base'] . 'members/findAll/', function (Request $request) use ($app) {
+    return $app['user']->findAll($request);
+});
+
 $app->get('/' . $app['board']['base'] . 'faqs/', function (ASFApplication $app) {
     return Route::get('faq:index');
 });
@@ -64,6 +68,10 @@ $app->get('/' . $app['board']['base'] . 'user/{username}/{page}/', function (ASF
 $app->get('/' . $app['board']['base'] . 'user/settings/', function (ASFApplication $app) {
     return Route::get('user:settings');
 })->bind('user-settings');
+
+$app->get('/' . $app['board']['base'] . 'user/settings/{section}', function (ASFApplication $app) {
+    return Route::get('user:settings');
+});
 
 $app->get('/' . $app['board']['base'] . 'user/{username}/', function (ASFApplication $app, $username) {
     return Route::get('user:index', $username);
@@ -151,7 +159,7 @@ $app->post('/' . $app['board']['base'] . 'forum/{method}/', function (Request $r
 });
 
 $app->post('/' . $app['board']['base'] . 'topic/{method}/', function (Request $request, $method) use ($app) {
-    // TODO: Check for allowed post methods
+    // @todo Check for allowed post methods
     if (!method_exists($app['topic'], $method))
     {
         $response = new Response();
@@ -162,7 +170,7 @@ $app->post('/' . $app['board']['base'] . 'topic/{method}/', function (Request $r
 });
 
 $app->post('/' . $app['board']['base'] . 'post/{method}/', function (Request $request, $method) use ($app) {
-    // TODO: Check for allowed post methods
+    // @todo Check for allowed post methods
     if (!method_exists($app['post'], $method))
     {
         $response = new Response();
@@ -172,14 +180,29 @@ $app->post('/' . $app['board']['base'] . 'post/{method}/', function (Request $re
     return $app['post']->$method($request);
 });
 
-$app->post('/' . $app['board']['base'] . 'user/{method}/', function (Request $request, $method) use ($app) {
-    // TODO: Check for allowed post methods
+$app->post('/' . $app['board']['base'] . 'user/save/{method}/', function (Request $request, $method) use ($app) {
+    // @todo Check for allowed post methods
+    $method = 'save' . ucfirst($method);
+
     if (!method_exists($app['user'], $method))
     {
         $response = new Response();
         $response->setStatusCode(403);
         return $response;
     }
+    
+    return $app['user']->$method($request);
+});
+
+$app->post('/' . $app['board']['base'] . 'user/{method}/', function (Request $request, $method) use ($app) {
+    // @todo Check for allowed post methods
+    if (!method_exists($app['user'], $method))
+    {
+        $response = new Response();
+        $response->setStatusCode(403);
+        return $response;
+    }
+    
     return $app['user']->$method($request);
 });
 
