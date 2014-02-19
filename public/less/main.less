@@ -13,6 +13,9 @@
 .marginBottom30 {margin-bottom:30px}
 .marginTop80 {margin-top:80px;}
 
+.alignTop img {vertical-align: top}
+.alignBottom img {vertical-align: bottom}
+
 .loading {
 	text-align: center;
 
@@ -270,7 +273,17 @@ thead.section-header {
 		background: #fff;
 	}
 
-	&.big {
+	&.tiny {
+		width: 35px;
+		height: 35px;
+
+		img {
+			width: 72px;
+			height: 72px;
+		}
+	}
+
+	&.medium {
 		width: 72px;
 		height: 72px;
 
@@ -280,7 +293,7 @@ thead.section-header {
 		}
 	}
 
-	&.huge {
+	&.large {
 		width: 100px;
 		height: 100px;
 
@@ -1126,4 +1139,20 @@ section h4 {
 .help {
 	color: @darkerGrey;
 	font-size: 12px;
+}
+
+.file-input {
+	position: relative;
+	height: 30px;
+
+	button {
+		position: absolute;
+	}
+
+	input {
+		position: absolute;
+		opacity: 0.0000001;
+		top: 0;
+		height: 35px;
+	}
 }

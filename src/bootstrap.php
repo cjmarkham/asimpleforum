@@ -249,6 +249,8 @@ else
 
 $app['cache']->app = $app;
 
+$app->register(new Neutron\Silex\Provider\ImagineServiceProvider());
+
 $logger = new Doctrine\DBAL\Logging\DebugStack();
 $app['db']->getConfiguration()->setSQLLogger($logger);
 

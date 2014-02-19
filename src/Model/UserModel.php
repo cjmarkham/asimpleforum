@@ -44,6 +44,56 @@ class UserModel extends BaseModel
 		return json_encode($users);
 	}
 
+	public function saveAvatar (Request $request)
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 400);
+		}
+
+		$avatar = $request->files->get('avatar');
+
+		$name = $avatar->getClientOriginalName();
+		$size = $avatar->getClientSize();
+
+		if ($size > $this->app['files']['maxSize'])
+		{
+			return new Response($this->app->trans('FILE_TOO_BIG', array($name, ($this->app['files']['maxSize'] / 1024))), 400);
+		}
+
+		$ext = pathinfo($name, PATHINFO_EXTENSION);
+
+		if (!in_array($ext, $this->app['files']['types']))
+		{
+			return new Response($this->app->trans('INVALID_FILE_EXT', array($ext, implode(', ', $this->app['files']['types']))), 400);
+		}
+
+		$upload_dir = dirname(dirname(__DIR__)) . '/public/uploads/avatars/' . $user['username'];
+
+		$this->app['imagine']
+            ->open($avatar->getPathname())
+            ->resize(new \Imagine\Image\Box(35, 35))
+            ->save($upload_dir . '/tiny.png');
+
+		$this->app['imagine']
+        	->open($avatar->getPathname())
+            ->resize(new \Imagine\Image\Box(55, 55))
+            ->save($upload_dir . '/small.png');
+
+        $this->app['imagine']
+            ->open($avatar->getPathname())
+            ->resize(new \Imagine\Image\Box(72, 72))
+            ->save($upload_dir . '/medium.png');
+
+        $this->app['imagine']
+            ->open($avatar->getPathname())
+            ->resize(new \Imagine\Image\Box(100, 100))
+            ->save($upload_dir . '/large.png');
+
+        return true;
+	}
+
 	/**
 	 * Saves the users email change
 	 * @param  Request $request The request object

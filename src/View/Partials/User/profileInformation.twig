@@ -1,5 +1,28 @@
-<form role="form" method="post" action="javascript:void(0)" class="form-horizontal">
+<form role="form" method="post" action="javascript:void(0)" class="form-horizontal" id="avatar-form">
+	<div class="form-group">
+		<div class="col-sm-3">
+			<label class="control-label">
+				Avatar
+			</label>	
+		</div>
+		<div class="col-sm-6">
+			<div class="marginBottom10 alignBottom" id="avatar-list">
+				<img class="inline avatar large" src="{{ avatar_root }}/{{ user.username }}/large.png" />
+				<img class="inline avatar medium" src="{{ avatar_root }}/{{ user.username }}/medium.png" />
+				<img class="inline avatar small" src="{{ avatar_root }}/{{ user.username }}/small.png" />
+				<img class="inline avatar tiny" src="{{ avatar_root }}/{{ user.username }}/tiny.png" />
+			</div>
+			<div class="file-input">
+				<button class="btn btn-orange">
+					Choose a new image
+				</button>
+				<input type="file" name="avatar" />
+			</div>
+		</div>
+	</div>
+</form>
 
+<form role="form" method="post" action="javascript:void(0)" class="form-horizontal">
 	<div class="form-group">
 		<div class="col-sm-3">
 			<label class="control-label">

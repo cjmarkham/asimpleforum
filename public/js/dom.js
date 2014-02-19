@@ -4,6 +4,42 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	var fileReader = new FileReader();
+
+	$('input[name="avatar"]').on('change', function (e) {
+
+		var file = e.target.files[0];
+		var imageType = /image*/;
+
+		var fileReader = new FileReader();
+
+		if (file.type.match(imageType)) {
+
+			fileReader.onload = function () {
+
+				var form = document.getElementById('avatar-form');
+				var formData = new FormData(form);
+
+				$.ajax({
+					url: '/' + asf.config.board.base + 'user/save/avatar/',
+					data: formData,
+					processData: false,
+					contentType: false,
+					type: 'POST'
+				}).done(function () {
+					$('#avatar-list img').attr('src', fileReader.result);
+				}).fail(function (response) {
+					asf.error(response.resposeText);
+					return false;
+				});
+			};
+
+			fileReader.readAsDataURL(file); 
+		} else {
+			asf.error('File must be an image.');
+		}
+	});
+
 	$('[data-toggle="tab"]').each(function () {
 
 		$(this).on('click', function () {
