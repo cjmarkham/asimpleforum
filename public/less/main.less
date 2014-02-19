@@ -4,6 +4,7 @@
 @darkGrey: #c6c6c6;
 @darkerGrey: #79828b;
 @orange: #f46626;
+@darkBlue: #0d2c49;
 
 .marginLeft10 {margin-left: 10px}
 .marginLeft20 {margin-left: 20px}
@@ -63,7 +64,7 @@ body {
 	input {
 		border: 0;
 		border-top: 1px solid #3d78b2;
-		background: #0d2c49;
+		background: @darkBlue;
 		padding-right: 35px;
 		color: #f4f4f4;
 	}
@@ -83,7 +84,7 @@ body {
 		top: 10px;
 		right: 30px;
 		color: #fff;
-		background: #0d2c49;
+		background: @darkBlue;
 		border: 0;
 
 		&:focus, &:active {
@@ -108,7 +109,7 @@ body {
 }
 
 #main-nav {
-	background: #0d2c49;
+	background: @darkBlue;
 	border-top: 1px solid @lightBlue;
 	padding: 10px 10px 0;
 	height: 50px;
@@ -872,11 +873,14 @@ section h4 {
 .blue {color: @lightBlue;}
 
 .recent-topic {
+
 	.topic-name {
 		width: 150px;
+		height: 20px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+
 }
 
 #package-list {
@@ -915,7 +919,7 @@ section h4 {
 #page-search .nav-tabs {
 	margin-bottom: 20px;
 	border: 0;
-	background: #0d2c49;
+	background: @darkBlue;
 	border-top: 1px solid #3d78b2;
 	padding: 10px 10px 0;
 	height: 50px;
@@ -989,7 +993,7 @@ section h4 {
 	.quick-links {
 		margin: 30px 20px 0 0;
 
-		em {
+		em, a {
 			font-size: 20px;
 			margin: 0 5px;
 		}
@@ -1155,4 +1159,30 @@ section h4 {
 		top: 0;
 		height: 35px;
 	}
+}
+
+#new-notifications  {
+	position: absolute;
+	left: 0px;
+	top: -5px;
+	font-size: 24px !important;
+}
+
+.dropdown-menu {
+	border-radius: 0;
+	background: @darkBlue;
+	font-size: 12px !important;
+	border: 0;
+
+	a {
+		font-size: 12px !important;
+		display: inline-block !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+}
+
+#notifications {
+	width: 300px;
+	padding: 5px;
 }

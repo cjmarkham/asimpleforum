@@ -2,12 +2,27 @@
 	<a class="pull-right avatar small background" href="{{ path('user-profile', {username: user.username}) }}">
 		<img width="55" height="55" src="{{ avatar_root }}/{{ user.username }}/small.png" alt="{{ user.username }}" title="{{ user.username }}" />
 	</a>
-	<div class="pull-right quick-links">
-		<a href="javascript:void(0)">
-			<em data-toggle="tooltip" title="Notifications" class="fa fa-envelope"></em>
-		</a>
-		<a href="{{ path('user-settings') }}">
-			<em data-toggle="tooltip" title="Settings" class="fa fa-cogs"></em>
-		</a>
+	<div class="pull-right quick-links relative">
+		<div class="dropdown inline">
+			<a href="javascript:void(0)">
+				<a href="javascript:void(0)" data-toggle="dropdown" title="Notifications" class="fa fa-envelope"></a>
+			</a>
+			<a href="{{ path('user-settings') }}">
+				<em data-toggle="tooltip" title="Settings" class="fa fa-cogs"></em>
+			</a>
+			{% if user.notifications.unread|length %}
+				<em data-toggle="dropdown" data-target="#notifications" class="fa fa-exclamation orange" id="new-notifications"></em>
+			
+				<div id="notifications" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					<ul class="list-unstyled">
+						{% for notification in user.notifications.unread %}	
+							<li>
+								{{ notification.notification|raw }}
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+		</div>
 	</div>
 </div>

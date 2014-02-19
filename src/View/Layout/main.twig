@@ -259,7 +259,7 @@
 		
 		{% if user %}
 			<script>
-				asf.user.data = JSON.parse('{{ user|json_encode|raw }}');
+				asf.user.data = {{ user|json_encode|raw }};
 			</script>
 		{% endif %}
 
