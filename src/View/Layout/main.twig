@@ -2,8 +2,13 @@
 <head>
 	{% block css %}
 
+		{% if not app.debug %}
 			<link rel="stylesheet" href="/{{ config('board', 'base') }}css/concat.css" />
-		
+		{% else %}
+			<link rel="stylesheet" href="/{{ config('board', 'base') }}css/bootstrap.css" />
+			<link rel="stylesheet" href="/{{ config('board', 'base') }}font-awesome/css/font-awesome.css" />
+			<link rel="stylesheet" href="/{{ config('board', 'base') }}css/main.css" />
+		{% endif %}
 
 	{% endblock %}
 
@@ -240,8 +245,17 @@
 			{{ include('Partials/analytics.twig') }}
 		{% endif %}
 
+		{% if not app.debug %}
 			<script src="/{{ config('board', 'base') }}js/concat.js"></script>
-		
+		{% else %}
+			<script src="/{{ config('board', 'base') }}js/jquery.js"></script>
+			<script src="/{{ config('board', 'base') }}js/bootstrap.js"></script>
+			<script src="/{{ config('board', 'base') }}js/timeago.js"></script>
+			<script src="/{{ config('board', 'base') }}js/color.js"></script>
+			<script src="/{{ config('board', 'base') }}js/datepicker.js"></script>
+			<script src="/{{ config('board', 'base') }}js/asf.js"></script>
+			<script src="/{{ config('board', 'base') }}js/dom.js"></script>
+		{% endif %}
 		
 		{% if user %}
 			<script>
