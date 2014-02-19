@@ -56,7 +56,7 @@ var asf = {
 
 			var value = $(node).val().trim();
 
-			$.post('/' + asf.config.board.base + 'user/save/email', {
+			$.post('/' + asf.config.board.base + 'user/save/email/', {
 				email: value
 			}).done(function (response) {
 				asf.inputSuccess($(node));
@@ -76,7 +76,7 @@ var asf = {
 
 			var value = $(node).find('option:selected').val().trim();
 
-			$.post('/' + asf.config.board.base + 'user/save/dateFormat', {
+			$.post('/' + asf.config.board.base + 'user/save/dateFormat/', {
 				format: value
 			}).done(function (response) {
 				asf.inputSuccess($(node));
@@ -96,7 +96,7 @@ var asf = {
 
 			var value = $(node).val().trim();
 
-			$.post('/' + asf.config.board.base + 'user/save/name', {
+			$.post('/' + asf.config.board.base + 'user/save/name/', {
 				name: value
 			}).done(function (response) {
 				asf.inputSuccess($(node));
@@ -116,7 +116,7 @@ var asf = {
 
 			var value = $(node).val().trim();
 
-			$.post('/' + asf.config.board.base + 'user/save/location', {
+			$.post('/' + asf.config.board.base + 'user/save/location/', {
 				location: value
 			}).done(function (response) {
 				asf.inputSuccess($(node));
@@ -139,7 +139,7 @@ var asf = {
 
 			var dob = date[2] + '-' + date[1] + '-' + date[0];
 
-			$.post('/' + asf.config.board.base + 'user/save/dob', {
+			$.post('/' + asf.config.board.base + 'user/save/dob/', {
 				dob: dob
 			}).done(function (response) {
 				asf.inputSuccess($(node));
