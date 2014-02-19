@@ -32,3 +32,9 @@ To contribute to A Simple Forum:
 - `fork` the repo
 - add your changes
 - submit a `pull request`
+
+Contributors
+=
+
+* [Marc Qualie](https://github.com/marcqualie)
+* [Kiwiheretic](https://github.com/kiwiheretic)
