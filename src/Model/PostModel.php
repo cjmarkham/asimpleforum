@@ -193,6 +193,13 @@ class PostModel extends BaseModel
 		// Get the topic so we can use it later
 		$topic = $this->app['topic']->findById($topic_id);
 
+		$forum = $this->app['forum']->findById($topic['forum']);
+
+		if (!$forum)
+		{
+			return new Response($this->app->trans('UNKNOWN_ERROR'), 500);
+		}
+
 		// get the logged in user
 		// @todo make a wrapper for this
 		$user = $this->app['session']->get('user');
@@ -207,9 +214,7 @@ class PostModel extends BaseModel
 		// Should never happen legit but just incase
 		if (!$topic)
 		{
-	        $response->setStatusCode(400);
-	        $response->setContent($this->app->trans('UNKNOWN_ERROR'));
-	        return $response;
+	        return new Response($this->app->trans('UNKNOWN_ERROR'), 500);
 		}
 
 		// If the topic is locked and user cannot bypass it
@@ -402,7 +407,12 @@ class PostModel extends BaseModel
 		}
 
 		// Format mentions
-		$content = preg_replace_callback('/@([\w]+)/si', array($this, 'parseMention'), $content);
+		$mentions = $this->parseMentions($content);
+
+		if ($mentions['has_mentions'])
+		{
+			$content = $mentions['content'];
+		}
 
 		$this->app['db']->insert('posts', array(
 			'topic' => $topic['id'],
@@ -415,6 +425,21 @@ class PostModel extends BaseModel
 		));
 
 		$post_id = $this->app['db']->lastInsertId();
+
+		$post_url = '/' . $this->app['board']['base'] . urlencode($forum['name']) . '/' . urlencode($topic['name']) . '-' . $topic['id'] . '/#' . $post_id;
+
+		if ($mentions['has_mentions'])
+		{
+			$content = $mentions['content'];
+
+			foreach ($mentions['users'] as $mention)
+			{
+				$this->app['notification']->add(new Request([
+					'user_id' => $mention['data']['id'],
+					'notification' => '<a href="/' . $this->app['board']['base'] . 'user/' . $user['username'] . '/" class="user-link">' . $user['username'] . '</a> mentioned you in a <a href="' . $post_url . '">post</a>'
+				]));
+			}
+		}
 
 		// Upload attachments
 		if ($attachments[0] != null)
@@ -490,24 +515,32 @@ class PostModel extends BaseModel
 		));
 	}
 
-	private function parseMention ($matches)
+	private function parseMentions (&$content)
 	{
-		$mentioned = $this->app['user']->findByUsername($matches[1]);
-		$user = $this->app['session']->get('user');
+		preg_match_all('/@([\w]+)/si', $content, $matches);
+		
+		$users = [];
 
-		if ($mentioned)
+		if (count($matches) > 0)
 		{
-			$this->app['notification']->add(new Request([
-				'user_id' => $mentioned['data']['id'],
-				'notification' => '<a href="" class="user-link">' . $user['username'] . '</a> mentioned you in a post'
-			]));
 
-			return '<a href="/' . $this->app['board']['base'] . 'user/' . $matches[1] . '/" class="mention user-link">' . $matches[0] . '</a>';
+			foreach ($matches[1] as $match)
+			{
+				$mentioned = $this->app['user']->findByUsername($match);
+		
+				if ($mentioned)
+				{
+					$users[] = $mentioned;
+					$content = str_replace('@' . $match, '<a href="/' . $this->app['board']['base'] . 'user/' . $match . '/" class="mention user-link">@' . $match . '</a>', $content);
+				}
+			}
 		}
-		else
-		{
-			return $matches[0];
-		}
+
+		return [
+			'has_mentions' => count($users) > 0 ? true : false,
+			'users' => $users,
+			'content' => $content
+		];
 	}	
 
 	/**

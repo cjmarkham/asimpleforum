@@ -21,6 +21,22 @@ class Controller
 			$user['profile'] = $_user['data']['profile'];
 			$user['group'] = $this->app['group']->findById($user['perm_group']);
 
+			$notifications = $this->app['notification']->findByUser($user_id);
+
+			$user['notifications'] = ['read' => [], 'unread' => []];
+
+			foreach ($notifications as $notification)
+			{
+				if ($notification['read'])
+				{
+					$user['notifications']['read'][] = $notification;
+				}
+				else
+				{
+					$user['notifications']['unread'][] = $notification;
+				}
+			}
+
 			$this->app['session']->set('user', $user);
 		}
 
