@@ -48,21 +48,24 @@ class NotificationModel
 			return false;
 		}
 
-		$notifications = $this->app['db']->fetchAll('SELECT * FROM notifications WHERE user_id=?', [
+		$notifications = $this->app['db']->fetchAll('SELECT * FROM notifications WHERE user_id=? ORDER BY added DESC', [
 			$user['id']
 		]);
 
 		$data = ['unread' => [], 'read' => []];
 
-		foreach ($notifications as $notification)
+		if ($notifications) 
 		{
-			if ($notification['read'])
+			foreach ($notifications as $notification)
 			{
-				$data['read'][] = $notification;
-			}
-			else
-			{
-				$data['unread'][] = $notification;
+				if ($notification['read'])
+				{
+					$data['read'][] = $notification;
+				}
+				else
+				{
+					$data['unread'][] = $notification;
+				}
 			}
 		}
 

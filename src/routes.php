@@ -73,6 +73,10 @@ $app->get('/' . $app['board']['base'] . 'user/settings/{section}', function (ASF
     return Route::get('user:settings');
 });
 
+$app->get('/' . $app['board']['base'] . 'user/notifications/', function (ASFApplication $app) {
+    return Route::get('user:notifications');
+})->bind('notifications');
+
 $app->get('/' . $app['board']['base'] . 'user/{username}/', function (ASFApplication $app, $username) {
     return Route::get('user:index', $username);
 })->bind('user-profile');
@@ -80,10 +84,6 @@ $app->get('/' . $app['board']['base'] . 'user/{username}/', function (ASFApplica
 $app->get('/' . $app['board']['base'] . 'user/confirmEmail/{code}/', function (ASFApplication $app, $code) {
     return Route::get('user:confirmEmail', $code);
 });
-
-$app->get('/' . $app['board']['base'] . 'notifications/', function (ASFApplication $app) {
-    return Route::get('notification:index');
-})->bind('notifications');
 
 $app->post('/' . $app['board']['base'] . 'partial/{name}/', function (Request $request, $name) use ($app) {
 

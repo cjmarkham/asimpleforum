@@ -37,6 +37,21 @@ class UserController extends Controller
 		) + $this->extras);
 	}
 
+	public function notifications ()
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+			return $this->app->redirect('/');
+		}
+
+		return $this->app['twig']->render('User/notifications.twig', array(
+			'title' 			=> 'Notifications',
+			'section'			=> 'user',
+			'user'				=> $user
+		) + $this->extras);
+	}
+
 	public function settings ()
 	{
 		$user = $this->app['session']->get('user');

@@ -69,7 +69,7 @@ class PostModel extends BaseModel
 
 		$posts['data'] = $this->app['cache']->get($cache_key, function () use ($user_id, $page) {
 			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT p.*, t.name as topicName, f.name as forumName, u.username FROM posts p JOIN users u ON p.poster=u.id JOIN topics t ON t.id=p.topic JOIN forums f ON f.id=t.forum WHERE p.poster=? ORDER BY added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, t.name as topicName, f.name as forumName, u.username FROM posts p JOIN users u ON p.author=u.id JOIN topics t ON t.id=p.topic JOIN forums f ON f.id=t.forum WHERE p.author=? ORDER BY added DESC LIMIT ' . (($page - 1)* 5) . ', 5', array(
 					$user_id
 				))
 			);
@@ -114,7 +114,7 @@ class PostModel extends BaseModel
 
 		$posts = $this->app['cache']->get($cache_key, function () use ($topic_id, $offset, $limit) {
 			$data = array(
-				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username, u.posts as userPosts, g.name as `group` FROM posts p JOIN users u ON p.poster=u.id JOIN groups g ON g.id=u.perm_group WHERE p.topic=? ORDER BY added ASC LIMIT ' . $offset . ', ' . $limit, array(
+				'data' => $this->app['db']->fetchAll('SELECT p.*, u.username, u.posts as userPosts, g.name as `group` FROM posts p JOIN users u ON p.author=u.id JOIN groups g ON g.id=u.perm_group WHERE p.topic=? ORDER BY added ASC LIMIT ' . $offset . ', ' . $limit, array(
 					$topic_id
 				))
 			);
@@ -313,13 +313,13 @@ class PostModel extends BaseModel
 		$content = strip_tags($content, implode(',', $this->allowed_html));
 		$content = str_replace('href=', 'target="_blank" rel="nofollow" href=', $content);
 
-		$time = time();
+		$time = date('Y-m-d H:i:s');
 
 		$last = $this->app['db']->fetchAssoc('SELECT * FROM posts WHERE topic=? ORDER BY added DESC LIMIT 1', array(
 			$topic_id
 		));
 
-		if ($last['poster'] == $user['id'])
+		if ($last['author'] == $user['id'])
 		{
 			if ($this->app['board']['doublePost'] === 'merge')
 			{
@@ -349,7 +349,7 @@ class PostModel extends BaseModel
 
 				$this->app['db']->update('forums', array(
 					'lastTopicId' => $topic['id'],
-					'lastPosterId' => $user['id'],
+					'lastAuthorId' => $user['id'],
 					'lastPostTime' => $time,
 					'lastPostId' => $last['id']
 				), array('id' => $last['forum']));
@@ -419,7 +419,7 @@ class PostModel extends BaseModel
 			'forum' => $topic['forum'],
 			'name' => $name,
 			'content' => $content,
-			'poster' => $user['id'],
+			'author' => $user['id'],
 			'added' => $time,
 			'updated' => $time
 		));
@@ -477,11 +477,11 @@ class PostModel extends BaseModel
 		$this->app['db']->update('topics', array(
 			'replies' => $topic['replies'] + 1,
 			'updated' => $time,
-			'lastPosterId' => $user['id'],
+			'lastAuthorId' => $user['id'],
 			'lastPostId' => $post_id
 		), array('id' => $topic_id));
 
-		$this->app['db']->executeQuery('UPDATE forums SET posts=posts+1, lastTopicId=?,lastPosterId=?, lastPostTime=?, lastPostId=? WHERE id=? LIMIT 1', array(
+		$this->app['db']->executeQuery('UPDATE forums SET posts=posts+1, lastTopicId=?,lastAuthorId=?, lastPostTime=?, lastPostId=? WHERE id=? LIMIT 1', array(
 			$topic['id'],
 			$user['id'],
 			$time,

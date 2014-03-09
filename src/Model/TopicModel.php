@@ -62,14 +62,26 @@ class TopicModel extends BaseModel
 		$cache_key = 'topic-' . $id;
 
 		$topic = $this->app['cache']->get($cache_key, function () use ($id) {
-			$data = array(
-				'data' => $this->app['db']->fetchAssoc('SELECT * FROM topics WHERE id=? LIMIT 1', array(
+			$data = [
+				'data' => $this->app['db']->fetchAssoc('SELECT * FROM topics WHERE id=? LIMIT 1', [
 					$id
-				))
-			);
+				])
+			];
 
 			return $data;
 		});
+
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'views');
+
+		$views = $this->app['cache']->get('topic-views-' . $topic['data']['id'], function () use ($topic) {
+			$data = [
+				'data' => [time()]
+			];
+
+			return $data;
+		});
+
+		$topic['data']['views'] = count($views['data']);
 
 		return $topic['data'];
 	}
@@ -187,7 +199,6 @@ class TopicModel extends BaseModel
 		}
 
 		$topic = $this->findById($id);
-
 		if (!$topic)
 		{
 			return false;
@@ -197,14 +208,9 @@ class TopicModel extends BaseModel
 			'views' => $topic['views'] + 1
 		), array('id' => $id));
 
-		$this->app['cache']->collection = $this->collection;
-
-		$this->app['cache']->delete('topic-' . $topic['name']);
-		$this->app['cache']->delete('topic-' . $topic['id']);
-
-		$this->app['cache']->collection = $this->app['mongo']['default']->selectCollection($this->app['database']['name'], 'views');
+		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'views');
 		
-		$views = $this->app['cache']->append('topic-views-54', time());
+		$views = $this->app['cache']->append('topic-views-' . $topic['id'], time());
 		
 		return true;
 	}

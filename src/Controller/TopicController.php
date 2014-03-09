@@ -20,7 +20,6 @@ class TopicController extends Controller
 		}
 
 		$topic = $this->app['topic']->findById($topic_id);
-
 		if (!$topic)
 		{
 			$this->app->redirect('/');
@@ -28,23 +27,23 @@ class TopicController extends Controller
 
 		$forum = $this->app['forum']->findById($topic['forum']);
 
-		return $this->app['twig']->render('Topic/index.twig', array(
+		return $this->app['twig']->render('Topic/index.twig', [
 			'title' 			=> $topic['name'],
 			'section'			=> 'forums',
 			'forum'				=> $forum,
 			'topic'				=> $topic,
 			'page'				=> $page
-		) + $this->extras);
+		] + $this->extras);
 	}
 
 	public function newest ()
 	{
 		$topics = $this->app['topic']->findRecent(10);
 
-		return $this->app['twig']->render('Topic/newest.twig', array(
+		return $this->app['twig']->render('Topic/newest.twig', [
 			'title' 			=> 'Newest Topics',
 			'section'			=> 'new-topics',
 			'topics'			=> $topics
-		) + $this->extras);
+		] + $this->extras);
 	}
 }

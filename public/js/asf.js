@@ -6,7 +6,7 @@ var asf = {
 	notifications: {
 		markRead: function (node) {
 			$.post('/' + asf.config.board.base + 'notifications/markRead/', {}).done(function () {
-				$('.new-notifications').remove();
+				$('.notification-link').removeClass('orange');
 			});
 		},
 

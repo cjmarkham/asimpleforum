@@ -9,7 +9,7 @@ $(function () {
 			list = JSON.parse(list);
 			
 			if (list.unread.length) {
-				$('.new-notifications').text(list.unread.length);
+				$('.notification-link').addClass('orange');
 
 				$.post('/' + asf.config.board.base + 'partial/user/notificationDropdown/', {
 					params: {
