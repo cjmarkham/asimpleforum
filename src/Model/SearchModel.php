@@ -8,9 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 class SearchModel 
 {
 	public $app;
-	private $collection;
 
-	public function __construct (\Silex\Application $app)
+	public function __construct (\ASFApplication $app)
 	{
 		$this->app = $app;
 	}
@@ -57,28 +56,31 @@ class SearchModel
 	public function typeahead ($query, $selection) 
 	{
 		$where = 'WHERE t.name LIKE ?';
-		$params = array(
+		$params = [
 			'%' . $query . '%'
-		);
-		$data = array();
+		];
+		$data = [];
 		$columns = 't.name, f.name as forumName';
 		$join = 'JOIN forums f ON f.id=t.forum';
 
-		if ($selection)
+		if ($selection != 'null')
 		{
 			$where .= ' AND t.forum=?';
 			$params[] = $selection;
 		}
 
-		$query = 'SELECT ' . $columns . ' FROM topics t ' . $join . ' ' . $where . ' LIMIT 6';
+		$sql = 'SELECT ' . $columns . ' FROM topics t ' . $join . ' ' . $where . ' LIMIT 6';
 
-		$results = $this->app['db']->fetchAll($query, $params);
+		$results = $this->app['db']->fetchAll($sql, $params);
 
-		foreach ($results as $key => $result)
+		if ($results)
 		{
-			$data[$key]['name'] = $result['name'];
+			foreach ($results as $key => $result)
+			{
+				$data[$key]['name'] = $result['name'];
 
-			$data[$key]['forum'] = $result['forumName'];
+				$data[$key]['forum'] = $result['forumName'];
+			}
 		}
 
 		return $data;

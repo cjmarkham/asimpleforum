@@ -49,6 +49,14 @@ body {
 	}
 }
 
+@media (max-width: 991px) {
+
+	#header {
+		height: 100px;
+	}
+
+}
+
 #header {
 	padding-top: 30px;
 }
@@ -139,6 +147,60 @@ body {
 				font-weight: bold;
 				text-decoration: none;
 			}
+		}
+	}
+	
+}
+
+#main-nav-fixed {
+	background: @darkBlue;
+	border-top: 1px solid @lightBlue;
+	padding: 10px 10px 0;
+	height: 50px;
+	border-radius: 0;
+	
+
+	ul {
+		margin: 0;
+		height: 50px;
+		overflow: hidden;
+
+		li {
+			padding: 2px;
+
+			h2 {
+				font-size: 14px;
+				margin: 0;
+			}
+
+			&.active {
+				background: #fff;
+
+				a {
+					color: #2f588c;
+					text-shadow: 0 1px 1px #fff;
+				}
+			}
+
+			a {
+				color: #d4e5f5;
+				text-shadow: 0 1px 1px #08192b;
+				display: block;
+				padding: 10px 20px;
+				font-weight: bold;
+				text-decoration: none;
+			}
+		}
+	}
+
+	.avatar {
+		width: 35px;
+		height: 35px;
+		margin-top: 20px;
+
+		img {
+			width: 35px;
+			height: 35px;
 		}
 	}
 	
@@ -647,7 +709,7 @@ date {
 
 #logger {
 	position: fixed;
-	top: 0;
+	bottom: 0;
 	right: 0;
 	z-index: 99999;
 }
@@ -1038,7 +1100,7 @@ section h4 {
 	position: absolute;
 	padding-top: 10px;
 	top: 0;
-	right: 20px;
+	right: 80px;
 }
 
 #no-topics, #no-posts {
@@ -1163,7 +1225,7 @@ section h4 {
 
 #new-notifications  {
 	position: absolute;
-	left: 5px;
+	left: 0;
 	top: -7px;
 	padding: 0 4px;
 	background: @orange;

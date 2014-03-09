@@ -26,23 +26,40 @@
 		</a>
 	{% endif %}
 
-	<div id="user-quick-access-fixed" class="hidden-no-user hidden-md hidden-lg pull-right">
-		{% if user %}
-			<a href="/{{ config('board', 'base') }}user/{{ user.username }}">
-				<img src="{{ avatar_root }}/{{ user.username }}/small.png" alt="{{ user.username }}" title="{{ user.username }}" />
-			</a>
-				&bull;
-			<a href="javascript:void(0)" data-user="{{ user.username }}" data-event="click" data-action="logout">
-				Logout
-			</a>
-		{% endif %}
+	<div class="row visible-sm visible-xs" id="main-nav-fixed" role="navigation">
+		<ul class="list-unstyled list-inline col-sm-9 col-xs-8">
+			{% for link in nav_links %}
+				<li {% if section == link.section %}class="active"{% endif %}>
+					<h2>
+						{% if link.link == '/' %}
+							{% set url = '/' ~ config('board', 'base') %}
+						{% else %}
+							{% if link.link matches '{http:\/\/}' %}
+								{% set url = link.link %}
+							{% else %}
+								{% set url = '/' ~ config('board', 'base') ~ link.link %}
+							{% endif %}
+						{% endif %}
+						<a href="{{ url }}">
+							{{ link.title }}
+						</a>
+					</h2>	
+				</li>
+			{% endfor %}
+		</ul>
+		<div id="user-quick-access" class="col-sm-3 col-xs-4">
+			{% if user %}
+				{% include "Partials/User/navQuickAccess.twig" %}
+			{% else %}
+				<!-- @todo LOGIN AND SIGNUP BUTTONS -->
+			{% endif %}
+		</div>
 	</div>
-	
-	<header id="header">
 
+	<header id="header">
 		<div class="container">
 			<div class="row">
-				<div id="logo" class="col-sm-9">
+				<div id="logo" class="col-sm-9 col-xs-12">
 
 					<h1>
 						<a href="/{{ config('board', 'base') }}">
@@ -51,7 +68,7 @@
 					</h1>
 					
 				</div>
-				<div id="quick-search" role="search" class="col-sm-3">
+				<div id="quick-search" role="search" class="col-sm-3 hidden-xs">
 					<form role="form" name="search-form" method="post" action="javascript:void(0)" class="form-horizontal">
 						<div class="form-group">
 							<input type="text" name="query" class="typeahead form-control" autocomplete="off" placeholder="Quick search" />
@@ -66,33 +83,35 @@
 			</div>
 		</div>
 
-		<div class="container clearfix" id="main-nav" role="navigation">
-			<ul class="list-unstyled list-inline pull-left">
-				{% for link in nav_links %}
-					<li {% if section == link.section %}class="active"{% endif %}>
-						<h2>
-							{% if link.link == '/' %}
-								{% set url = '/' ~ config('board', 'base') %}
-							{% else %}
-								{% if link.link matches '{http:\/\/}' %}
-									{% set url = link.link %}
+		<div class="container hidden-sm hidden-xs" role="navigation">
+			<div id="main-nav" class="row">
+				<ul class="list-unstyled list-inline col-md-9">
+					{% for link in nav_links %}
+						<li {% if section == link.section %}class="active"{% endif %}>
+							<h2>
+								{% if link.link == '/' %}
+									{% set url = '/' ~ config('board', 'base') %}
 								{% else %}
-									{% set url = '/' ~ config('board', 'base') ~ link.link %}
+									{% if link.link matches '{http:\/\/}' %}
+										{% set url = link.link %}
+									{% else %}
+										{% set url = '/' ~ config('board', 'base') ~ link.link %}
+									{% endif %}
 								{% endif %}
-							{% endif %}
-							<a href="{{ url }}">
-								{{ link.title }}
-							</a>
-						</h2>	
-					</li>
-				{% endfor %}
-			</ul>
-			<div id="user-quick-access" class="pull-right">
-				{% if user %}
-					{% include "Partials/User/navQuickAccess.twig" %}
-				{% else %}
-					<!-- @todo LOGIN AND SIGNUP BUTTONS -->
-				{% endif %}
+								<a href="{{ url }}">
+									{{ link.title }}
+								</a>
+							</h2>	
+						</li>
+					{% endfor %}
+				</ul>
+				<div id="user-quick-access" class="col-md-3 hidden-sm hidden-xs">
+					{% if user %}
+						{% include "Partials/User/navQuickAccess.twig" %}
+					{% else %}
+						<!-- @todo LOGIN AND SIGNUP BUTTONS -->
+					{% endif %}
+				</div>
 			</div>
 		</div>
 	</header>
@@ -250,6 +269,7 @@
 		{% else %}
 			<script src="/{{ config('board', 'base') }}js/jquery.js"></script>
 			<script src="/{{ config('board', 'base') }}js/bootstrap.js"></script>
+			<script src="/{{ config('board', 'base') }}js/typeahead.js"></script>
 			<script src="/{{ config('board', 'base') }}js/timeago.js"></script>
 			<script src="/{{ config('board', 'base') }}js/color.js"></script>
 			<script src="/{{ config('board', 'base') }}js/datepicker.js"></script>
@@ -270,7 +290,7 @@
 			};
 
 			{% if section == 'forums' and forum is defined %} // home page also has section forums
-				asf.forum = '{{ forum|json_encode|raw }}'
+				asf.forum = {{ forum|json_encode|raw }}
 			{% endif %}
 
 			asf.config = JSON.parse('{{ config|json_encode|raw }}');

@@ -33,8 +33,10 @@ $app->register(new Silex\Provider\TranslationServiceProvider(), array(
 $app['translator'] = $app->share($app->extend('translator', function($translator, $app) {
     $translator->addLoader('php', new PhpFileLoader());
 
-    $translator->addResource('php', __DIR__ . '/Locales/en.php', 'en');
-    $translator->addResource('php', __DIR__ . '/Locales/fr.php', 'fr');
+    foreach (['en', 'fr'] as $language)
+    {
+        $translator->addResource('php', __DIR__ . '/Locales/' . $language . '.php', $language);
+    }
 
     return $translator;
 }));
@@ -143,9 +145,8 @@ $app['assetic.asset_manager'] = $app->share(
                 // Specified one by one to define order
                 array(
                     __DIR__ . '/../public/js/jquery.js',
-                    __DIR__ . '/../public/js/handlebars.js',
-                    __DIR__ . '/../public/js/ember.js',
                     __DIR__ . '/../public/js/bootstrap.js',
+                    __DIR__ . '/../public/js/typeahead.js',
                     __DIR__ . '/../public/js/twig.js',
                     __DIR__ . '/../public/js/timeago.js',
                     __DIR__ . '/../public/js/color.js',

@@ -4,6 +4,8 @@ $(function () {
 
 	$(document.body).fadeIn();
 
+	$('#notifications-dropdown').on('shown.bs.dropdown', asf.notifications.markRead);
+
 	var fileReader = new FileReader();
 
 	$('input[name="avatar"]').on('change', function (e) {
@@ -133,7 +135,41 @@ $(function () {
 	});
 
 	// Quick search typeahead
+	var selection = null;
+
+	var selector = $('#search-form-indicator option:selected');
+
+	if (asf.forum) {
+		var forum = JSON.parse(asf.forum);
+		selection = forum.id;
+	}
+
+	var engine = new Bloodhound({
+		name: 'search',
+		local: [],
+		remote: '/' + asf.config.board.base + 'search/typeahead/%QUERY/' + selection + '/',
+		datumTokenizer: function(d) { 
+			return Bloodhound.tokenizers.whitespace(d.val); 
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace
+	});
+
+	engine.initialize();
+
 	$('.typeahead').typeahead({
+		minLength: 3,
+		highlight: true,
+		displayKey: 'value'
+	}, {
+		source: engine.ttAdapter(),
+		templates: {
+			suggestion: function (result) {
+				return result.name;
+			}
+		}
+	});
+
+	/*$('.typeahead').typeahead({
 		minLength : 3,
 		source: function(query, process) {
 			var selection = null;
@@ -185,7 +221,7 @@ $(function () {
 			}
 			return items;
 		}
-	});
+	});*/
 
 	$(document).on('submit', '[data-event="submit"]', function (e) {
 		var action = $(this).data('action');

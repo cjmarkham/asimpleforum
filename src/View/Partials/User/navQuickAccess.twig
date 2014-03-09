@@ -3,15 +3,14 @@
 		<img width="55" height="55" src="{{ avatar_root }}/{{ user.username }}/small.png" alt="{{ user.username }}" title="{{ user.username }}" />
 	</a>
 	<div class="pull-right quick-links relative">
-		<div class="dropdown inline">
-			<a href="javascript:void(0)">
-				<a href="javascript:void(0)" data-toggle="dropdown" title="Notifications" class="fa fa-envelope"></a>
-			</a>
+		<div class="dropdown inline" id="notifications-dropdown">
+			<a href="#" data-toggle="dropdown" title="Notifications" class="fa fa-envelope"></a>
+
 			<a href="{{ path('user-settings') }}">
 				<em data-toggle="tooltip" title="Settings" class="fa fa-cogs"></em>
 			</a>
 			{% if user.notifications.unread|length %}
-				<strong data-toggle="dropdown" data-target="#notifications" id="new-notifications">
+				<strong id="new-notifications">
 					{{ user.notifications.unread|length }}
 				</strong>
 			

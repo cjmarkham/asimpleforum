@@ -194,12 +194,10 @@ class AuthModel
 		return sha1(md5(sha1($password)));
 	}
 
-	public function login (Request $request)
+	public function login (array $data)
 	{
-		$response = new Response();
-
-		$username = $request->get('username');
-		$password = $request->get('password');
+		$username = $data['username'];
+		$password = $data['password'];
 
 		$user = $this->app['db']->fetchAssoc('SELECT * FROM users WHERE username=?', array(
 			$username
@@ -207,23 +205,17 @@ class AuthModel
 
 		if (!$user)
 		{
-			$response->setStatusCode(400);
-			$response->setContent($this->app->trans('NO_USER'));
-			return $response;
+			return new Response($this->app->trans('NO_USER'), 400);
 		}
 
 		if ($user['password'] !== $this->hash($this->app['defaults']['salt'] . $password))
 		{
-			$response->setStatusCode(400);
-			$response->setContent($this->app->trans('INVALID_CREDENTIALS'));
-			return $response;
+			return new Response($this->app->trans('INVALID_CREDENTIALS'), 400);
 		}
 
 		if (!$user['approved'] && $this->app['board']['confirmEmail'])
 		{
-			$response->setStatusCode(400);
-			$response->setContent($this->app->trans('NOT_APPROVED'));
-			return $response;
+			return new Response($this->app->trans('NOT_APPROVED'), 400);
 		}
 
 		$this->app['session']->set('userId', $user['id']);

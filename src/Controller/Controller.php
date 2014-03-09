@@ -6,7 +6,7 @@ class Controller
 {
 	public $app;
 
-	public $extras = array();
+	public $extras = [];
 
 	public function init()
 	{

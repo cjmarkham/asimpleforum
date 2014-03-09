@@ -3,6 +3,12 @@ var asf = {
 	medSpeed: 300,
 	fastSpeed: 100,
 
+	notifications: {
+		markRead: function (node) {
+			console.log('hi')
+		}
+	},
+
 	members: {
 		filter: function (node) {
 

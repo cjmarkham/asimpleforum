@@ -42,11 +42,8 @@ class SearchController extends Controller
 		) + $this->extras);
 	}
 
-	public function typeahead (Request $request)
+	public function typeahead ($query, $selection)
 	{
-		$selection = $request->get('selection');
-		$query = $request->get('query');
-
 		$data = $this->app['search']->typeahead($query, $selection);
 
 		return json_encode($data);

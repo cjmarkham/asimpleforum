@@ -41,16 +41,16 @@ $app->get('/' . $app['board']['base'] . 'search/', function (ASFApplication $app
     return Route::get('search:index');
 });
 
+$app->get('/' . $app['board']['base'] . 'search/typeahead/{query}/{selection}/', function (ASFApplication $app, $query, $selection) {
+    return Route::get('search:typeahead', $query, $selection);
+});
+
 $app->get('/' . $app['board']['base'] . 'search/{query}/{selection}/', function (ASFApplication $app, $query, $selection) {
     return Route::get('search:get', $query, $selection);
 });
 
-$app->post('/' . $app['board']['base'] . 'search/typeahead/', function (Request $request) {
-    return Route::get('search:typeahead', $request);
-});
-
 $app->post('/' . $app['board']['base'] . 'login/', function (Request $request) use ($app) {
-    return $app['auth']->login($request);
+    return $app['auth']->login($request->request->all());
 });
 
 $app->get('/' . $app['board']['base'] . 'logout/', function (ASFApplication $app) {

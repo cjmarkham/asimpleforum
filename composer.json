@@ -17,7 +17,11 @@
         "mheap/Silex-Assetic": "*",
         "neutron/silex-imagine-provider": "dev-master",
         "natxet/CssMin": "dev-master",
-        "lmammino/jsmin4assetic": "1.0.*@dev"
+        "lmammino/jsmin4assetic": "1.0.*@dev",
+        "taluu/doctrine-orm-provider": "1.0.*@dev",
+        "doctrine/orm": "2.3.0",
+        "doctrine/common": "2.3.0",
+        "doctrine/dbal": "2.3.0"
     },
 
     "autoload" : {
