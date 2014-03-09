@@ -1,4 +1,4 @@
-<form role="form" method="post" action="javascript:void(0)" class="form-horizontal">
+	<form role="form" method="post" action="javascript:void(0)" class="form-horizontal">
 
 	<div class="form-group">
 		<div class="col-sm-3">
@@ -24,6 +24,10 @@
 			<select class="form-control" name="date-format">
 				<option {% if settings.date_format == 'jS M y, H:i' %}selected{% endif %} value="jS M y, H:i">{{ "now"|date('jS M y, H:i') }}</option>
 				<option {% if settings.date_format == 'jS M y, g:i a' %}selected{% endif %} value="jS M y, g:i a">{{ "now"|date('jS M y, g:i a') }}</option>
+
+				<option {% if settings.date_format == 'M jS y, H:i' %}selected{% endif %} value="jS M y, H:i">{{ "now"|date('M jS y, H:i') }}</option>
+				<option {% if settings.date_format == 'M jS y, g:i a' %}selected{% endif %} value="jS M y, g:i a">{{ "now"|date('M jS y, g:i a') }}</option>
+
 			</select>
 		</div>
 	</div>

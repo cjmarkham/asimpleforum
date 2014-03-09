@@ -34,22 +34,51 @@ class NotificationModel
 		$this->app['db']->insert('notifications', [
 			'user_id' => $user_id,
 			'notification' => $notification,
-			'added' => time()
+			'added' => date('Y-m-d H:i:s')
 		]);
 
 		return true;
 	}
 
-	public function findByUser ($user_id)
+	public function findByUser ()
 	{
-		$user_id = (int) $user_id;
-		if (!$user_id)
+		$user = $this->app['session']->get('user');
+		if (!$user)
 		{
 			return false;
 		}
 
-		return $this->app['db']->fetchAll('SELECT * FROM notifications WHERE user_id=?', [
-			$user_id
+		$notifications = $this->app['db']->fetchAll('SELECT * FROM notifications WHERE user_id=?', [
+			$user['id']
 		]);
+
+		$data = ['unread' => [], 'read' => []];
+
+		foreach ($notifications as $notification)
+		{
+			if ($notification['read'])
+			{
+				$data['read'][] = $notification;
+			}
+			else
+			{
+				$data['unread'][] = $notification;
+			}
+		}
+
+		return json_encode($data);
+	}
+
+	public function markRead ()
+	{
+		$user = $this->app['session']->get('user');
+		if (!$user)
+		{
+			return false;
+		}
+
+		return $this->app['db']->update('notifications', [
+			'`read`' => 1
+		], ['`read`' => 0, 'user_id' => $user['id']]);
 	}
 }

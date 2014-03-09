@@ -5,7 +5,17 @@ var asf = {
 
 	notifications: {
 		markRead: function (node) {
-			console.log('hi')
+			$.post('/' + asf.config.board.base + 'notifications/markRead/', {}).done(function () {
+				$('.new-notifications').remove();
+			});
+		},
+
+		findByUser: function (callback) {
+			$.post('/' + asf.config.board.base + 'notifications/findByUser/', {}).done(function (response) {
+				if (typeof callback == 'function') {
+					callback(response);
+				}
+			});	
 		}
 	},
 
@@ -287,17 +297,27 @@ var asf = {
 				}
 
 				$.post('/' + asf.config.board.base + 'partial/user/navQuickAccess/', {
-					params: {
-						
-					}
+					params: {}
 				}).done(function (html) {
+
+					asf.user.data = {
+						username: username
+					};
+					
 					$('#user-quick-access').hide().html(html).fadeIn(asf.medSpeed);
+
+					asf.notifications.findByUser(function (notifications) {
+						console.log(notifications);
+						
+						if (notifications.length) {
+							$('#new-notifications').text(notifications.length);
+						}
+					});
+
+					asf.elements.toggleUserVisibility();
 				});
 
-				asf.user = {
-					username: username
-				};
-				asf.elements.toggleUserVisibility();
+				
 				
 			});
 
@@ -337,7 +357,13 @@ var asf = {
 				$('#account-control').fadeIn(asf.medSpeed);
 			});
 
-			asf.user = undefined;
+			$.post('/' + asf.config.board.base + 'partial/user/quickLinks/', {
+				params: {}
+			}).done(function (html) {
+				$('#user-quick-access').hide().html(html).fadeIn(asf.medSpeed);
+			});
+
+			asf.user.data = null;
 			asf.elements.toggleUserVisibility();
 		});
 
@@ -437,7 +463,7 @@ var asf = {
 	},
 
 	delegate: function () {
-		$('date').timeago();
+		$('.date').timeago();
 	},
 
 	reportPostTrigger: function (node) {
@@ -680,7 +706,7 @@ var asf = {
 		},
 
 		toggleUserVisibility: function () {
-			if (typeof asf.user == 'undefined') {
+			if (asf.user.data == null) {
 				$('.hidden-no-user').hide();
 				$('.hidden-user').show();
 			} else {

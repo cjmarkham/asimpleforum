@@ -4,6 +4,8 @@ namespace Controller;
 
 class HomeController extends Controller
 {
+	public $login_required = false;
+	
 	public function __construct(\Silex\Application $app)
 	{
 		$this->app = $app;

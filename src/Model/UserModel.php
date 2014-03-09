@@ -170,8 +170,9 @@ class UserModel extends BaseModel
 			'date_format' => $format
 		], ['id' => $user['id']]);
 
-		$this->app['cache']->setCollection($this->app['database']['name'], 'profiles');
-		$this->app['cache']->delete('profile-' . $user['id']);
+		$this->app['cache']->setCollection($this->app['database']['name'], 'settings');
+		$this->app['cache']->delete('settings-' . $user['id']);
+
 
 		return true;
 	}

@@ -81,6 +81,10 @@ $app->get('/' . $app['board']['base'] . 'user/confirmEmail/{code}/', function (A
     return Route::get('user:confirmEmail', $code);
 });
 
+$app->get('/' . $app['board']['base'] . 'notifications/', function (ASFApplication $app) {
+    return Route::get('notification:index');
+})->bind('notifications');
+
 $app->post('/' . $app['board']['base'] . 'partial/{name}/', function (Request $request, $name) use ($app) {
 
     $params = $request->get('params');
@@ -98,6 +102,25 @@ $app->post('/' . $app['board']['base'] . 'partial/{name}/', function (Request $r
     $array['user'] = $app['session']->get('user');
 
     return $app['twig']->render('Partials/' . $name . '.twig', $array);
+});
+
+$app->post('/' . $app['board']['base'] . 'partial/{directory}/{name}/', function (Request $request, $directory, $name) use ($app) {
+
+    $params = $request->get('params');
+    $array = array();
+
+    if (isset($params) && is_array($params))
+    {
+        foreach ($params as $key => $param)
+        {
+            $array[$key] = $param;
+        
+        }
+    }
+
+    $array['user'] = $app['session']->get('user');
+
+    return $app['twig']->render('Partials/' . $directory . '/' . $name . '.twig', $array);
 });
 
 $app->get('/' . $app['board']['base'] . 'partial/{name}/', function (ASFApplication $app, $name) {
@@ -204,6 +227,18 @@ $app->post('/' . $app['board']['base'] . 'user/{method}/', function (Request $re
     }
     
     return $app['user']->$method($request);
+});
+
+$app->post('/' . $app['board']['base'] . 'notifications/{method}/', function (Request $request, $method) use ($app) {
+    // @todo Check for allowed post methods
+    if (!method_exists($app['notification'], $method))
+    {
+        $response = new Response();
+        $response->setStatusCode(403);
+        return $response;
+    }
+    
+    return $app['notification']->$method($request);
 });
 
 // ADMIN ROUTES

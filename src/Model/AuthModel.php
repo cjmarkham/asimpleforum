@@ -218,6 +218,24 @@ class AuthModel
 			return new Response($this->app->trans('NOT_APPROVED'), 400);
 		}
 
+		$user['notifications'] = ['read' => [], 'unread' => []];
+
+		$notifications = $this->app['notification']->findByUser($user['id']);
+
+		foreach ($notifications as $notification)
+		{
+			if ($notification['read'])
+			{
+				$user['notifications']['read'][] = $notification;
+			}
+			else
+			{
+				$user['notifications']['unread'][] = $notification;
+			}
+		}
+
+		$user['group'] = $this->app['group']->findById($user['perm_group']);
+
 		$this->app['session']->set('userId', $user['id']);
 		$this->app['session']->set('user', $user);
 

@@ -14,6 +14,45 @@
 
 	<title>{{ title }} - {{ config('board', 'name') }}</title>
 
+	{% block scripts %}
+
+		{% if not app.debug %}
+			{{ include('Partials/analytics.twig') }}
+		{% endif %}
+
+		{% if not app.debug %}
+			<script src="/{{ config('board', 'base') }}js/concat.js"></script>
+		{% else %}
+			<script src="/{{ config('board', 'base') }}js/jquery.js"></script>
+			<script src="/{{ config('board', 'base') }}js/bootstrap.js"></script>
+			<script src="/{{ config('board', 'base') }}js/typeahead.js"></script>
+			<script src="/{{ config('board', 'base') }}js/timeago.js"></script>
+			<script src="/{{ config('board', 'base') }}js/color.js"></script>
+			<script src="/{{ config('board', 'base') }}js/datepicker.js"></script>
+			<script src="/{{ config('board', 'base') }}js/asf.js"></script>
+			<script src="/{{ config('board', 'base') }}js/dom.js"></script>
+		{% endif %}
+		
+		{% if user %}
+			<script>
+				asf.user.data = {{ user|json_encode|raw }};
+			</script>
+		{% endif %}
+
+		<script>
+			asf.page = {
+				url: location.href,
+				section: '{{ section }}'
+			};
+
+			{% if section == 'forums' and forum is defined %} // home page also has section forums
+				asf.forum = {{ forum|json_encode|raw }}
+			{% endif %}
+
+			asf.config = JSON.parse('{{ config|json_encode|raw }}');
+		</script>
+	{% endblock %}
+
 	{{ include('Layout/meta.twig') }}
 
 </head>
@@ -47,18 +86,11 @@
 				</li>
 			{% endfor %}
 		</ul>
-		<div id="user-quick-access" class="col-sm-3 col-xs-4">
+		<div id="user-quick-access-fixed" class="col-sm-3 col-xs-4">
 			{% if user %}
 				{% include "Partials/User/navQuickAccess.twig" %}
 			{% else %}
-				<div class="quick-links text-right">
-					<a href="#" data-toggle="modal" data-target="#login-modal">
-						Login
-					</a>
-					<a href="#" data-toggle="modal" data-target="#login-modal">
-						Signup
-					</a>
-				</div>
+				{% include "Partials/User/quickLinks.twig" %}
 			{% endif %}
 		</div>
 	</div>
@@ -80,7 +112,7 @@
 						<div class="form-group">
 							<input type="text" name="query" class="typeahead form-control" autocomplete="off" placeholder="Quick search" />
 							<button class="fa fa-search">&nbsp;</button>
-							<select id="search-form-indicator" {% if section != 'forums' %}class="hide"{% endif %}>
+							<select id="search-form-indicator" {% if section != 'forums' or section != 'index' %}class="hide"{% endif %}>
 								<option selected value="this">This forum</option>
 								<option value="all">All forums</option>
 							</select>
@@ -116,14 +148,7 @@
 					{% if user %}
 						{% include "Partials/User/navQuickAccess.twig" %}
 					{% else %}
-						<div class="quick-links text-right">
-							<a href="#" data-toggle="modal" data-target="#login-modal">
-								Login
-							</a>
-							<a href="#" data-toggle="modal" data-target="#login-modal">
-								Signup
-							</a>
-						</div>
+						{% include "Partials/User/quickLinks.twig" %}
 					{% endif %}
 				</div>
 			</div>
@@ -270,44 +295,5 @@
 
 		{% endif %}	
 
-	{% endblock %}
-
-	{% block scripts %}
-
-		{% if not app.debug %}
-			{{ include('Partials/analytics.twig') }}
-		{% endif %}
-
-		{% if not app.debug %}
-			<script src="/{{ config('board', 'base') }}js/concat.js"></script>
-		{% else %}
-			<script src="/{{ config('board', 'base') }}js/jquery.js"></script>
-			<script src="/{{ config('board', 'base') }}js/bootstrap.js"></script>
-			<script src="/{{ config('board', 'base') }}js/typeahead.js"></script>
-			<script src="/{{ config('board', 'base') }}js/timeago.js"></script>
-			<script src="/{{ config('board', 'base') }}js/color.js"></script>
-			<script src="/{{ config('board', 'base') }}js/datepicker.js"></script>
-			<script src="/{{ config('board', 'base') }}js/asf.js"></script>
-			<script src="/{{ config('board', 'base') }}js/dom.js"></script>
-		{% endif %}
-		
-		{% if user %}
-			<script>
-				asf.user.data = {{ user|json_encode|raw }};
-			</script>
-		{% endif %}
-
-		<script>
-			asf.page = {
-				url: location.href,
-				section: '{{ section }}'
-			};
-
-			{% if section == 'forums' and forum is defined %} // home page also has section forums
-				asf.forum = {{ forum|json_encode|raw }}
-			{% endif %}
-
-			asf.config = JSON.parse('{{ config|json_encode|raw }}');
-		</script>
 	{% endblock %}
 </body>

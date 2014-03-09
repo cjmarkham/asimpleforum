@@ -191,21 +191,22 @@ $repeat_function = new Twig_SimpleFunction('repeat', function ($string, $length)
 });
 
 $to_date = new Twig_SimpleFilter('toDate', function ($string) use ($app) {
+    
     $user = $app['session']->get('user');
     
     if (!$user)
     {
         // @todo add an admin setting for default date format
-        return date('jS m y, H:i', $string);
+        return date('jS m y, H:i', strtotime($string));
     }
     else
     {
         if (!$user['settings']['date_format'])
         {
-            return date('jS m y, H:i', $string);
+            return date('jS m y, H:i', strtotime($string));
         }
 
-        return date($user['settings']['date_format'], $string);
+        return date($user['settings']['date_format'], strtotime($string));
     }
 });
 

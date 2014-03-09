@@ -4,7 +4,25 @@ $(function () {
 
 	$(document.body).fadeIn();
 
-	$('#notifications-dropdown').on('shown.bs.dropdown', asf.notifications.markRead);
+	if (asf.user.data != null) {
+		asf.notifications.findByUser(function (list) {
+			list = JSON.parse(list);
+			
+			if (list.unread.length) {
+				$('.new-notifications').text(list.unread.length);
+
+				$.post('/' + asf.config.board.base + 'partial/user/notificationDropdown/', {
+					params: {
+						notifications: list.unread
+					}
+				}).done(function (html) {
+					$('.notifications-dropdown-list').html(html);
+				});	
+			}
+		});
+	}
+
+	$('div#notifications-dropdown.dropdown.inline').on('shown.bs.dropdown', asf.notifications.markRead);
 
 	var fileReader = new FileReader();
 
@@ -140,7 +158,7 @@ $(function () {
 	var selector = $('#search-form-indicator option:selected');
 
 	if (asf.forum) {
-		var forum = JSON.parse(asf.forum);
+		var forum = asf.forum;
 		selection = forum.id;
 	}
 

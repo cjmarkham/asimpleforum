@@ -31,7 +31,7 @@ class Route
 
 		if ($admin)
 		{
-			if (!$user || !\Permissions::hasPermission('ACCESS_ADMIN'))
+			if (!$user || !Permissions::hasPermission('ACCESS_ADMIN'))
 			{
 				return self::$app->redirect('/');
 			}
@@ -41,7 +41,7 @@ class Route
 
 		if (!class_exists($path))
 		{
-			throw new Exception($controller . ' does not exist in ' . $path);
+			throw new \Exception($controller . ' does not exist in ' . $path);
 		}
 
 		$controller = new $path(self::$app);

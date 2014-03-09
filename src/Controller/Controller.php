@@ -21,7 +21,7 @@ class Controller
 			$user['profile'] = $_user['data']['profile'];
 			$user['group'] = $this->app['group']->findById($user['perm_group']);
 
-			$notifications = $this->app['notification']->findByUser($user_id);
+			/*$notifications = $this->app['notification']->findByUser($user_id);
 
 			$user['notifications'] = ['read' => [], 'unread' => []];
 
@@ -35,7 +35,7 @@ class Controller
 				{
 					$user['notifications']['unread'][] = $notification;
 				}
-			}
+			}*/
 
 			$this->app['session']->set('user', $user);
 		}

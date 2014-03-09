@@ -1,0 +1,16 @@
+<ul class="list-unstyled">
+	{% for notification in notifications %}
+		<li class="row">
+			<div class="col-md-6">
+				<a href="">
+					{{ notification.notification|raw }}
+				</a>
+			</div>
+			<div class="col-md-6 text-right">
+				<span class="date" title="{{ notification.added|date('c') }}">
+					{{ notification.added|toDate }}
+				</span>
+			</div>
+		</li>
+	{% endfor %}	
+</ul>

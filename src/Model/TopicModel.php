@@ -115,15 +115,15 @@ class TopicModel extends BaseModel
 		$topics = $this->app['cache']->get($cache_key, function () use ($forum_id, $offset) {
 			$topics = $this->app['db']->fetchAll(
 				'SELECT ' . 
-					't.*, ' . 
+					't.id, t.forum, t.lastAuthorId, t.name, t.views, t.replies, t.added, t.author, t.updated, t.sticky, t.locked, ' . 
 					'p.name as lastPostName, p.id as lastPostId, p.content, ' . 
-					'u.username as author, us.username as lastPosterUsername, ' . 
+					'u.username as authorName, us.username as lastPosterUsername, ' . 
 					'f.name as forumName ' . 
 				'FROM topics t ' . 
 				'JOIN users u ' . 
-				'ON t.poster=u.id ' . 
+				'ON t.author=u.id ' . 
 				'JOIN users us ' . 
-				'ON us.id=t.lastPosterId ' . 
+				'ON us.id=t.lastAuthorId ' . 
 				'LEFT JOIN posts p ' . 
 				'ON t.lastPostId=p.id ' . 
 				'JOIN forums f ' . 
@@ -150,8 +150,8 @@ class TopicModel extends BaseModel
 					'sticky'	=> $topic['sticky'],
 					'locked'	=> $topic['locked'],
 					'author' => array(
-						'id' => $topic['poster'],
-						'username' => $topic['author']
+						'id' => $topic['author'],
+						'username' => $topic['authorName']
 					),
 					'forum' => array(
 						'id' => $topic['forum'],
@@ -162,7 +162,7 @@ class TopicModel extends BaseModel
 						'name' => $topic['lastPostName'],
 						'content' => $topic['content'],
 						'user' => array(
-							'id' => $topic['lastPosterId'],
+							'id' => $topic['lastAuthorId'],
 							'username' => $topic['author']
 						)
 					)
@@ -227,7 +227,7 @@ class TopicModel extends BaseModel
 			$topics = $this->app['db']->fetchAll(
 				'SELECT ' .  
 					't.*, ' .  
-					'u.id as lastPosterId, u.username, ' .  
+					'u.id as lastAuthorId, u.username, ' .  
 					'f.name as forumName, ' .  
 					'p.name as lastPostName, p.content, ' . 
 					'us.id as authorId, us.username as authorUsername ' . 
@@ -235,9 +235,9 @@ class TopicModel extends BaseModel
 				'JOIN posts p ' . 
 				'ON p.id=t.lastPostId ' . 
 				'JOIN users u ' .  
-				'ON p.poster=u.id ' .  
+				'ON p.author=u.id ' .  
 				'JOIN users us ' .  
-				'ON t.poster=us.id ' .  
+				'ON t.author=us.id ' .  
 				'JOIN forums f ' .  
 				'ON t.forum=f.id ' .  
 				'ORDER BY updated ' . 
@@ -258,7 +258,7 @@ class TopicModel extends BaseModel
 					'sticky'	=> $topic['sticky'],
 					'locked'	=> $topic['locked'],
 					'author' => array(
-						'id' => $topic['poster'],
+						'id' => $topic['author'],
 						'username' => $topic['authorUsername']
 					),
 					'forum' => array(
@@ -270,7 +270,7 @@ class TopicModel extends BaseModel
 						'name' => $topic['lastPostName'],
 						'content' => $topic['content'],
 						'user' => array(
-							'id' => $topic['lastPosterId'],
+							'id' => $topic['lastAuthorId'],
 							'username' => $topic['username']
 						)
 					)
@@ -383,7 +383,7 @@ class TopicModel extends BaseModel
 
 		if (!\ASF\Permissions::hasPermission('BYPASS_RESTRICTIONS'))
 		{
-			$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE poster=? AND forum=? ORDER BY added DESC LIMIT 1', array(
+			$user_last = $this->app['db']->fetchAssoc('SELECT forum, added FROM topics WHERE author=? AND forum=? ORDER BY added DESC LIMIT 1', array(
 				$user['id'],
 				$forum_id
 			));
@@ -401,18 +401,18 @@ class TopicModel extends BaseModel
 			}
 		}
 
-		$time = time();
+		$time = date('Y-m-d H:i:s');
 
 		$this->app['db']->insert('topics', array(
 			'forum' => $forum_id,
 			'name' => $name,
-			'poster' => $user['id'],
+			'author' => $user['id'],
 			'locked' => $locked,
 			'sticky' => $sticky,
 			'added' => $time,
 			'updated' => $time,
 			'lastPostId' => 0,
-			'lastPosterId' => $user['id']
+			'lastAuthorId' => $user['id']
 		));
 
 		$topic_id = $this->app['db']->lastInsertId();
@@ -422,7 +422,7 @@ class TopicModel extends BaseModel
 			'forum' => $forum_id,
 			'name' => $name,
 			'content' => $content,
-			'poster' => $user['id'],
+			'author' => $user['id'],
 			'added' => $time,
 			'updated' => $time
 		));
@@ -466,7 +466,7 @@ class TopicModel extends BaseModel
 			'lastPostId' => $post_id
 		), array('id' => $topic_id));
 
-		$this->app['db']->executeQuery('UPDATE forums SET topics=topics+1, posts=posts+1, lastTopicId=?, lastPosterId=?, lastPostTime=?, lastPostId=?, updated=? WHERE id=? LIMIT 1', array(
+		$this->app['db']->executeQuery('UPDATE forums SET topics=topics+1, posts=posts+1, lastTopicId=?, lastAuthorId=?, lastPostTime=?, lastPostId=?, updated=? WHERE id=? LIMIT 1', array(
 			$topic_id,
 			$user['id'],
 			$time,
@@ -482,6 +482,10 @@ class TopicModel extends BaseModel
 		$this->app['cache']->collection = $this->collection;
 		$this->app['cache']->delete_group('topics-recent');
 		$this->app['cache']->delete_group('topics-forum-' . $forum_id);
+
+		$this->app['cache']->setCollection($this->app['database']['name'], 'forums');
+		$this->app['cache']->delete('forum-' . $forum_id);
+		$this->app['cache']->delete('forums.all');
 
 		return json_encode(array(
 			'id' => $topic_id,
