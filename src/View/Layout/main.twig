@@ -51,7 +51,14 @@
 			{% if user %}
 				{% include "Partials/User/navQuickAccess.twig" %}
 			{% else %}
-				<!-- @todo LOGIN AND SIGNUP BUTTONS -->
+				<div class="quick-links text-right">
+					<a href="#" data-toggle="modal" data-target="#login-modal">
+						Login
+					</a>
+					<a href="#" data-toggle="modal" data-target="#login-modal">
+						Signup
+					</a>
+				</div>
 			{% endif %}
 		</div>
 	</div>
@@ -109,7 +116,14 @@
 					{% if user %}
 						{% include "Partials/User/navQuickAccess.twig" %}
 					{% else %}
-						<!-- @todo LOGIN AND SIGNUP BUTTONS -->
+						<div class="quick-links text-right">
+							<a href="#" data-toggle="modal" data-target="#login-modal">
+								Login
+							</a>
+							<a href="#" data-toggle="modal" data-target="#login-modal">
+								Signup
+							</a>
+						</div>
 					{% endif %}
 				</div>
 			</div>
