@@ -355,7 +355,7 @@ class PostModel extends BaseModel
 				), array('id' => $last['forum']));
 
 				// Upload attachments
-				if ($attachments)
+				if ($attachments[0] != null)
 				{
 					foreach ($attachments as $attachment)
 					{
