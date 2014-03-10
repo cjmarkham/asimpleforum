@@ -154,12 +154,22 @@ $app->get('/' . $app['board']['base'] . 'sidebar/{name}/', function (ASFApplicat
     ));
 });
 
-$app->get('/' . $app['board']['base'] . '{name}-{id}/{page}/', function (ASFApplication $app, $name, $id, $page) {
-    return Route::get('forum:index', $name, $id, $page);
+$app->get('/' . $app['board']['base'] . '{forum_url}/{page}/', function (ASFApplication $app, $forum_url, $page) {
+    $parts = explode('-', $forum_url);
+
+    $forum_id = array_pop($parts);
+    $forum_name = implode('-', $parts);
+    
+    return Route::get('forum:index', $forum_name, $forum_id, $page);
 })->assert('page', '([0-9]+)');
 
-$app->get('/' . $app['board']['base'] . '{name}-{id}/', function (ASFApplication $app, $name, $id) {
-    return Route::get('forum:index', $name, $id);
+$app->get('/' . $app['board']['base'] . '{forum_url}/', function (ASFApplication $app, $forum_url) {
+    $parts = explode('-', $forum_url);
+
+    $forum_id = array_pop($parts);
+    $forum_name = implode('-', $parts);
+
+    return Route::get('forum:index', $forum_name, $forum_id);
 });
 
 $app->get('/' . $app['board']['base'] . '{forum_name}/{topic_url}/{page}/', function (ASFApplication $app, $topic_url, $page) {
