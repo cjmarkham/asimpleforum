@@ -373,6 +373,15 @@ var asf = {
 			var guestCount = parseInt($('#sessions p:last span').text().trim(), 10);
 			onlineCount -= 1;
 			guestCount += 1;
+
+			if (onlineCount < 0) {
+				onlineCount = 0;
+			}
+
+			if (guestCount < 0) {
+				guestCount = 0;
+			}
+			
 			$('#sessions p:first span').text(onlineCount);
 			$('#sessions p:last span').text(guestCount);
 
