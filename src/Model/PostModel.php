@@ -354,6 +354,8 @@ class PostModel extends BaseModel
 					'lastPostId' => $last['id']
 				), array('id' => $last['forum']));
 
+				$files = [];
+
 				// Upload attachments
 				if ($attachments[0] != null)
 				{
