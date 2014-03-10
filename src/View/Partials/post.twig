@@ -2,8 +2,8 @@
 	<a name="{{ post.id }}"></a>
 	<div class="clearfix">
 		<div class="post-author">
-			<div class="avatar big">
-				<img width="70" height="70" src="{{ avatar_root }}/{{ post.username }}/big.png" alt="" />
+			<div class="avatar large">
+				<img width="70" height="70" src="{{ avatar_root }}/{{ post.username }}/large.png" alt="" />
 			</div>
 			<p class="truncate w80">
 				<a href="/{{ config('board', 'base') }}user/{{ post.username }}" class="user-link resize">
@@ -11,17 +11,17 @@
 				</a>
 			</p>
 			<p title="Group" class="group">
-				<em class="fa fa-group"></em > Admin
+				<em class="fa fa-group"></em > {{ post.group }}
 			</p>
 			<p title="Posts" class="post-count">
-				<em class="fa fa-pencil"></em > 200
+				<em class="fa fa-pencil"></em > {{ post.userPosts }}
 			</p>
 		</div>
 		<div class="post-body">
 			<div class="post-info">
 				<div class="clearfix">
 					<div class="pull-left">
-						<span class="date" title="{{ post.added|date('c') }}">{{ post.added|date('jS M y, H:i') }}</span> - <a href="/{{ config('board', 'base') }}" class="topic-name">{{ post.name }}</a>
+						<span class="date" title="{{ post.added|date('c') }}">{{ post.added|toDate }}</span> - <a href="/{{ config('board', 'base') }}" class="topic-name">{{ post.name }}</a>
 					</div>
 					<div class="pull-right post-tools">
 						{% if user and post.poster == user.id or hasPermission('EDIT_POSTS') %}
@@ -33,7 +33,7 @@
 							<a href="javascript:void(0)" data-event="click" data-action="reportPostTrigger" data-postId="{{ post.id }}">
 								<em class="fa fa-exclamation-triangle"></em >
 							</a>
-							<a href="javascript:void(0)" data-event="click" data-action="likePost" data-postId="{{ post.id }}">
+							<a href="javascript:void(0)" data-event="click" data-action="posts.likePost" data-postId="{{ post.id }}">
 								<em class="fa fa-thumbs-up"></em >
 							</a>
 						{% endif %}

@@ -162,11 +162,21 @@ $app->get('/' . $app['board']['base'] . '{name}-{id}/', function (ASFApplication
     return Route::get('forum:index', $name, $id);
 });
 
-$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_name}-{topic_id}/{page}/', function (ASFApplication $app, $topic_name, $topic_id, $page) {
+$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_url}/{page}/', function (ASFApplication $app, $topic_url, $page) {
+    $parts = explode('-', $topic_url);
+
+    $topic_id = array_pop($parts);
+    $topic_name = implode('-', $parts);
+
     return Route::get('topic:index', $topic_name, $topic_id, $page);
 })->assert('page', '([0-9]+)');
 
-$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_name}-{topic_id}/', function (ASFApplication $app, $topic_name, $topic_id) {
+$app->get('/' . $app['board']['base'] . '{forum_name}/{topic_url}/', function (ASFApplication $app, $topic_url) {
+    $parts = explode('-', $topic_url);
+
+    $topic_id = array_pop($parts);
+    $topic_name = implode('-', $parts);
+
     return Route::get('topic:index', $topic_name, $topic_id);
 });
 

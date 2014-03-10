@@ -1,6 +1,6 @@
 <div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
 	<div class="col-sm-5">
-		<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/1" class="topic-name preview">
+		<a href="/{{ config('board', 'base') }}{{ forum.name|toUrl }}/{{ topic.name|toUrl }}-{{ topic.id }}/1" class="topic-name preview">
 			{{ truncate(topic.name, 40) }}
 		</a>
 
@@ -15,12 +15,12 @@
 		</div>
 
 		<p class="topic-author">
-			<a href="/{{ config('board', 'base') }}" class="user-link">
-				{{ topic.author }}
+			<a href="/{{ config('board', 'base') }}user/{{ topic.author.username }}" class="user-link">
+				{{ topic.author.username }}
 			</a>
 		</p>
 		<span class="date" title="{{ topic.added|date('c') }}">
-			{{ topic.added|date('jS M y, H:i') }}
+			{{ topic.added|toDate }}
 		</span>
 	</div>
 	<div class="col-sm-3">
@@ -34,7 +34,7 @@
 				{% if page < 1 %}
 					{% set page = 1 %}
 				{% endif %}
-				<a href="/{{ config('board', 'base') }}{{ forum.name|url_encode }}/{{ topic.name|url_encode }}-{{ topic.id }}/{{ page }}/#{{ topic.lastPostId }}" class="topic-name">
+				<a href="/{{ config('board', 'base') }}{{ forum.name|toUrl }}/{{ topic.name|toUrl }}-{{ topic.id }}/{{ page }}/#{{ topic.lastPostId }}" class="topic-name">
 					{{ topic.lastPostName }}
 				</a>
 			{% else %}
@@ -44,12 +44,12 @@
 			{% endif %}
 		</p>
 		<p>	
-			<a href="/{{ config('board', 'base') }}" class="user-link">
-				{{ topic.lastPosterUsername }}
+			<a href="/{{ config('board', 'base') }}user/{{ topic.lastPost.user.username }}" class="user-link">
+				{{ topic.lastPost.user.username }}
 			</a>
 		</p>
 		<span class="date" title="{{ topic.updated|date('c') }}">
-			{{ topic.updated|date('jS M y. H:i') }}
+			{{ topic.updated|toDate }}
 		</span>
 	</div>
 </div>

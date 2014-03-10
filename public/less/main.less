@@ -1,10 +1,4 @@
-@lightBlue: #3d78b2;
-@white: #fff;
-@grey: #f2f2f2;
-@darkGrey: #c6c6c6;
-@darkerGrey: #79828b;
-@orange: #f46626;
-@darkBlue: #0d2c49;
+@import "colors-default.less";
 
 .marginLeft10 {margin-left: 10px}
 .marginLeft20 {margin-left: 20px}
@@ -37,7 +31,7 @@ body {
 
 #header, #footer {
 	height: 156px;
-	background: #3d78b2;
+	background: @lightBlue;
 
 	#logo {
 		padding: 0;
@@ -71,7 +65,7 @@ body {
 	
 	input {
 		border: 0;
-		border-top: 1px solid #3d78b2;
+		border-top: 1px solid @lightBlue;
 		background: @darkBlue;
 		padding-right: 35px;
 		color: #f4f4f4;
@@ -116,6 +110,14 @@ body {
 	-webkit-box-shadow: none;
 }
 
+a {
+	color: @linkColor;
+
+	&:hover {
+		color: @linkHoverColor;
+	}
+}
+
 #main-nav {
 	background: @darkBlue;
 	border-top: 1px solid @lightBlue;
@@ -140,7 +142,7 @@ body {
 			}
 
 			a {
-				color: #d4e5f5;
+				color: @lightestBlue;
 				text-shadow: 0 1px 1px #08192b;
 				display: block;
 				padding: 10px 20px;
@@ -183,7 +185,7 @@ body {
 			}
 
 			a {
-				color: #d4e5f5;
+				color: @lightestBlue;
 				text-shadow: 0 1px 1px #08192b;
 				display: block;
 				padding: 10px 20px;
@@ -267,7 +269,7 @@ section {
 	header {
 		height: 35px;
 		padding: 8px 8px 0;
-		background: #3d78b2;
+		background: @lightBlue;
 		color: #fff;
 		text-shadow: 0 1px 1px #08192b;
 		font-weight: bold;
@@ -288,7 +290,7 @@ section {
 thead.section-header {
 	height: 35px;
 	padding: 8px 8px 0;
-	background: #3d78b2;
+	background: @lightBlue;
 	color: #fff;
 	text-shadow: 0 1px 1px #08192b;
 	font-weight: bold;
@@ -378,14 +380,14 @@ p {
 }
 
 .user-link, label {
-	color: @orange;
+	.orange();
 	font-weight: bold;
 	text-decoration: none;
 }
 
 .topic-info {
 	font-size: 13px;
-	color: #79828b;
+	color: @darkerGrey;
 	text-shadow: 0 1px 1px @white;
 
 	.date {
@@ -395,7 +397,7 @@ p {
 }
 
 .date, .forum-description {
-	color: #79828b;
+	color: @darkerGrey;
 }
 
 a:hover {
@@ -446,7 +448,7 @@ date {
 .views, .replies {
 	margin-top: 20px;
 	display: inline-block;
-	color: #79828b;
+	color: @darkerGrey;
 	font-weight: bold;
 
 	i {
@@ -516,7 +518,7 @@ date {
 		position: relative;
 
 		.post-info {
-			color: #79828b;
+			color: @darkerGrey;
 			font-weight: bold;
 			border-bottom: 1px solid #dfdfdf;
 			padding: 0 0 10px;
@@ -528,7 +530,7 @@ date {
 		}
 
 		.post-content {
-			color: #79828b;
+			color: @darkerGrey;
 			padding-top: 10px;
 			border-top: 1px solid #fff;
 			position: relative;
@@ -565,7 +567,7 @@ date {
 
 .popover {
 	padding: 0;
-	color: #79828b;
+	color: @darkerGrey;
 
 }
 
@@ -632,7 +634,7 @@ date {
 
 	.modal-body {
 		background: @grey;
-		color: #79828b;
+		color: @darkerGrey;
 	}
 }
 
@@ -655,7 +657,7 @@ date {
 	bottom: 0;
 	padding: 0 10px;
 	font-size: 11px;
-	color: #79828b;
+	color: @darkerGrey;
 
 	.edit-count {
 		text-align: right;
@@ -800,7 +802,7 @@ date {
 
 			p {
 				font-size: 12px;
-				color: #79828b;
+				color: @darkerGrey;
 			}
 		}
 
@@ -936,7 +938,13 @@ section h4 {
 	padding: 0 0 5px;
 }
 
-.orange {color: @orange !important;}
+.orange {
+	color: @orange !important;
+
+	&:hover {
+		color: @orangeHover !important;
+	}
+}
 .blue {color: @lightBlue;}
 
 .recent-topic {
@@ -987,14 +995,14 @@ section h4 {
 	margin-bottom: 20px;
 	border: 0;
 	background: @darkBlue;
-	border-top: 1px solid #3d78b2;
+	border-top: 1px solid @lightBlue;
 	padding: 10px 10px 0;
 	height: 50px;
 
 	li {
 
 		a {
-			color: #d4e5f5;
+			color: @lightestBlue;
 			text-shadow: 0 1px 1px #08192b;
 			padding: 10px 20px;
 			font-weight: bold;
@@ -1002,7 +1010,7 @@ section h4 {
 
 			&:hover {
 				background: transparent;
-				color: #d4e5f5;
+				color: @lightestBlue;
 				border: 0;
 			}
 		}
@@ -1093,7 +1101,7 @@ section h4 {
 	color: #fff;
 
 	a {
-		color: #d4e5f5;
+		color: @lightestBlue;
 		text-shadow: 0 1px 1px #08192b;
 		font-weight: bold;
 		font-size: 14px;
@@ -1130,7 +1138,7 @@ section h4 {
 		width: 100%;
 		height: 75px;
 		display: none;
-		background: #3d78b2;
+		background: @lightBlue;
 		color: #fff;
 		padding: 10px;
 
@@ -1159,7 +1167,7 @@ section h4 {
 			cursor: pointer;
 
 			&.active {
-				background: #3d78b2;
+				background: @lightBlue;
 				color: #fff;
 				cursor: default;
 			}
@@ -1260,13 +1268,13 @@ section h4 {
 
 	li:not(.seperator) {
 		&:hover {
-			background: #3d78b2;
+			background: @lightBlue;
 		}
 	}
 
 	li.seperator {
 		padding: 0 !important;
-		border-color: #3d78b2 !important;
+		border-color: @lightBlue !important;
 	}
 }
 
@@ -1315,7 +1323,7 @@ section h4 {
 
 .tt-dropdown-menu {
 	background: #0d2c49;
-	color: #d4e5f5;
+	color: @lightestBlue;
 	text-shadow: 0 1px 1px #08192b;
 	width: 100%;
 	padding: 5px;
@@ -1325,10 +1333,10 @@ section h4 {
 	padding: 5px;
 
 	a {
-		color: #d4e5f5;
+		color: @lightestBlue;
 	}
 
 	&:hover {
-		background: #3d78b2;
+		background: @lightBlue;
 	}
 }

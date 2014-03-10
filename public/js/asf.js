@@ -248,6 +248,31 @@ var asf = {
 	
 	},
 
+	posts: {
+		likePost: function (node) {
+			node = $(node);
+			var self = this;
+
+			var postId = node.attr('data-postId');
+
+			$.post('/' + asf.config.board.base + 'post/like/', {
+				postId: postId
+			}).done(function (response) {
+
+				asf.elements.replace('/' + asf.config.board.base + 'partial/postLikes', {
+					post: {
+						likes: JSON.parse(response),
+						id: postId
+					}
+				}, '.like-row[data-postId="' + postId + '"]');
+
+			}).fail(function (response) {
+				asf.error(response.responseText);
+				return false;
+			});
+		},
+	},
+
 	login: function (node) {
 		var self = this;
 
@@ -657,29 +682,6 @@ var asf = {
 
 				editor.focus();	
 			});
-		});
-	},
-
-	likePost: function (node) {
-		node = $(node);
-		var self = this;
-
-		var postId = node.attr('data-postId');
-
-		$.post('/' + asf.config.board.base + 'post/like/', {
-			postId: postId
-		}).done(function (response) {
-
-			asf.elements.replace('postLikes', {
-				post: {
-					likes: JSON.parse(response),
-					id: postId
-				}
-			}, '.like-row[data-postId="' + postId + '"]');
-
-		}).fail(function (response) {
-			asf.error(response.responseText);
-			return false;
 		});
 	},
 

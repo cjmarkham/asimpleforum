@@ -74,8 +74,15 @@ class TopicModel extends BaseModel
 		$this->app['cache']->collection = $this->app['cache']->setCollection($this->app['database']['name'], 'views');
 
 		$views = $this->app['cache']->get('topic-views-' . $topic['data']['id'], function () use ($topic) {
+			$amount = [];
+
+			for ($i = 0; $i < (int) $topic['data']['views']; $i++)
+			{
+				$amount[] = time();
+			}
+
 			$data = [
-				'data' => [time()]
+				'data' => $amount
 			];
 
 			return $data;
@@ -175,7 +182,7 @@ class TopicModel extends BaseModel
 						'content' => $topic['content'],
 						'user' => array(
 							'id' => $topic['lastAuthorId'],
-							'username' => $topic['author']
+							'username' => $topic['lastPosterUsername']
 						)
 					)
 				);
@@ -233,7 +240,7 @@ class TopicModel extends BaseModel
 			$topics = $this->app['db']->fetchAll(
 				'SELECT ' .  
 					't.*, ' .  
-					'u.id as lastAuthorId, u.username, ' .  
+					'u.id as lastAuthorId, u.username as lastAuthorUsername, ' .  
 					'f.name as forumName, ' .  
 					'p.name as lastPostName, p.content, ' . 
 					'us.id as authorId, us.username as authorUsername ' . 
@@ -246,7 +253,7 @@ class TopicModel extends BaseModel
 				'ON t.author=us.id ' .  
 				'JOIN forums f ' .  
 				'ON t.forum=f.id ' .  
-				'ORDER BY updated ' . 
+				'ORDER BY added ' . 
 				'DESC LIMIT ' . $amount
 			);
 
@@ -264,7 +271,7 @@ class TopicModel extends BaseModel
 					'sticky'	=> $topic['sticky'],
 					'locked'	=> $topic['locked'],
 					'author' => array(
-						'id' => $topic['author'],
+						'id' => $topic['authorId'],
 						'username' => $topic['authorUsername']
 					),
 					'forum' => array(
@@ -277,7 +284,7 @@ class TopicModel extends BaseModel
 						'content' => $topic['content'],
 						'user' => array(
 							'id' => $topic['lastAuthorId'],
-							'username' => $topic['username']
+							'username' => $topic['lastAuthorUsername']
 						)
 					)
 				);

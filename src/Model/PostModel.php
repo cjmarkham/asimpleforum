@@ -340,7 +340,7 @@ class PostModel extends BaseModel
 
 				$this->app['db']->update('posts', array(
 					'content' => $content,
-					'updated' => time()
+					'updated' => $time
 				), array('id' => $last['id']));
 
 				$this->app['db']->update('topics', array(
@@ -379,7 +379,7 @@ class PostModel extends BaseModel
 							'file_name' => $file_name,
 							'size' => $attachment->getClientSize(),
 							'mime' => $attachment->getClientMimeType(),
-							'added' => time()
+							'added' => $time
 						));
 
 						$files[] = array(
@@ -673,21 +673,19 @@ class PostModel extends BaseModel
 	{
 		$post_id = (int) $request->get('postId');
 		$user = $this->app['session']->get('user');
-		$response = new Response;
 
 		if (!$user)
 		{
-			$response->setStatusCode(500);
-	        $response->setContent($this->app->trans('MUST_BE_LOGGED_IN'));
-	        return $response;
+	        return new Response($this->app->trans('MUST_BE_LOGGED_IN'), 500);
 		}
 
 		if (!$post_id)
 		{
-			$response->setStatusCode(500);
-	        $response->setContent($this->app->trans('UNKNOWN_ERROR'));
-	        return $response;
+	        return new Response($this->app->trans('UNKNOWN_ERROR'), 500);
 		}
+
+		$post = $this->findById(new Request(['id' => $post_id]));
+		$post = json_decode($post, true);
 
 		$likes = $this->app['db']->fetchAll('SELECT username FROM likes WHERE postId=?', array(
 			$post_id
@@ -702,16 +700,27 @@ class PostModel extends BaseModel
 
 		if (in_array($user['username'], $_likes))
 		{
-			$response->setStatusCode(400);
-	        $response->setContent($this->app->trans('ALREADY_LIKED'));
-	        return $response;
+	        return new Response($this->app->trans('ALREADY_LIKED'), 400);
 		}
 
 		$this->app['db']->insert('likes', array(
 			'postId' => $post_id,
 			'username' => $user['username'],
-			'added' => time()
+			'added' => date('Y-m-d H:i:s')
 		));
+
+		$topic = $this->app['topic']->findById($post['topic']);
+		$forum = $this->app['forum']->findById($post['forum']);
+
+		$post_url = '/' . $this->app['board']['base'] . \ASF\Utils::toUrl($forum['name']) . '/' . \ASF\Utils::toUrl($topic['name']) . '-' . $topic['id'] . '/#' . $post['id'];
+
+		if ($post['author'] !== $user['id'])
+		{
+			$this->app['notification']->add(new Request([
+				'user_id' => $post['author'],
+				'notification' => '<a href="/' . $this->app['board']['base'] . 'user/' . $user['username'] . '/" class="user-link">' . $user['username'] . '</a> likes your <a href="' . $post_url . '">post</a>'
+			]));
+		}
 
 		$_likes[] = $user['username'];
 

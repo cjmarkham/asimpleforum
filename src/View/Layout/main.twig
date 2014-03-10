@@ -112,7 +112,7 @@
 						<div class="form-group">
 							<input type="text" name="query" class="typeahead form-control" autocomplete="off" placeholder="Quick search" />
 							<button class="fa fa-search">&nbsp;</button>
-							<select id="search-form-indicator" {% if section != 'forums' or section != 'index' %}class="hide"{% endif %}>
+							<select id="search-form-indicator" {% if section != 'forums' or section == 'index' %}class="hide"{% endif %}>
 								<option selected value="this">This forum</option>
 								<option value="all">All forums</option>
 							</select>

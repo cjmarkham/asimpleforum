@@ -210,11 +210,18 @@ $to_date = new Twig_SimpleFilter('toDate', function ($string) use ($app) {
     }
 });
 
+$to_url = new Twig_SimpleFilter('toUrl', function ($string) {
+
+    return \ASF\Utils::toUrl($string);
+
+});
+
 $app['twig']->addFunction($truncate);
 $app['twig']->addFunction($config_function);
 $app['twig']->addFunction($permissions_function);
 $app['twig']->addFunction($repeat_function);
 $app['twig']->addFilter($to_date);
+$app['twig']->addFilter($to_url);
 
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(

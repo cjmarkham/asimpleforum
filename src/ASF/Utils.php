@@ -8,4 +8,12 @@ class Utils
 	{
 		return strlen($string) > $length ? substr($string, 0, $length - 2) . '..' : $string;
 	}
+
+	public static function toUrl ($string)
+	{
+		$string = urlencode($string);
+    	$string = str_replace('+', '-', $string);
+
+    	return $string;
+	}
 }

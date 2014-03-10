@@ -18,7 +18,7 @@ class HomeController extends Controller
 
 		return $this->app['twig']->render('Home/index.twig', array(
 			'title' 			=> 'Home',
-			'section'			=> 'forums',
+			'section'			=> 'index',
 			'forums' 			=> $forums
 		) + $this->extras);
 	}
