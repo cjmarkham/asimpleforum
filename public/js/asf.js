@@ -565,16 +565,8 @@ var asf = {
 					topic: {
 						id: response.topic_id,
 						name: title,
-						views: 0,
-						replies: 0,
-						lastPostName: title,
-						lastPosterUsername: response.author,
-						lastPostTime: Math.round(new Date().getTime() / 1000),
-						lastPostId: response.post_id,
 						author: response.author,
 						content: response.content,
-						added: Math.round(new Date().getTime() / 1000),
-						updated: Math.round(new Date().getTime() / 1000),
 						locked: response.locked,
 						sticky: response.sticky
 					},

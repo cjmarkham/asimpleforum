@@ -1,6 +1,6 @@
 <div class="row topic {% if topic.sticky %}sticky{% endif %}" id="topic-{{ topic.id }}">
 	<div class="col-sm-5">
-		<a href="/{{ config('board', 'base') }}{{ forum.name|toUrl }}/{{ topic.name|toUrl }}-{{ topic.id }}/1" class="topic-name preview">
+		<a href="/{{ config('board', 'base') }}{{ forum.name|toUrl }}/{{ topic.name|toUrl }}-{{ topic.id }}/" class="topic-name preview">
 			{{ truncate(topic.name, 40) }}
 		</a>
 
@@ -15,41 +15,31 @@
 		</div>
 
 		<p class="topic-author">
-			<a href="/{{ config('board', 'base') }}user/{{ topic.author.username }}" class="user-link">
-				{{ topic.author.username }}
+			<a href="/{{ config('board', 'base') }}user/{{ topic.author }}" class="user-link">
+				{{ topic.author }}
 			</a>
 		</p>
-		<span class="date" title="{{ topic.added|date('c') }}">
-			{{ topic.added|toDate }}
+		<span class="date" title="{{ 'now'|date('c') }}">
+			{{ 'now'|toDate }}
 		</span>
 	</div>
 	<div class="col-sm-3">
-		<p title="Views" data-toggle="tooltip" class="views"><em class="fa fa-eye"></em > {{ topic.views }}</p>
-		<p title="Replies" data-toggle="tooltip" class="replies"><em class="fa fa-pencil"></em > {{ topic.replies }}<p>
+		<p title="Views" data-toggle="tooltip" class="views"><em class="fa fa-eye"></em > 0</p>
+		<p title="Replies" data-toggle="tooltip" class="replies"><em class="fa fa-pencil"></em > 0<p>
 	</div>
 	<div class="text-right col-sm-4">
 		<p>
-			{% if topic.lastPostName %}
-				{% set page = (topic.replies / config('board', 'postsPerPage'))|round %}
-				{% if page < 1 %}
-					{% set page = 1 %}
-				{% endif %}
-				<a href="/{{ config('board', 'base') }}{{ forum.name|toUrl }}/{{ topic.name|toUrl }}-{{ topic.id }}/{{ page }}/#{{ topic.lastPostId }}" class="topic-name">
-					{{ topic.lastPostName }}
-				</a>
-			{% else %}
-				<a href="/{{ config('board', 'base') }}" class="topic-name">
-					{{ topic.name }}
-				</a>
-			{% endif %}
+			<a href="/{{ config('board', 'base') }}" class="topic-name">
+				{{ topic.name }}
+			</a>
 		</p>
 		<p>	
-			<a href="/{{ config('board', 'base') }}user/{{ topic.lastPost.user.username }}" class="user-link">
-				{{ topic.lastPost.user.username }}
+			<a href="/{{ config('board', 'base') }}user/{{ topic.author }}" class="user-link">
+				{{ topic.author }}
 			</a>
 		</p>
 		<span class="date" title="{{ topic.updated|date('c') }}">
-			{{ topic.updated|toDate }}
+			{{ "now"|toDate }}
 		</span>
 	</div>
 </div>
