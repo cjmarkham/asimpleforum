@@ -459,7 +459,9 @@ var asf = {
 							added: Math.round(new Date().getTime() / 1000),
 							username: response.username,
 							poster: response.userId,
-							edits: 0
+							edits: 0,
+							group: response.userGroup,
+							userPosts: response.userPosts
 						}
 					}
 				}).done(function (html) {

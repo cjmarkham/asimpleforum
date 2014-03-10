@@ -511,11 +511,13 @@ class PostModel extends BaseModel
 			'id' => $post_id,
 			'username' => $user['username'],
 			'userId' => $user['id'],
+			'userGroup' => $user['group']['name'],
+			'userPosts' => $user['posts'],
 			'page' => $page
 		));
 	}
 
-	private function parseMentions (&$content)
+	public function parseMentions (&$content)
 	{
 		preg_match_all('/@([\w]+)/si', $content, $matches);
 		

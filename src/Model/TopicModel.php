@@ -430,6 +430,14 @@ class TopicModel extends BaseModel
 
 		$topic_id = $this->app['db']->lastInsertId();
 
+		// Format mentions
+		$mentions = $this->app['post']->parseMentions($content);
+
+		if ($mentions['has_mentions'])
+		{
+			$content = $mentions['content'];
+		}
+
 		$this->app['db']->insert('posts', array(
 			'topic' => $topic_id,
 			'forum' => $forum_id,
@@ -441,6 +449,21 @@ class TopicModel extends BaseModel
 		));
 
 		$post_id = $this->app['db']->lastInsertId();
+
+		$post_url = '/' . $this->app['board']['base'] . urlencode($forum['name']) . '/' . urlencode($name) . '-' . $topic_id . '/#' . $post_id;
+
+		if ($mentions['has_mentions'])
+		{
+			$content = $mentions['content'];
+
+			foreach ($mentions['users'] as $mention)
+			{
+				$this->app['notification']->add(new Request([
+					'user_id' => $mention['data']['id'],
+					'notification' => '<a href="/' . $this->app['board']['base'] . 'user/' . $user['username'] . '/" class="user-link">' . $user['username'] . '</a> mentioned you in a <a href="' . $post_url . '">post</a>'
+				]));
+			}
+		}
 
 		// Upload attachments
 		if ($attachments[0] != null)
