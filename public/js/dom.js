@@ -167,7 +167,7 @@ $(function () {
 		local: [],
 		remote: '/' + asf.config.board.base + 'search/typeahead/%QUERY/' + selection + '/',
 		datumTokenizer: function(d) { 
-			return Bloodhound.tokenizers.whitespace(d.val); 
+			return Bloodhound.tokenizers.whitespace(d.name); 
 		},
 		queryTokenizer: Bloodhound.tokenizers.whitespace
 	});
@@ -176,13 +176,13 @@ $(function () {
 
 	$('.typeahead').typeahead({
 		minLength: 3,
-		highlight: true,
-		displayKey: 'value'
+		highlight: true
 	}, {
+		displayKey: 'name',
 		source: engine.ttAdapter(),
 		templates: {
 			suggestion: function (result) {
-				return result.name;
+				return '<a href="/' + asf.config.board.base + result.url + '">' + result.name + '</a>';
 			}
 		}
 	});
@@ -468,7 +468,7 @@ $(function () {
 					width = 700;
 				}
 
-				$('#main-nav ul').css('width', width + 'px').addClass('pull-left');
+				$('#main-nav ul').css('width', width + 'px');
 				$('#main-nav').prepend(logo)
 							.removeClass('container')
 							.addClass('clearfix');
@@ -477,28 +477,29 @@ $(function () {
 					width: 35,
 					height: 35,
 					marginTop: 20
-				});
+				}, 100);
 
 				$('#main-nav a.avatar img').animate({
 					width: 35,
 					height: 35
-				});
+				}, 100);
 
 				$('#main-nav').css({
 					position: 'fixed',
 					top: 0,
 					left: '50%',
-					'border-radius': 0,
-					marginLeft: -(1170 / 2) + 'px'
+					marginLeft: -(1170 / 2)
 				}).animate({
 					width: '100%',
 					left: 0,
 					zIndex: 10,
 					marginLeft: 0
-				}, 100);
+				}, 200);
 			}
 		} else {
 			if (scrolled) {
+
+				$('#main-nav ul').removeAttr('style');
 
 				logo.removeClass('hidden-xs hidden-sm').css({
 					height: 52,
@@ -512,24 +513,24 @@ $(function () {
 					width: 55,
 					height: 55,
 					marginTop: 0
-				});
+				}, 100);
 
 				$('#main-nav a.avatar img').animate({
 					width: 55,
 					height: 55
-				});
+				}, 100);
 
 				$('#main-nav img:first').remove();
 
 				$('#main-nav').css({
 					position: 'relative',
 					left: 0,
-					margin: '0 auto',
 					zIndex: 1,
-					'border-radius': '5px 5px 0 0'
+					marginLeft: 0
 				}).animate({
-					width: '1170px'
-				}, 100).addClass('container');
+					width: '1170px',
+					marginLeft: -15
+				}, 200).addClass('container');
 			}
 		}
 	});

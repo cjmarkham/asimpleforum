@@ -60,7 +60,7 @@ class SearchModel
 			'%' . $query . '%'
 		];
 		$data = [];
-		$columns = 't.name, f.name as forumName';
+		$columns = 't.id, t.name, f.name as forumName';
 		$join = 'JOIN forums f ON f.id=t.forum';
 
 		if ($selection != 'null')
@@ -77,13 +77,12 @@ class SearchModel
 		{
 			foreach ($results as $key => $result)
 			{
+				$data[$key]['url'] = urlencode($result['forumName']) . '/' . urlencode($result['name']) . '-' . $result['id'] . '/';
 				$data[$key]['name'] = $result['name'];
 
 				$data[$key]['forum'] = $result['forumName'];
 			}
 		}
-
-		var_dump($results);
 
 		return $data;
 	}
