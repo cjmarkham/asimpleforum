@@ -4,6 +4,8 @@ asimpleforum
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cjmarkham/asimpleforum/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
+***A Simple Forum is being rewritten using NodeJS. This code will remain here as a backup only. You can view the new project in its own repository [asimpleforum-node](https://github.com/cjmarkham/asimpleforum-node)***
+
 Coding Guidelines
 =
 
